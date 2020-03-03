@@ -1,0 +1,67 @@
+---------------------------------------------------------------------------------
+  Changelog for "Rainbeau's Rational Romance"
+---------------------------------------------------------------------------------
+- 03/03/2020
+	- Updated for RimWorld 1.1
+
+- 12/05/2018
+	- Made some more minor tweaks to the date functionality.
+	- Rewrote XML patches to improve load efficiency slightly.
+
+- 11/15/2018
+	- Fixed a bug that sometimes allowed pawns with preexisting romantic partners
+	  to be assigned two different orientation traits.
+	  
+- 11/11/2018
+	- Added options sliders to adjust the rate at which pawns propose dates and
+	  hookups.
+	- Made a few very minor tweaks which might (or might not) resolve lingering
+	  problems (if any) with date functionality.
+
+- 11/06/2018
+	- Pawns now check to see if their intended targets are actually available
+	  before walking across the map to ask for a date or to propose a hookup. So
+	  you should no longer have to deal, for example, with pacifist Joel walking
+	  into the middle of a firefight because he wants to know if his girlfriend
+	  Sally is interested in leaving the combat to go on a romantic walk.
+
+- 11/04/2018
+	- Added support for polyamorous relationships. The code is based in part on
+	  polyamory code from the original "Romance Diversified," and also in part on
+	  code from Linq/Word-Mule's "Psychology" mod.
+	- Culture now plays a role in determining a pawn's likelihood to initiate a
+	  romantic encounter or to propose marriage.
+	- The impact of the Ugly trait on romantic attraction is lessened for pawns
+	  who have that trait themselves.
+    - Replaced the date walk code with a clean copy of the vanilla walk code,
+	  just in case some subtle difference was responsible for the problems some
+	  users have seen with pawns not actually going on dates.
+	- Added a few log messages that will hopefully help me track down the reason
+	  for the problems if the above change doesn't actually fix them.
+	  
+- 10/26/2018
+	- When on a date, both pawns (and not just the following pawn) will now gain
+	  joy, as obviously should have been happening all along.
+	- Squashed a bug that completely prevented cross-species romances.
+	- Added a configuration option to affect the likelihood of pawns actually
+	  being interested in cross-species romance. (Obviously, this setting is 
+	  meaningless if you're not playing with any alien races.)
+	- Pawns of non-gendered alien races will no longer be given an orientation
+	  trait. 
+	
+- 10/19/2018
+	- Initial release of "Rational Romance" for RimWorld 1.0.
+
+- 06/14/2017
+    - SeveralPuffins' final update to his mod.
+	
+- 05/29/2017
+    - Updated for alpha 17.
+
+- 12/21/2016
+    - Updated for alpha 16.
+	
+- 11/06/2016
+    - Initial release of SeveralPuffins' "Romance Diversified" for RimWorld
+	  alpha 15.
+	  
