@@ -10,15 +10,15 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 	
-namespace RationalRomance_Code {
+namespace RationalRomance {
 
-	public class Controller : Mod {
+	class RationalRomance : Mod {
 		public static Settings Settings;
 		public override string SettingsCategory() { return "RRR.RationalRomance".Translate(); }
 		public override void DoSettingsWindowContents(Rect canvas) { Settings.DoWindowContents(canvas); }
-		public Controller(ModContentPack content) : base(content) {
+		public RationalRomance(ModContentPack content) : base(content) {
 			var harmony = new Harmony("net.rainbeau.rimworld.mod.rationalromance");
-			harmony.PatchAll( Assembly.GetExecutingAssembly() );
+			harmony.PatchAll();
 			Settings = GetSettings<Settings>();
 		}
 	}
@@ -41,37 +41,37 @@ namespace RationalRomance_Code {
 			list.Label("RRR.Overview".Translate());
 			Text.Font = GameFont.Small;
 			list.Gap();
-			list.Label("RRR.StraightChance".Translate()+"  "+(int)straightChance+"%");
+			list.Label("RRR.StraightChance".Translate() + "  " + (int)straightChance + "%");
 			straightChance = list.Slider(straightChance, 0f, 100.99f);
-			if (straightChance > 100.99f-bisexualChance-gayChance) {
-				straightChance = 100.99f-bisexualChance-gayChance;
+			if (straightChance > 100.99f - bisexualChance - gayChance) {
+				straightChance = 100.99f - bisexualChance - gayChance;
 			}
 			list.Gap();
-			list.Label("RRR.BisexualChance".Translate()+"  "+(int)bisexualChance+"%");
+			list.Label("RRR.BisexualChance".Translate() + "  " + (int)bisexualChance + "%");
 			bisexualChance = list.Slider(bisexualChance, 0f, 100.99f);
-			if (bisexualChance > 100.99f-straightChance-gayChance) {
-				bisexualChance = 100.99f-straightChance-gayChance;
+			if (bisexualChance > 100.99f - straightChance - gayChance) {
+				bisexualChance = 100.99f - straightChance - gayChance;
 			}
 			list.Gap();
-			list.Label("RRR.GayChance".Translate()+"  "+(int)gayChance+"%");
+			list.Label("RRR.GayChance".Translate() + "  " + (int)gayChance + "%");
 			gayChance = list.Slider(gayChance, 0f, 100.99f);
-			if (gayChance > 100.99f-straightChance-bisexualChance) {
-				gayChance = 100.99f-straightChance-bisexualChance;
+			if (gayChance > 100.99f - straightChance - bisexualChance) {
+				gayChance = 100.99f - straightChance - bisexualChance;
 			}
 			list.Gap();
-			asexualChance = 100-(int)straightChance-(int)bisexualChance-(int)gayChance;
-			list.Label("RRR.AsexualChance".Translate()+"  "+asexualChance+"%");
+			asexualChance = 100 - (int)straightChance - (int)bisexualChance - (int)gayChance;
+			list.Label("RRR.AsexualChance".Translate() + "  " + asexualChance + "%");
 			list.Gap(48);
-			list.Label("RRR.PolyamoryChance".Translate()+"  "+(int)polyChance+"%", -1f, "RRR.PolyamoryChanceTip".Translate());
+			list.Label("RRR.PolyamoryChance".Translate() + "  " + (int)polyChance + "%", -1f, "RRR.PolyamoryChanceTip".Translate());
 			polyChance = list.Slider(polyChance, 0f, 100.99f);
 			list.Gap();
-			list.Label("RRR.DateRate".Translate()+"  "+(int)dateRate+"%");
-			dateRate = list.Slider(dateRate, 0f, 200.99f);
+			list.Label("RRR.DateRate".Translate() + "  " + (int)dateRate + "%");
+			dateRate = list.Slider(dateRate, 0f, 1000.99f);
 			list.Gap();
-			list.Label("RRR.HookupRate".Translate()+"  "+(int)hookupRate+"%");
-			hookupRate = list.Slider(hookupRate, 0f, 200.99f);
+			list.Label("RRR.HookupRate".Translate() + "  " + (int)hookupRate + "%");
+			hookupRate = list.Slider(hookupRate, 0f, 1000.99f);
 			list.Gap();
-			list.Label("RRR.AlienLoveChance".Translate()+"  "+(int)alienLoveChance+"%", -1f, "RRR.AlienLoveChanceTip".Translate());
+			list.Label("RRR.AlienLoveChance".Translate() + "  " + (int)alienLoveChance + "%", -1f, "RRR.AlienLoveChanceTip".Translate());
 			alienLoveChance = list.Slider(alienLoveChance, 0f, 100.99f);
 			list.End();
 		}
@@ -91,8 +91,8 @@ namespace RationalRomance_Code {
 	[DefOf]
 	public static class RRRJobDefOf {
 		public static JobDef DoLovinCasual;
-		public static JobDef JobDateFollow;
-		public static JobDef JobDateLead;
+		public static JobDef FollowDate;
+		public static JobDef LeadDate;
 		public static JobDef LeadHookup;
 		public static JobDef ProposeDate;
 	}
@@ -127,41 +127,33 @@ namespace RationalRomance_Code {
 		public static void AssignOrientation(Pawn pawn) {
 			float orientation = Rand.Value;
 			if (pawn.gender == Gender.None) { return; }
-			if (orientation < (Controller.Settings.asexualChance / 100)) {
+			if (orientation < (RationalRomance.Settings.asexualChance / 100)) {
 				if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn)) {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+				} else if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheSameGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheSameGender(pawn)) {
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+				} else if (pawn.story.traits.HasTrait(RRRTraitDefOf.Philanderer)) {
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+				} else {
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual, 0, false));
 				}
-				else if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheSameGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheSameGender(pawn)) {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
-				}
-				else if (pawn.story.traits.HasTrait(RRRTraitDefOf.Philanderer)) {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
-				}
-				else {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Asexual, 0, false));
-				}
-			}
-			else if (orientation < ((Controller.Settings.asexualChance + Controller.Settings.bisexualChance) / 100)) {
-				pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
-			}
-			else if (orientation < ((Controller.Settings.asexualChance + Controller.Settings.bisexualChance + Controller.Settings.gayChance) / 100)) {
+			} else if (orientation < ((RationalRomance.Settings.asexualChance + RationalRomance.Settings.bisexualChance) / 100)) {
+				pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+			} else if (orientation < ((RationalRomance.Settings.asexualChance + RationalRomance.Settings.bisexualChance + RationalRomance.Settings.gayChance) / 100)) {
 				if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn)) {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
-				}
-				else {
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+				} else {
 					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Gay, 0, false));
 				}
-			}
-			else {
+			} else {
 				if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheSameGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheSameGender(pawn)) {
-					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Bisexual, 0, false));
-				}
-				else {
+					pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual, 0, false));
+				} else {
 					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Straight, 0, false));
 				}
 			}
-			if (!pawn.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
-				if (Rand.Value < (Controller.Settings.polyChance / 100)) {
+			if (!pawn.story.traits.HasTrait(TraitDefOf.Asexual) && !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
+				if (Rand.Value < (RationalRomance.Settings.polyChance / 100)) {
 					pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Polyamorous, 0, false));
 				}
 			}
@@ -211,15 +203,13 @@ namespace RationalRomance_Code {
 							if (float.TryParse(l[i].operand.ToString(), out f)) {
 								if (!first30 && f == 30f) {
 									l[i].operand = 24f;
-								}
-								else if (!first24 && f == 24f) {
+								} else if (!first24 && f == 24f) {
 									first24 = true;
 									l[i].operand = 16f;
 									break;
 								}
 							}
-						}
-						else if (!first0 && l[i].opcode == OpCodes.Ldc_I4_1) {
+						} else if (!first0 && l[i].opcode == OpCodes.Ldc_I4_1) {
 							first0 = true;
 							l[i].opcode = OpCodes.Ldc_I4_0;
 						}
@@ -397,7 +387,7 @@ namespace RationalRomance_Code {
 	public static class InteractionWorker_Breakup_RandomSelectionWeight {
 		// CHANGE: Pawns are more likely to break up if currently with non-ideal partner.
 		public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result) {
-			if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!initiator.story.traits.HasTrait(TraitDefOf.Asexual) && !initiator.story.traits.HasTrait(TraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(initiator);
 			}
 			if (!LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient)) {
@@ -416,7 +406,7 @@ namespace RationalRomance_Code {
 			if ((initiator.gender != recipient.gender) && (initiator.story.traits.HasTrait(TraitDefOf.Gay))) {
 				__result *= 2f;
 			}
-			if (initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (initiator.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				__result *= 2f;
 			}
 			return false;
@@ -427,7 +417,7 @@ namespace RationalRomance_Code {
 	public static class InteractionWorker_MarriageProposal_AcceptanceChance {
 		// CHANGE: Pawns will always reject marriage proposals if proposer is of non-ideal gender.
 		public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result) {
-			if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual) && !recipient.story.traits.HasTrait(TraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(recipient);
 			}
 			if ((initiator.gender == recipient.gender) && (recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))) {
@@ -438,7 +428,7 @@ namespace RationalRomance_Code {
 				__result = 0f;
 				return false;
 			}
-			if (recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (recipient.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				__result = 0f;
 				return false;
 			}
@@ -454,7 +444,7 @@ namespace RationalRomance_Code {
 		// CHANGE: Female pawns are now just as likely to propose as male pawns, with cultural variations.
 		// CHANGE: Marriage won't be proposed to someone of non-ideal gender.
 		public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result) {
-			if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!initiator.story.traits.HasTrait(TraitDefOf.Asexual) && !initiator.story.traits.HasTrait(TraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(initiator);
 			}
 			DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient);
@@ -476,7 +466,7 @@ namespace RationalRomance_Code {
 				__result = 0f;
 				return false;
 			}
-			if (initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (initiator.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				__result = 0f;
 				return false;
 			}
@@ -484,17 +474,13 @@ namespace RationalRomance_Code {
 			string backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(initiator);
 			if (backgroundCulture == "Urbworld") {
 				genderAggressiveness = (initiator.gender != Gender.Male ? 0.75f : 1f);
-			}
-			else if (backgroundCulture == "Imperial") {
+			} else if (backgroundCulture == "Imperial") {
 				genderAggressiveness = (initiator.gender != Gender.Female ? 0.75f : 1f);
-			}
-			else if (backgroundCulture == "Tribal") {
+			} else if (backgroundCulture == "Tribal") {
 				genderAggressiveness = (initiator.gender != Gender.Female ? 0.2f : 1f);
-			}
-			else if (backgroundCulture == "Medieval") {
+			} else if (backgroundCulture == "Medieval") {
 				genderAggressiveness = (initiator.gender != Gender.Male ? 0.2f : 1f);
-			}
-			else {
+			} else {
 				genderAggressiveness = 1f;
 			}
 			float single = 0.4f;
@@ -521,13 +507,11 @@ namespace RationalRomance_Code {
 					pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, firstDirectRelationPawn);
 					pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, firstDirectRelationPawn);
 					oldLoversAndFiances.Add(firstDirectRelationPawn);
-				}
-				else {
+				} else {
 					Pawn firstDirectRelationPawn1 = pawn.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, null);
 					if (firstDirectRelationPawn1 == null) {
 						break;
-					}
-					else if (!firstDirectRelationPawn1.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) || !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
+					} else if (!firstDirectRelationPawn1.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) || !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
 						pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, firstDirectRelationPawn1);
 						pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, firstDirectRelationPawn1);
 						oldLoversAndFiances.Add(firstDirectRelationPawn1);
@@ -548,10 +532,10 @@ namespace RationalRomance_Code {
 		// CHANGE: Pawn can't target others or be targeted if current lover is good enough.
 		// CHANGE: Allowed for polyamory.
 		public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result) {
-			if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!initiator.story.traits.HasTrait(TraitDefOf.Asexual) && !initiator.story.traits.HasTrait(TraitDefOf.Bisexual) && !initiator.story.traits.HasTrait(TraitDefOf.Gay) && !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(initiator);
 			}
-			if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual) && !recipient.story.traits.HasTrait(TraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(recipient);
 			}
 			if (recipient.InMentalState || LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient)) {
@@ -599,32 +583,26 @@ namespace RationalRomance_Code {
 						if (initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer)) {
 							if (initiator.Map == pawn.Map) {
 								cheatChance = Mathf.InverseLerp(75f, 5f, opinionOfPartner);
-							}
-							else {
+							} else {
 								cheatChance = Mathf.InverseLerp(100f, 50f, opinionOfPartner);
 							}
-						}
-						else {
+						} else {
 							cheatChance = Mathf.InverseLerp(50f, -50f, opinionOfPartner);
 						}
 						if (initiator.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
 							cheatChance = 0f;
 						}
-					}
-					else {
+					} else {
 						cheatChance = 1f;
 					}
-				}
-				else {
+				} else {
 					if (initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer)) {
 						if (initiator.Map == pawn.Map) {
 							cheatChance = Mathf.InverseLerp(75f, 5f, opinionOfPartner);
-						}
-						else {
+						} else {
 							cheatChance = Mathf.InverseLerp(100f, 50f, opinionOfPartner);
 						}
-					}
-					else {
+					} else {
 						cheatChance = Mathf.InverseLerp(50f, -50f, opinionOfPartner);
 					}
 					if (initiator.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
@@ -636,23 +614,19 @@ namespace RationalRomance_Code {
 			string backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(initiator);
 			if (backgroundCulture == "Urbworld") {
 				genderAggressiveness = (initiator.gender != Gender.Male ? 0.5f : 1f);
-			}
-			else if (backgroundCulture == "Imperial") {
+			} else if (backgroundCulture == "Imperial") {
 				genderAggressiveness = (initiator.gender != Gender.Female ? 0.5f : 1f);
-			}
-			else if (backgroundCulture == "Tribal") {
+			} else if (backgroundCulture == "Tribal") {
 				genderAggressiveness = (initiator.gender != Gender.Female ? 0.125f : 1f);
-			}
-			else if (backgroundCulture == "Medieval") {
+			} else if (backgroundCulture == "Medieval") {
 				genderAggressiveness = (initiator.gender != Gender.Male ? 0.125f : 1f);
-			}
-			else {
+			} else {
 				genderAggressiveness = 1f;
 			}
 			float romanceChancePercent = Mathf.InverseLerp(0.25f, 1f, romanceChance);
 			float opinionPercent = Mathf.InverseLerp(5f, 100f, (float)opinionOfTarget);
 			float orientationMatch = 1f;
-			if (initiator.story.traits.HasTrait(RRRTraitDefOf.Asexual) || recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (initiator.story.traits.HasTrait(TraitDefOf.Asexual) || recipient.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				orientationMatch = 0.15f;
 			}
 			if (initiator.gender != recipient.gender) {
@@ -677,15 +651,14 @@ namespace RationalRomance_Code {
 		// CHANGE: Pawns are more likely to rebuff non-ideal partners.
 		// CHANGE: Allowed for polyamory.
 		public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result) {
-			if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual) && !recipient.story.traits.HasTrait(TraitDefOf.Bisexual) && !recipient.story.traits.HasTrait(TraitDefOf.Gay) && !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				ExtraTraits.AssignOrientation(recipient);
 			}
 			float single = 0.6f;
 			single *= recipient.relations.SecondaryRomanceChanceFactor(initiator);
 			single *= Mathf.InverseLerp(5f, 100f, (float)recipient.relations.OpinionOf(initiator));
 			float single1 = 1f;
-			if (recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) && !SexualityUtilities.HasNonPolyPartner(recipient)) { }
-			else {
+			if (recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) && !SexualityUtilities.HasNonPolyPartner(recipient)) { } else {
 				Pawn firstDirectRelationPawn = null;
 				if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover, (Pawn x) => !x.Dead) != null) {
 					firstDirectRelationPawn = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover, null);
@@ -693,15 +666,13 @@ namespace RationalRomance_Code {
 					if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
 						single1 = 0f;
 					}
-				}
-				else if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, (Pawn x) => !x.Dead) != null) {
+				} else if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, (Pawn x) => !x.Dead) != null) {
 					firstDirectRelationPawn = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, null);
 					single1 = 0.1f;
 					if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
 						single1 = 0f;
 					}
-				}
-				else if (recipient.GetSpouse() != null && !recipient.GetSpouse().Dead) {
+				} else if (recipient.GetSpouse() != null && !recipient.GetSpouse().Dead) {
 					firstDirectRelationPawn = recipient.GetSpouse();
 					single1 = 0.3f;
 					if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
@@ -727,7 +698,7 @@ namespace RationalRomance_Code {
 			if ((initiator.gender != recipient.gender) && (recipient.story.traits.HasTrait(TraitDefOf.Gay))) {
 				__result *= 0.6f;
 			}
-			if (recipient.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (recipient.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				__result *= 0.3f;
 			}
 			return false;
@@ -739,7 +710,7 @@ namespace RationalRomance_Code {
 		// CHANGE: Allowed for polyamory.
 		public static bool Prefix(Pawn pawn) {
 			if (pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
-				IEnumerable<Pawn> spouses = (from p in pawn.relations.RelatedPawns where pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, p) select p);
+				IEnumerable<Pawn> spouses = (from p in pawn.relations.RelatedPawns where pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, p)select p);
 				foreach (Pawn spousePawn in spouses) {
 					if (!spousePawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
 						pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, spousePawn);
@@ -782,8 +753,7 @@ namespace RationalRomance_Code {
 					}
 				}
 				single = Mathf.Pow(0.2f, (float)num);
-			}
-			else if (LovePartnerRelationUtility.HasAnyLovePartner(other)) {
+			} else if (LovePartnerRelationUtility.HasAnyLovePartner(other)) {
 				__result = 0f;
 				return false;
 			}
@@ -798,8 +768,7 @@ namespace RationalRomance_Code {
 			float melaninCommonalityFactor = 1f;
 			if (!request.FixedMelanin.HasValue) {
 				melaninCommonalityFactor = PawnSkinColors.GetMelaninCommonalityFactor(other.story.melanin);
-			}
-			else {
+			} else {
 				float? fixedMelanin = request.FixedMelanin;
 				melaninCommonalityFactor = ChildRelationUtility.GetMelaninSimilarityFactor(fixedMelanin.Value, other.story.melanin);
 			}
@@ -853,25 +822,13 @@ namespace RationalRomance_Code {
 	public static class PawnGenerator_GenerateTraits {
 		// CHANGE: Add orientation trait after other traits are selected.
 		public static void Postfix(Pawn pawn) {
-			if (pawn.story.traits.HasTrait(RRRTraitDefOf.Asexual) || pawn.story.traits.HasTrait(RRRTraitDefOf.Bisexual) || pawn.story.traits.HasTrait(TraitDefOf.Gay) || pawn.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
+			if (pawn.story.traits.HasTrait(TraitDefOf.Asexual) || pawn.story.traits.HasTrait(TraitDefOf.Bisexual) || pawn.story.traits.HasTrait(TraitDefOf.Gay) || pawn.story.traits.HasTrait(RRRTraitDefOf.Straight)) {
 				return;
 			}
 			ExtraTraits.AssignOrientation(pawn);
 			return;
 		}
 	}
-	
-	//
-	// PawnRelationWorker_Child "CreateRelation"
-	//
-	
-	//
-	// PawnRelationWorker_Sibling "CreateRelation"
-	//
-	
-	//
-	// PawnRelationWorker_Sibling "GenerateParent"	
-	//
 	
 	[HarmonyPatch(typeof(Pawn_RelationsTracker), "SecondaryLovinChanceFactor", null)]
 	public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor {
@@ -891,10 +848,10 @@ namespace RationalRomance_Code {
 			}
 			float crossSpecies = 1;
 			if (pawn.def != otherPawn.def) {
-				crossSpecies = Controller.Settings.alienLoveChance/100;
+				crossSpecies = RationalRomance.Settings.alienLoveChance / 100;
 			}
 			if (Rand.ValueSeeded(pawn.thingIDNumber ^ 3273711) >= 0.015f) {
-				if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+				if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(TraitDefOf.Asexual)) {
 					__result = 0f;
 					return false;
 				}
@@ -942,8 +899,7 @@ namespace RationalRomance_Code {
 			}
 			if (targetBeauty == 1) {
 				targetBeautyMod = 1.7f;
-			}
-			else if (targetBeauty == 2) {
+			} else if (targetBeauty == 2) {
 				targetBeautyMod = 2.3f;
 			}
 			string backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(pawn);
@@ -951,16 +907,14 @@ namespace RationalRomance_Code {
 			if (backgroundCulture == "Urbworld" || backgroundCulture == "Medieval") {
 				if (pawn.gender == Gender.Male && otherPawn.gender == Gender.Female) {
 					ageDiffPref = (ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f);
-				}
-				else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male) {
+				} else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male) {
 					ageDiffPref = (ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f);
 				}
 			}
 			if (backgroundCulture == "Tribal" || backgroundCulture == "Imperial") {
 				if (pawn.gender == Gender.Male && otherPawn.gender == Gender.Female) {
 					ageDiffPref = (ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f);
-				}
-				else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male) {
+				} else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male) {
 					ageDiffPref = (ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f);
 				}
 			}
@@ -988,8 +942,8 @@ namespace RationalRomance_Code {
 		public static void CurrentStateInternal(ref ThoughtState __result, Pawn p) {
 			if (__result.StageIndex != ThoughtState.Inactive.StageIndex) {
 				DirectPawnRelation directPawnRelation = LovePartnerRelationUtility.ExistingMostLikedLovePartnerRel(p, false);
-				bool multiplePartners = (from r in p.relations.PotentiallyRelatedPawns where LovePartnerRelationUtility.LovePartnerRelationExists(p, r) select r).Count() > 1;
-				bool partnerBedInRoom = (from t in p.ownership.OwnedBed.GetRoom().ContainedBeds where t.OwnersForReading.Contains(directPawnRelation.otherPawn) select t).Count() > 0;
+				bool multiplePartners = (from r in p.relations.PotentiallyRelatedPawns where LovePartnerRelationUtility.LovePartnerRelationExists(p, r)select r).Count() > 1;
+				bool partnerBedInRoom = (from t in p.ownership.OwnedBed.GetRoom().ContainedBeds where t.OwnersForReading.Contains(directPawnRelation.otherPawn)select t).Count() > 0;
 				if (directPawnRelation != null && p.ownership.OwnedBed != null && p.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) && multiplePartners && partnerBedInRoom) {
 					__result = false;
 				}
@@ -1000,7 +954,7 @@ namespace RationalRomance_Code {
 	public class Thought_WantToSleepWithSpouseOrLoverRRR : Thought_WantToSleepWithSpouseOrLover {
 		public override string LabelCap {
 			get {
-				if(this.pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
+				if (this.pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)) {
 					return string.Format(base.CurStage.label, "my partners").CapitalizeFirst();
 				}
 				DirectPawnRelation directPawnRelation = LovePartnerRelationUtility.ExistingMostLikedLovePartnerRel(this.pawn, false);
@@ -1065,6 +1019,7 @@ namespace RationalRomance_Code {
 			}
 			return false;
 		}
+
 		[DebuggerHidden]
 		protected override IEnumerable<Toil> MakeNewToils() {
 			yield return Toils_Reserve.Reserve(this.BedInd, 2, 0, null);
@@ -1126,7 +1081,7 @@ namespace RationalRomance_Code {
 		}
 	}
 
-	public class JobDriver_JobDateFollow : JobDriver {
+	public class JobDriver_FollowDate : JobDriver {
 		public override bool TryMakePreToilReservations(bool errorOnFailed) {
 			return true;
 		}
@@ -1145,11 +1100,21 @@ namespace RationalRomance_Code {
 		//}
 		[DebuggerHidden]
 		protected override IEnumerable<Toil> MakeNewToils() {
+			// Wait a tick to avoid a 1.1 issue where the date leader now must end their current
+			// job after the date follower, causing the date follower to think the leader was no
+			// longer leading the date and end this job.
+			Toil WaitForPartnerJob = new Toil();
+			WaitForPartnerJob.defaultCompleteMode = ToilCompleteMode.Delay;
+			WaitForPartnerJob.initAction = delegate {
+				this.ticksLeftThisToil = 1;
+			};
+			yield return WaitForPartnerJob;
+
 			Toil FollowPartner = new Toil();
 			FollowPartner.defaultCompleteMode = ToilCompleteMode.Delay;
 			FollowPartner.AddFailCondition(() => !this.Partner.Spawned);
 			FollowPartner.AddFailCondition(() => this.Partner.Dead);
-			FollowPartner.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.JobDateLead);
+			FollowPartner.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.LeadDate);
 			FollowPartner.initAction = delegate {
 				this.ticksLeftThisToil = 200;
 				this.actor.pather.StartPath(this.Partner, PathEndMode.Touch);
@@ -1164,7 +1129,7 @@ namespace RationalRomance_Code {
 		}
 	}
 
-	public class JobDriver_JobDateLead : JobDriver {
+	public class JobDriver_LeadDate : JobDriver {
 		public override bool TryMakePreToilReservations(bool errorOnFailed) {
 			return true;
 		}
@@ -1199,7 +1164,7 @@ namespace RationalRomance_Code {
 			toil.defaultCompleteMode = ToilCompleteMode.PatherArrival;
 			toil.AddFailCondition(() => !this.Partner.Spawned);
 			toil.AddFailCondition(() => this.Partner.Dead);
-			toil.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.JobDateFollow);
+			toil.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.FollowDate);
 			return toil;
 		}
 		private Toil WaitForPartner() {
@@ -1211,12 +1176,13 @@ namespace RationalRomance_Code {
 			toil.tickAction = delegate {
 				this.actor.needs.joy.GainJoy(0.0001f, RRRMiscDefOf.Social);
 			};
-			toil.AddFailCondition(() => PawnUtility.WillSoonHaveBasicNeed(base.GetActor()) || PawnUtility.WillSoonHaveBasicNeed(this.Partner));
+			toil.AddFailCondition(() => PawnUtility.WillSoonHaveBasicNeed(this.actor) || PawnUtility.WillSoonHaveBasicNeed(this.Partner));
 			toil.AddFailCondition(() => !this.Partner.Spawned);
 			toil.AddFailCondition(() => this.Partner.Dead);
-			toil.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.JobDateFollow);
+			toil.AddFailCondition(() => this.Partner.CurJob.def != RRRJobDefOf.FollowDate);
 			return toil;
 		}
+
 		[DebuggerHidden]
 		protected override IEnumerable<Toil> MakeNewToils() {
 			foreach (LocalTargetInfo target in base.job.targetQueueB) {
@@ -1251,7 +1217,7 @@ namespace RationalRomance_Code {
 			get { return TargetIndex.B; }
 		}
 		private bool DoesTargetPawnAcceptAdvance() {
-			return !PawnUtility.WillSoonHaveBasicNeed(this.TargetPawn) && !PawnUtility.EnemiesAreNearby(this.TargetPawn, 9, false) && this.TargetPawn.CurJob.def != JobDefOf.LayDown && this.TargetPawn.CurJob.def != JobDefOf.BeatFire && this.TargetPawn.CurJob.def != JobDefOf.Arrest && this.TargetPawn.CurJob.def != JobDefOf.Capture && this.TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && this.TargetPawn.CurJob.def != JobDefOf.FleeAndCower && this.TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn && this.TargetPawn.CurJob.def != JobDefOf.PrisonerExecution && this.TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && this.TargetPawn.CurJob.def != JobDefOf.Rescue && this.TargetPawn.CurJob.def != JobDefOf.SocialFight && this.TargetPawn.CurJob.def != JobDefOf.SpectateCeremony && this.TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate && this.TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && this.TargetPawn.CurJob.def != JobDefOf.Vomit && this.TargetPawn.CurJob.def != JobDefOf.Wait_Downed && SexualityUtilities.WillPawnTryHookup(this.TargetPawn) && SexualityUtilities.IsHookupAppealing(this.TargetPawn, base.GetActor());
+			return !PawnUtility.WillSoonHaveBasicNeed(this.TargetPawn) && !PawnUtility.EnemiesAreNearby(this.TargetPawn, 9, false) && this.TargetPawn.CurJob.def != JobDefOf.LayDown && this.TargetPawn.CurJob.def != JobDefOf.BeatFire && this.TargetPawn.CurJob.def != JobDefOf.Arrest && this.TargetPawn.CurJob.def != JobDefOf.Capture && this.TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && this.TargetPawn.CurJob.def != JobDefOf.FleeAndCower && this.TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn && this.TargetPawn.CurJob.def != JobDefOf.PrisonerExecution && this.TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && this.TargetPawn.CurJob.def != JobDefOf.Rescue && this.TargetPawn.CurJob.def != JobDefOf.SocialFight && this.TargetPawn.CurJob.def != JobDefOf.SpectateCeremony && this.TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate && this.TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && this.TargetPawn.CurJob.def != JobDefOf.Vomit && this.TargetPawn.CurJob.def != JobDefOf.Wait_Downed && SexualityUtilities.WillPawnTryHookup(this.TargetPawn) && SexualityUtilities.IsHookupAppealing(this.TargetPawn, this.actor);
 		}
 		private bool IsTargetPawnOkay() {
 			return !this.TargetPawn.Dead && !this.TargetPawn.Downed;
@@ -1259,18 +1225,24 @@ namespace RationalRomance_Code {
 		private bool IsTargetPawnFreeForHookup() {
 			return !PawnUtility.WillSoonHaveBasicNeed(this.TargetPawn) && !PawnUtility.EnemiesAreNearby(this.TargetPawn, 9, false) && this.TargetPawn.CurJob.def != JobDefOf.LayDown && this.TargetPawn.CurJob.def != JobDefOf.BeatFire && this.TargetPawn.CurJob.def != JobDefOf.Arrest && this.TargetPawn.CurJob.def != JobDefOf.Capture && this.TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && this.TargetPawn.CurJob.def != JobDefOf.FleeAndCower && this.TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn && this.TargetPawn.CurJob.def != JobDefOf.PrisonerExecution && this.TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && this.TargetPawn.CurJob.def != JobDefOf.Rescue && this.TargetPawn.CurJob.def != JobDefOf.SocialFight && this.TargetPawn.CurJob.def != JobDefOf.SpectateCeremony && this.TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate && this.TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed && this.TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && this.TargetPawn.CurJob.def != JobDefOf.Vomit && this.TargetPawn.CurJob.def != JobDefOf.Wait_Downed;
 		}
+
 		[DebuggerHidden]
 		protected override IEnumerable<Toil> MakeNewToils() {
 			if (this.IsTargetPawnFreeForHookup()) {
+				// walk to target pawn
 				yield return Toils_Goto.GotoThing(this.TargetPawnIndex, PathEndMode.Touch);
+
 				Toil TryItOn = new Toil();
+				// make sure target is feeling ok
 				TryItOn.AddFailCondition(() => !this.IsTargetPawnOkay());
 				TryItOn.defaultCompleteMode = ToilCompleteMode.Delay;
+				// show heart between pawns
 				TryItOn.initAction = delegate {
 					this.ticksLeftThisToil = 50;
-					MoteMaker.ThrowMetaIcon(this.GetActor().Position, this.GetActor().Map, ThingDefOf.Mote_Heart);
+					MoteMaker.ThrowMetaIcon(this.actor.Position, this.actor.Map, ThingDefOf.Mote_Heart);
 				};
 				yield return TryItOn;
+
 				Toil AwaitResponse = new Toil();
 				AwaitResponse.defaultCompleteMode = ToilCompleteMode.Instant;
 				AwaitResponse.initAction = delegate {
@@ -1279,26 +1251,28 @@ namespace RationalRomance_Code {
 					if (this.successfulPass) {
 						MoteMaker.ThrowMetaIcon(this.TargetPawn.Position, this.TargetPawn.Map, ThingDefOf.Mote_Heart);
 						list.Add(RRRMiscDefOf.HookupSucceeded);
-					}
-					else {
+					} else {
 						MoteMaker.ThrowMetaIcon(this.TargetPawn.Position, this.TargetPawn.Map, ThingDefOf.Mote_IncapIcon);
-						this.GetActor().needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt, this.TargetPawn);
-						this.TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.FailedHookupAttemptOnMe, this.GetActor());
+						this.actor.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt, this.TargetPawn);
+						this.TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.FailedHookupAttemptOnMe, this.actor);
 						list.Add(RRRMiscDefOf.HookupFailed);
 					}
+					// add "tried hookup with" to the log
 					Find.PlayLog.Add(new PlayLogEntry_Interaction(RRRMiscDefOf.TriedHookupWith, this.pawn, this.TargetPawn, list));
 				};
 				AwaitResponse.AddFailCondition(() => !this.wasSuccessfulPass);
 				yield return AwaitResponse;
+
 				if (this.wasSuccessfulPass) {
 					yield return new Toil {
 						defaultCompleteMode = ToilCompleteMode.Instant,
 						initAction = delegate {
 							if (this.wasSuccessfulPass) {
-								this.GetActor().jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, this.TargetPawn, this.TargetBed, this.TargetBed.GetSleepingSlotPos(0)), null);
-								this.TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, this.GetActor(), this.TargetBed, this.TargetBed.GetSleepingSlotPos(1)), null);
-								this.GetActor().jobs.EndCurrentJob(JobCondition.InterruptOptional, true);
-								this.TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional, true);
+								this.actor.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, this.TargetPawn, this.TargetBed, this.TargetBed.GetSleepingSlotPos(0)));
+								this.TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, this.actor, this.TargetBed, this.TargetBed.GetSleepingSlotPos(1)));
+								// important for 1.1 that the hookup leader ends their job last. best guess is that it's related to the new garbage collection
+								this.TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+								this.actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);		
 							}
 						}
 					};
@@ -1313,6 +1287,9 @@ namespace RationalRomance_Code {
 			return true;
 		}
 		public bool successfulPass = true;
+		private Pawn actor {
+			get { return base.GetActor(); }
+		}
 		private Pawn TargetPawn {
 			get { return base.TargetThingA as Pawn; }
 		}
@@ -1356,8 +1333,7 @@ namespace RationalRomance_Code {
 							if (angleFlat1 <= angleFlat) {
 								angleFlat -= 360f;
 								single = angleFlat1 - angleFlat;
-							}
-							else {
+							} else {
 								single = angleFlat1 - angleFlat;
 							}
 							if (single > 110f) {
@@ -1400,18 +1376,16 @@ namespace RationalRomance_Code {
 			if (list.Count == 0) {
 				result = false;
 				Log.Message("No date walk destination found.");
-			}
-			else {
-				List<IntVec3> list2 = (from c in list
-				orderby BeautyUtility.AverageBeautyPerceptible(c, p1.Map) descending
-				select c).ToList<IntVec3>();
+			} else {
+				List<IntVec3> list2 = (from c in list orderby BeautyUtility.AverageBeautyPerceptible(c, p1.Map)descending select c).ToList<IntVec3>();
 				best = list2.FirstOrDefault<IntVec3>();
 				list2.Reverse();
-				Log.Message("Date walk destinations found from beauty "+BeautyUtility.AverageBeautyPerceptible(best, p1.Map)+" to "+BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault<IntVec3>(), p1.Map));
+				Log.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault<IntVec3>(), p1.Map));
 				result = true;
 			}
 			return result;
 		}
+
 		[DebuggerHidden]
 		protected override IEnumerable<Toil> MakeNewToils() {
 			if (this.IsTargetPawnFreeForDate()) {
@@ -1430,8 +1404,7 @@ namespace RationalRomance_Code {
 					this.successfulPass = this.IsTargetPawnFreeForDate();
 					if (this.successfulPass) {
 						MoteMaker.ThrowMetaIcon(this.TargetPawn.Position, this.TargetPawn.Map, ThingDefOf.Mote_Heart);
-					}
-					else {
+					} else {
 						MoteMaker.ThrowMetaIcon(this.TargetPawn.Position, this.TargetPawn.Map, ThingDefOf.Mote_IncapIcon);
 					}
 				};
@@ -1441,7 +1414,7 @@ namespace RationalRomance_Code {
 					yield return new Toil {
 						defaultCompleteMode = ToilCompleteMode.Instant,
 						initAction = delegate {
-							Job job = new Job(RRRJobDefOf.JobDateLead);
+							Job job = new Job(RRRJobDefOf.LeadDate);
 							IntVec3 root;
 							if (this.TryFindMostBeautifulRootInDistance(40, this.pawn, this.TargetPawn, out root)) {
 								List<IntVec3> list = null;
@@ -1453,15 +1426,14 @@ namespace RationalRomance_Code {
 									}
 									job.locomotionUrgency = LocomotionUrgency.Amble;
 									job.targetA = this.TargetPawn;
-									this.GetActor().jobs.jobQueue.EnqueueFirst(job, null);
-									Job job2 = new Job(RRRJobDefOf.JobDateFollow);
+									this.actor.jobs.jobQueue.EnqueueFirst(job);
+									Job job2 = new Job(RRRJobDefOf.FollowDate);
 									job2.locomotionUrgency = LocomotionUrgency.Amble;
-									job2.targetA = this.GetActor();
-									this.TargetPawn.jobs.jobQueue.EnqueueFirst(job2, null);
-									this.GetActor().jobs.EndCurrentJob(JobCondition.InterruptOptional, true);
-									this.TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional, true);
-								}
-								else {
+									job2.targetA = this.actor;
+									this.TargetPawn.jobs.jobQueue.EnqueueFirst(job2);
+									this.TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+									this.actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);	
+								} else {
 									Log.Message("No date walk path found.");
 								}
 							}
@@ -1474,33 +1446,27 @@ namespace RationalRomance_Code {
 	}
 
 	public class JoyGiver_CasualHookup : JoyGiver {
-		public static float percentRate = Controller.Settings.hookupRate / 2;
+		public static float percentRate = RationalRomance.Settings.hookupRate / 2;
 		public override Job TryGiveJob(Pawn pawn) {
 			Job result;
 			if (!InteractionUtility.CanInitiateInteraction(pawn)) {
 				result = null;
-			}
-			else if (!SexualityUtilities.WillPawnTryHookup(pawn)) {
+			} else if (!SexualityUtilities.WillPawnTryHookup(pawn)) {
 				result = null;
-			}
-			else if (PawnUtility.WillSoonHaveBasicNeed(pawn)) {
+			} else if (PawnUtility.WillSoonHaveBasicNeed(pawn)) {
 				result = null;
-			}
-			else {
+			} else {
 				Pawn pawn2 = SexualityUtilities.FindAttractivePawn(pawn);
 				if (pawn2 == null) {
 					result = null;
-				}
-				else {
-					Building_Bed building_Bed = SexualityUtilities.FindHookupBed(pawn, pawn2);
-					if (building_Bed == null) {
+				} else {					
+					Building_Bed bed = SexualityUtilities.FindHookupBed(pawn, pawn2);
+					if (bed == null) {
 						result = null;
-					}
-					else if (100f * Rand.Value > JoyGiver_CasualHookup.percentRate) {
+					} else if (100f * Rand.Value > JoyGiver_CasualHookup.percentRate) {
 						result = null;
-					}
-					else {
-						result = new Job(this.def.jobDef, pawn2, building_Bed);
+					} else {
+						result = new Job(this.def.jobDef, pawn2, bed);
 					}
 				}
 			}
@@ -1509,33 +1475,33 @@ namespace RationalRomance_Code {
 	}
 	
 	public class JoyGiver_Date : JoyGiver {
-		public static float percentRate = Controller.Settings.dateRate / 2;
+		public static float percentRate = RationalRomance.Settings.dateRate / 2;
 		public override Job TryGiveJob(Pawn pawn) {
 			Job result;
 			if (!InteractionUtility.CanInitiateInteraction(pawn)) {
 				result = null;
-			}
-			else if (!LovePartnerRelationUtility.HasAnyLovePartner(pawn)) {
-				result = null;
-			}
-			else {
-				Pawn pawn2 = LovePartnerRelationUtility.ExistingLovePartner(pawn);
-				if (!pawn2.Spawned) {
-					result = null;
+			} else {
+				Pawn pawn2;
+				if (LovePartnerRelationUtility.HasAnyLovePartner(pawn)) {
+					pawn2 = LovePartnerRelationUtility.ExistingLovePartner(pawn);
+				} else {
+					// allow pawns to choose any attractive pawn if they don't have a lover
+					pawn2 = SexualityUtilities.FindAttractivePawn(pawn);
 				}
-				else if (!RestUtility.Awake(pawn2)) {
+
+				if (pawn2 == null) {
 					result = null;
-				}
-				else if (!JoyUtility.EnjoyableOutsideNow(pawn, null)) {
+				} else if (!pawn2.Spawned) {
 					result = null;
-				}
-				else if (PawnUtility.WillSoonHaveBasicNeed(pawn)) {
+				} else if (!RestUtility.Awake(pawn2)) {
 					result = null;
-				}
-				else if (100f * Rand.Value > JoyGiver_Date.percentRate) {
+				} else if (!JoyUtility.EnjoyableOutsideNow(pawn, null)) {
 					result = null;
-				}
-				else {
+				} else if (PawnUtility.WillSoonHaveBasicNeed(pawn)) {
+					result = null;
+				} else if (100f * Rand.Value > JoyGiver_Date.percentRate) {
+					result = null;
+				} else {
 					result = new Job(this.def.jobDef, pawn2);
 				}
 			}
@@ -1546,39 +1512,30 @@ namespace RationalRomance_Code {
 	public static class SexualityUtilities {
 		public static Pawn FindAttractivePawn(Pawn p1) {
 			Pawn result;
-			if (p1.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (p1.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				result = null;
-			}
-			else {
+			} else {
 				IEnumerable<Pawn> enumerable = p1.Map.mapPawns.FreeColonistsSpawned;
-				enumerable = enumerable.Except(from p in enumerable
-				where (p.story.traits.HasTrait(RRRTraitDefOf.Asexual) || !p.RaceProps.Humanlike || (p.story.traits.HasTrait(TraitDefOf.Gay) && p.gender != p1.gender) || (p.story.traits.HasTrait(RRRTraitDefOf.Straight) && p.gender == p1.gender)) && (double)Rand.Value < 0.8
-				select p);
+				enumerable = enumerable.Except(from p in enumerable where(p.story.traits.HasTrait(TraitDefOf.Asexual) || !p.RaceProps.Humanlike || (p.story.traits.HasTrait(TraitDefOf.Gay) && p.gender != p1.gender) || (p.story.traits.HasTrait(RRRTraitDefOf.Straight) && p.gender == p1.gender)) && (double)Rand.Value < 0.8 select p);
 				enumerable = from p in enumerable
 				where p.Map == p1.Map && p.Faction == p1.Faction
 				select p;
 				if (enumerable.Count<Pawn>() == 0) {
 					result = null;
-				}
-				else {
+				} else {
 					Pawn pawn = null;
 					GenCollection.TryRandomElementByWeight<Pawn>(enumerable, (Pawn x) => p1.relations.SecondaryRomanceChanceFactor(x) * p1.relations.SecondaryRomanceChanceFactor(x), out pawn);
 					if (pawn == null) {
 						result = null;
-					}
-					else if (pawn == p1) {
+					} else if (pawn == p1) {
 						result = null;
-					}
-					else if (LovePartnerRelationUtility.HasAnyLovePartner(pawn) && Rand.Value < 0.85f) {
+					} else if (LovePartnerRelationUtility.HasAnyLovePartner(pawn) && Rand.Value < 0.85f) {
 						result = null;
-					}
-					else if (pawn == LovePartnerRelationUtility.ExistingLovePartner(p1)) {
+					} else if (pawn == LovePartnerRelationUtility.ExistingLovePartner(p1)) {
 						result = null;
-					}
-					else if ((double)p1.relations.SecondaryRomanceChanceFactor(pawn) < 0.05) {
+					} else if ((double)p1.relations.SecondaryRomanceChanceFactor(pawn) < 0.05) {
 						result = null;
-					}
-					else {
+					} else {
 						result = pawn;
 					}
 				}
@@ -1598,8 +1555,7 @@ namespace RationalRomance_Code {
 					result = p2.ownership.OwnedBed;
 					return result;
 				}
-			}
-			else {
+			} else {
 				foreach (ThingDef current in RestUtility.AllBedDefBestToWorst) {
 					if (RestUtility.CanUseBedEver(p1, current)) {
 						Building_Bed building_Bed = (Building_Bed)GenClosest.ClosestThingReachable(p1.Position, p1.Map, ThingRequest.ForDef(current), PathEndMode.OnCell, TraverseParms.For(p1, Danger.Deadly, 0, false), 9999f, (Thing x) => true, null, 0, -1, false, RegionType.Set_All, false);
@@ -1632,8 +1588,7 @@ namespace RationalRomance_Code {
 			bool result;
 			if (PawnUtility.WillSoonHaveBasicNeed(pSubject)) {
 				result = false;
-			}
-			else {
+			} else {
 				float num = 0f;
 				num += pSubject.relations.SecondaryRomanceChanceFactor(pObject) / 1.5f;
 				num *= Mathf.InverseLerp(-100f, 0f, (float)pSubject.relations.OpinionOf(pObject));
@@ -1643,10 +1598,9 @@ namespace RationalRomance_Code {
 		}
 		public static bool WillPawnTryHookup(Pawn p1) {
 			bool result;
-			if (p1.story.traits.HasTrait(RRRTraitDefOf.Asexual)) {
+			if (p1.story.traits.HasTrait(TraitDefOf.Asexual)) {
 				result = false;
-			}
-			else {
+			} else {
 				Pawn pawn = LovePartnerRelationUtility.ExistingMostLikedLovePartner(p1, false);
 				if (pawn != null) {
 					float num = (float)p1.relations.OpinionOf(pawn);
@@ -1654,12 +1608,10 @@ namespace RationalRomance_Code {
 					if (p1.story.traits.HasTrait(RRRTraitDefOf.Philanderer)) {
 						if (p1.Map == pawn.Map) {
 							num2 = Mathf.InverseLerp(70f, 15f, num);
-						}
-						else {
+						} else {
 							num2 = Mathf.InverseLerp(100f, 50f, num);
 						}
-					}
-					else {
+					} else {
 						num2 = Mathf.InverseLerp(30f, -80f, num);
 					}
 					if (p1.story.traits.HasTrait(RRRTraitDefOf.Faithful)) {
@@ -1667,8 +1619,7 @@ namespace RationalRomance_Code {
 					}
 					num2 /= 2f;
 					result = (Rand.Range(0f, 1f) < num2);
-				}
-				else {
+				} else {
 					result = true;
 				}
 			}
@@ -1679,25 +1630,19 @@ namespace RationalRomance_Code {
 			if (p.story.adulthood != null) {
 				if (p.story.adulthood.spawnCategories.Contains("Tribal")) {
 					result = "Tribal";
-				}
-				else if (p.story.adulthood.title.Contains("medieval") || p.story.adulthood.baseDesc.IndexOf("Medieval", StringComparison.OrdinalIgnoreCase) >= 0 || p.story.adulthood.baseDesc.IndexOf("Village", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.title.Contains("medieval") || p.story.adulthood.baseDesc.IndexOf("Medieval", StringComparison.OrdinalIgnoreCase) >= 0 || p.story.adulthood.baseDesc.IndexOf("Village", StringComparison.OrdinalIgnoreCase) >= 0) {
 					result = "Medieval";
-				}
-				else if (p.story.adulthood.title.Contains("glitterworld") || p.story.adulthood.baseDesc.IndexOf("Glitterworld", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.title.Contains("glitterworld") || p.story.adulthood.baseDesc.IndexOf("Glitterworld", StringComparison.OrdinalIgnoreCase) >= 0) {
 					if (p.story.adulthood.title != "adventurer") {
 						result = "Glitterworld";
 					}
-				}
-				else if (p.story.adulthood.title.Contains("urbworld") || p.story.adulthood.title.Contains("vatgrown") || p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0 || p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.title.Contains("urbworld") || p.story.adulthood.title.Contains("vatgrown") || p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0 || p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0) {
 					result = "Urbworld";
-				}
-				else if (p.story.adulthood.title.Contains("midworld") || p.story.adulthood.baseDesc.IndexOf("Midworld", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.title.Contains("midworld") || p.story.adulthood.baseDesc.IndexOf("Midworld", StringComparison.OrdinalIgnoreCase) >= 0) {
 					result = "Midworld";
-				}
-				else if (p.story.adulthood.baseDesc.IndexOf("Tribe", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.baseDesc.IndexOf("Tribe", StringComparison.OrdinalIgnoreCase) >= 0) {
 					result = "Tribal";
-				}
-				else if (p.story.adulthood.title.Contains("imperial") || p.story.adulthood.baseDesc.IndexOf("Imperial", StringComparison.OrdinalIgnoreCase) >= 0) {
+				} else if (p.story.adulthood.title.Contains("imperial") || p.story.adulthood.baseDesc.IndexOf("Imperial", StringComparison.OrdinalIgnoreCase) >= 0) {
 					result = "Imperial";
 				}
 			}
