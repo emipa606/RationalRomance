@@ -1,0 +1,113 @@
+<Patch>
+
+	<!-- Affair -->
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThoughtDef[defName = "Affair"]/stages/li[1]/baseOpinionOffset</xpath>
+		<value>
+			<baseOpinionOffset>-30</baseOpinionOffset>
+		</value>
+	</Operation>
+	
+	<!-- Disfigured -->
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThoughtDef[defName = "Disfigured"]/stages/li[1]/baseOpinionOffset</xpath>
+		<value>
+			<baseOpinionOffset>3</baseOpinionOffset>
+		</value>
+	</Operation>
+	
+	<!-- Ugly -->
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[1]/baseOpinionOffset</xpath>
+		<value>
+			<baseOpinionOffset>-15</baseOpinionOffset>
+		</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[2]/baseOpinionOffset</xpath>
+		<value>
+			<baseOpinionOffset>-30</baseOpinionOffset>
+		</value>
+	</Operation>
+
+	<!-- AnnoyingVoice -->
+
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThoughtDef[defName = "AnnoyingVoice"]/stages/li[1]/baseOpinionOffset</xpath>
+		<value>
+			<baseOpinionOffset>-20</baseOpinionOffset>
+		</value>
+	</Operation>
+	
+	
+	<!-- Polyamorus patches -->
+	 <Operation Class="PatchOperationSequence">
+        <success>Always</success>
+        <operations>
+            <li Class="PatchOperationTest">
+              <xpath>*/ThoughtDef[defName="CheatedOnMe"]/nullifyingTraits</xpath>
+            </li>
+            <li Class="PatchOperationAdd">
+                <xpath>*/ThoughtDef[defName="CheatedOnMe"]/nullifyingTraits</xpath>
+                <value>
+                    <li>Polyamorous</li>
+                </value>
+            </li>
+        </operations>
+    </Operation>
+    
+    <Operation Class="PatchOperationSequence">
+        <success>Always</success>
+        <operations>
+            <li Class="PatchOperationTest">
+              <xpath>*/ThoughtDef[defName="Affair"]/nullifyingTraits</xpath>
+            </li>
+            <li Class="PatchOperationAdd">
+                <xpath>*/ThoughtDef[defName="Affair"]/nullifyingTraits</xpath>
+                <value>
+                    <li>Polyamorous</li>
+                </value>
+            </li>
+        </operations>
+    </Operation>
+    
+    <Operation Class="PatchOperationSequence">
+        <success>Always</success>
+        <operations>
+            <li Class="PatchOperationTest">
+              <xpath>*/ThoughtDef[defName="CheatedOnMe"]/nullifyingTraits</xpath>
+              <success>Invert</success>
+            </li>
+            <li Class="PatchOperationAdd">
+                <xpath>*/ThoughtDef[defName="CheatedOnMe"]</xpath>
+                <value>
+                    <nullifyingTraits>
+                        <li>Polyamorous</li>
+                    </nullifyingTraits>
+                </value>
+            </li>
+        </operations>
+    </Operation>
+	
+	<Operation Class="PatchOperationSequence">
+        <success>Always</success>
+        <operations>
+            <li Class="PatchOperationTest">
+              <xpath>*/ThoughtDef[defName="Affair"]/nullifyingTraits</xpath>
+              <success>Invert</success>
+            </li>
+            <li Class="PatchOperationAdd">
+                <xpath>*/ThoughtDef[defName="Affair"]</xpath>
+                <value>
+                    <nullifyingTraits>
+                        <li>Polyamorous</li>
+                    </nullifyingTraits>
+                </value>
+            </li>
+        </operations>
+    </Operation>
+	
+</Patch>
