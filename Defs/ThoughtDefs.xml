@@ -1,78 +1,72 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-
-	<ThoughtDef>
-		<defName>FeelingHarassed</defName>
-		<durationDays>1</durationDays>
-		<stackLimit>10</stackLimit>
-		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-		<stages>
-			<li>
-				<label>I can't get a moment's peace!</label>
-				<description>Can I just go a day without having to turn someone down?</description>
-				<baseMoodEffect>-1</baseMoodEffect>
-			</li>
-		</stages>
-	</ThoughtDef>
-
-	<ThoughtDef>
-		<defName>RebuffedMyHookupAttempt</defName>
-		<thoughtClass>Thought_MemorySocial</thoughtClass>
-		<durationDays>5.0</durationDays>
-		<stackLimit>300</stackLimit>
-		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-		<stages>
-			<li>
-				<label>rebuffed me</label>
-				<baseOpinionOffset>-5</baseOpinionOffset>
-			</li>
-		</stages>
-		<thoughtToMake>RebuffedMyHookupAttemptMood</thoughtToMake>
-	</ThoughtDef>
-
-	<ThoughtDef>
-		<defName>RebuffedMyHookupAttemptMood</defName>
-		<durationDays>2.5</durationDays>
-		<stackLimit>1</stackLimit>
-		<stackedEffectMultiplier>0.9</stackedEffectMultiplier>
-		<stages>
-			<li>
-				<label>rebuffed by {0}</label>
-				<description>What, am I not pretty enough for a tumble??</description>
-				<baseMoodEffect>-1</baseMoodEffect>
-			</li>
-		</stages>
-	</ThoughtDef>
-
-	<ThoughtDef>
-		<defName>FailedHookupAttemptOnMe</defName>
-		<thoughtClass>Thought_MemorySocial</thoughtClass>
-		<durationDays>5.0</durationDays>
-		<stackLimit>300</stackLimit>
-		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-		<stages>
-			<li>
-				<label>failed to hook up with me</label>
-				<baseOpinionOffset>-3</baseOpinionOffset>
-			</li>
-		</stages>
-	</ThoughtDef>
-
-	<ThoughtDef>
-		<defName>Polyamorous</defName>
-		<workerClass>RationalRomance_Code.ThoughtWorker_Polyamorous</workerClass>
-		<requiredTraits>
-			<li>Polyamorous</li>
-		</requiredTraits>
-		<stages>
-			<li>
-				<label>in a monogamous relationship</label>
-				<description>I wish my love wasn't limited to just one person.</description>
-				<baseMoodEffect>-1</baseMoodEffect>
-			</li>
-		</stages>
-	</ThoughtDef>	
-	
+  <ThoughtDef>
+    <defName>FeelingHarassed</defName>
+    <durationDays>1</durationDays>
+    <stackLimit>10</stackLimit>
+    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>I can't get a moment's peace!</label>
+        <description>Can I just go a day without having to turn someone down?</description>
+        <baseMoodEffect>-1</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RebuffedMyHookupAttempt</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>5.0</durationDays>
+    <stackLimit>300</stackLimit>
+    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>rebuffed me</label>
+        <baseOpinionOffset>-5</baseOpinionOffset>
+      </li>
+    </stages>
+    <thoughtToMake>RebuffedMyHookupAttemptMood</thoughtToMake>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>RebuffedMyHookupAttemptMood</defName>
+    <durationDays>2.5</durationDays>
+    <stackLimit>1</stackLimit>
+    <stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>rebuffed by {0}</label>
+        <description>What, am I not pretty enough for a tumble??</description>
+        <baseMoodEffect>-1</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>FailedHookupAttemptOnMe</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>5.0</durationDays>
+    <stackLimit>300</stackLimit>
+    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>failed to hook up with me</label>
+        <baseOpinionOffset>-3</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>Polyamorous</defName>
+    <workerClass>RationalRomance_Code.ThoughtWorker_Polyamorous</workerClass>
+    <requiredTraits>
+      <li>Polyamorous</li>
+    </requiredTraits>
+    <stages>
+      <li>
+        <label>in a monogamous relationship</label>
+        <description>I wish my love wasn't limited to just one person.</description>
+        <baseMoodEffect>-1</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
 </Defs>

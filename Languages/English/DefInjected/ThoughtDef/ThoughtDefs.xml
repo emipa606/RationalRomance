@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <FeelingHarassed.stages.0.label>I can't get a moment's peace!</FeelingHarassed.stages.0.label>
+  <FeelingHarassed.stages.0.description>Can I just go a day without having to turn someone down?</FeelingHarassed.stages.0.description>
+
+  <RebuffedMyHookupAttempt.stages.0.label>rebuffed me</RebuffedMyHookupAttempt.stages.0.label>
+
+  <RebuffedMyHookupAttemptMood.stages.0.label>rebuffed by {0}</RebuffedMyHookupAttemptMood.stages.0.label>
+  <RebuffedMyHookupAttemptMood.stages.0.description>What, am I not pretty enough for a tumble??</RebuffedMyHookupAttemptMood.stages.0.description>
+
+  <FailedHookupAttemptOnMe.stages.0.label>failed to hook up with me</FailedHookupAttemptOnMe.stages.0.label>
+
+  <Polyamorous.stages.0.label>in a monogamous relationship</Polyamorous.stages.0.label>
+  <Polyamorous.stages.0.description>I wish my love wasn't limited to just one person.</Polyamorous.stages.0.description>
+
+
+</LanguageData>

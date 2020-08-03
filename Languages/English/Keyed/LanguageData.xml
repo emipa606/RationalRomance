@@ -1,22 +1,16 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <RRR.RationalRomance>Rainbeau's Rational Romance</RRR.RationalRomance>
+  <RRR.Overview>Each pawn in the game will be either straight, bisexual, gay, or asexual. The sliders below allow you to determine the relative commonality of each of those orientations. Obviously, the total must, and will always, be 100%. (If a pawn has a 60% chance of being bisexual, after all, he or she can't also have a 70% chance of being straight!)</RRR.Overview>
+  <RRR.StraightChance>Chance of a Pawn Being Straight (Romantically Interested Only in Opposite-Gender Partners):</RRR.StraightChance>
+  <RRR.BisexualChance>Chance of a Pawn Being Bisexual (Romantically Interested in Partners of Either Gender):</RRR.BisexualChance>
+  <RRR.GayChance>Chance of a Pawn Being Gay (Romantically Interested Only in Same-Gender Partners):</RRR.GayChance>
+  <RRR.AsexualChance>Chance of a Pawn Being Asexual (Uninterested in Any Romantic Entanglements):</RRR.AsexualChance>
+  <RRR.PolyamoryChance>Chance of a Pawn Being Polyamorous:</RRR.PolyamoryChance>
+  <RRR.PolyamoryChanceTip>This slider determines how likely pawns are to have the Polyamorous trait. (Polyamorous, like the orientation traits, is an "extra" trait, and won't actually interfere with normal trait assignment. It's set to 0% by default, as the polyamory system isn't fully tested, and even if it all works as intended, it may introduce unexpected complications to colony management.</RRR.PolyamoryChanceTip>
+  <RRR.AlienLoveChance>Modifier for Cross-Species Romance:</RRR.AlienLoveChance>
+  <RRR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</RRR.AlienLoveChanceTip>
+  <RRR.DateRate>Base Rate at Which Pawns Will Propose Dates:</RRR.DateRate>
+  <RRR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</RRR.HookupRate>
 
-	<RRR.RationalRomance>Rainbeau's Rational Romance</RRR.RationalRomance>
-
-	<RRR.Overview>Each pawn in the game will be either straight, bisexual, gay, or asexual. The sliders below allow you to determine the relative commonality of each of those orientations. Obviously, the total must, and will always, be 100%. (If a pawn has a 60% chance of being bisexual, after all, he or she can't also have a 70% chance of being straight!)</RRR.Overview>
-	
-	<RRR.StraightChance>Chance of a Pawn Being Straight (Romantically Interested Only in Opposite-Gender Partners):</RRR.StraightChance>
-	<RRR.BisexualChance>Chance of a Pawn Being Bisexual (Romantically Interested in Partners of Either Gender):</RRR.BisexualChance>
-	<RRR.GayChance>Chance of a Pawn Being Gay (Romantically Interested Only in Same-Gender Partners):</RRR.GayChance>
-	<RRR.AsexualChance>Chance of a Pawn Being Asexual (Uninterested in Any Romantic Entanglements):</RRR.AsexualChance>
-
-	<RRR.PolyamoryChance>Chance of a Pawn Being Polyamorous:</RRR.PolyamoryChance>
-	<RRR.PolyamoryChanceTip>This slider determines how likely pawns are to have the Polyamorous trait. (Polyamorous, like the orientation traits, is an "extra" trait, and won't actually interfere with normal trait assignment. It's set to 0% by default, as the polyamory system isn't fully tested, and even if it all works as intended, it may introduce unexpected complications to colony management.</RRR.PolyamoryChanceTip>
-	
-	<RRR.AlienLoveChance>Modifier for Cross-Species Romance:</RRR.AlienLoveChance>
-	<RRR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</RRR.AlienLoveChanceTip>
-	
-	<RRR.DateRate>Base Rate at Which Pawns Will Propose Dates:</RRR.DateRate>
-	<RRR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</RRR.HookupRate>
-	
 </LanguageData>
