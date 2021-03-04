@@ -29,7 +29,7 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\..\Assemblies\</OutputPath>
+    <OutputPath>..\..\1.2\Assemblies\</OutputPath>
     <DebugSymbols>True</DebugSymbols>
     <DebugType>None</DebugType>
     <Optimize>False</Optimize>
@@ -53,34 +53,49 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Lib.Harmony.2.0.0.8\lib\net472\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="Krafs.Rimworld.Ref">
+      <Version>1.2.2900</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>2.0.4</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyClass.cs" />
+    <Compile Include="CharacterCardUtility_DrawCharacterCard.cs" />
+    <Compile Include="ChildRelationUtility_ChanceOfBecomingChildOf.cs" />
+    <Compile Include="ExtraTraits.cs" />
+    <Compile Include="InteractionWorker_Breakup_RandomSelectionWeight.cs" />
+    <Compile Include="InteractionWorker_MarriageProposal_AcceptanceChance.cs" />
+    <Compile Include="InteractionWorker_MarriageProposal_RandomSelectionWeight.cs" />
+    <Compile Include="InteractionWorker_NullWorker.cs" />
+    <Compile Include="InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations.cs" />
+    <Compile Include="InteractionWorker_RomanceAttempt_RandomSelectionWeight.cs" />
+    <Compile Include="InteractionWorker_RomanceAttempt_SuccessChance.cs" />
+    <Compile Include="JobDriver_DoLovinCasual.cs" />
+    <Compile Include="JobDriver_JobDateFollow.cs" />
+    <Compile Include="JobDriver_JobDateLead.cs" />
+    <Compile Include="JobDriver_LeadHookup.cs" />
+    <Compile Include="JobDriver_ProposeDate.cs" />
+    <Compile Include="JoyGiver_CasualHookup.cs" />
+    <Compile Include="JoyGiver_Date.cs" />
+    <Compile Include="LovePartnerRelationUtility_ChangeSpouseRelationsToExSpouse.cs" />
+    <Compile Include="LovePartnerRelationUtility_LovePartnerRelationGenerationChance.cs" />
+    <Compile Include="RRRJobDefOf.cs" />
+    <Compile Include="PawnGenerator_GenerateTraits.cs" />
+    <Compile Include="Pawn_RelationsTracker_SecondaryLovinChanceFactor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="RationalRomance.cs" />
+    <Compile Include="RRRMiscDefOf.cs" />
+    <Compile Include="RRRThoughtDefOf.cs" />
+    <Compile Include="RRRTraitDefOf.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SexualityUtilities.cs" />
+    <Compile Include="ThoughtWorker_Polyamorous.cs" />
+    <Compile Include="ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInternal.cs" />
+    <Compile Include="Thought_WantToSleepWithSpouseOrLoverRRR.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

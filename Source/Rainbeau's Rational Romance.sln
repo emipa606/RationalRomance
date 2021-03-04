@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 # SharpDevelop 5.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rainbeau's Rational Romance", "Rainbeau's Rational Romance.csproj", "{CFD04186-9B2F-4664-B0D7-9D4B89D0C465}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rainbeau's Rational Romance", "Rainbeau's Rational Romance\Rainbeau's Rational Romance.csproj", "{CFD04186-9B2F-4664-B0D7-9D4B89D0C465}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
