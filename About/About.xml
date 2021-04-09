@@ -19,12 +19,15 @@
   </modDependencies>
   <loadAfter>
     <li>brrainz.harmony</li>
+    <li>syrchalis.traitvalue</li>
   </loadAfter>
   <description>[img]https://i.imgur.com/WAEzk68.png[/img]
 Update of Rainbeau Flambe mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
-Added patches for Polyamorous-trait, thanks to Meltup!
+- Added patches for Polyamorous-trait, thanks to Meltup!
+- Updated the patches to use the vanilla traits when possible instead of overwriting them
+- Added support for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2451324814][SYR] Trait Value[/url]
 
 [img]https://i.imgur.com/7Gzt3Rg.png[/img]
 
