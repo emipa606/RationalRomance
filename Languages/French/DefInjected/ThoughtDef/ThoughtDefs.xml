@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <FeelingHarassed.stages.0.label>Je ne peux pas avoir un instant de paix!</FeelingHarassed.stages.0.label>
+  <FeelingHarassed.stages.0.description>Puis-je juste passer une journée sans avoir à envoyer bouler quelqu'un?</FeelingHarassed.stages.0.description>
+  <RebuffedMyHookupAttempt.stages.0.label>m'a repoussé</RebuffedMyHookupAttempt.stages.0.label>
+  <RebuffedMyHookupAttemptMood.stages.0.label>repoussé par {0}</RebuffedMyHookupAttemptMood.stages.0.label>
+  <RebuffedMyHookupAttemptMood.stages.0.description>Quoi, je ne suis pas assez jolie ??</RebuffedMyHookupAttemptMood.stages.0.description>
+  <FailedHookupAttemptOnMe.stages.0.label>a échoué à trouver un coup d'un soir</FailedHookupAttemptOnMe.stages.0.label>
+  <Polyamorous.stages.0.label>dans une relation monogame</Polyamorous.stages.0.label>
+  <Polyamorous.stages.0.description>J'aimerais que mon amour ne se limite pas à une seule personne.</Polyamorous.stages.0.description>
+</LanguageData>

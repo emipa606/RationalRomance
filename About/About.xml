@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <name>[RF] Rational Romance (Continued)</name>
   <packageId>Mlie.RationalRomance</packageId>
@@ -48,7 +48,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 (1) Adds Orientations. All pawns will now have a trait indicating their sexual orientation, either asexual, bisexual, gay or straight. (Don't worry; the mod doesn't "waste" a trait slot on this, as orientation traits are assigned only *after* regular trait assignment is complete.)
 
-[i]By default, pawns have a 50% chance to be bisexual, a 20% chance to be gay, a 20% chance to be straight, and a 10% chance to be asexual. I set the percentages this way because biological, sociological and historical evidence strongly suggest that, in the absence of cultural imperatives to the contrary, bisexuality is actually the "default" status for most humans. However, the percentages are all configurable in the mod's "options" menu, so you can set things up however you prefer for your own games. If you're radically heterosexist and don't want any gays in your colony, go right ahead and set the mod to make pawns 100% straight. On the other hand, if you want *all* your colonists to be queer, more power to you! And if you just want to play on a planet full of asexuals, where nobody worries about romantic entanglements at all, well, you can do that, too.
+[i]By default, pawns have a 50% chance to be bisexual, a 20% chance to be gay, a 20% chance to be straight, and a 10% chance to be asexual. I set the percentages this way because biological, sociological and historical evidence strongly suggest that, in the absence of cultural imperatives to the contrary, bisexuality is actually the "default" status for most humans. However, the percentages are all configurable in the mod's "options" menu, so you can set things up however you prefer for your own games.
 
 (And yes, I'm aware that I'm using certain terms rather loosely. "Bisexual" isn't the only or even necessarily the best term to describe someone whose romantic interests are not governed by gender or gender presentation, but it's a convenient and widely familiar term that fits the mod's needs. Similarly, while I know that not all asexual individuals are aromantic, the game draws no distinction between romantic and sexual relationships, and so the use of the term "asexual," though not strictly accurate, is convenient. On a related note, sadly, there's really nothing I can do to correct the fact that the game forces pawns to conform to the idea of a gender binary.)[/i]
 
@@ -60,7 +60,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 (5) Makes Culture Matter. There is now a cultural component to pawns' romantic interactions, with female pawns from tribal and imperial backgrounds more forward (more likely to initiate romantic encounters or to propose marriage) than males from those cultures, and male pawns from medieval and urbworld backgrounds more forward than females from those cultures.
 
-(6) Adds Support for Polyamory. Polyamorous pawns prefer relationships involving multiple partners to simple monogamous relationships. You can decide in the mod's "options" menu how likely pawns are to be polyamorous. Like the orientation traits, Polyamorous is an "extra" trait assigned after normal trait assignment is complete, so allowing pawns to be polyamorous won't in any way limit their access to other traits. The default chance for polyamory is 0%, as the system isn't yet fully tested, and even if it all works as intended, it may still complicate colony management in unexpected ways. If you do want to include polyamorous pawns in your games, I strongly encourage you to also use Meltup's "Polyamory Beds" mod, which will allow you to more easily accommodate your pawns' desired sleeping arrangements.
+(6) Adds Support for Polyamory. Polyamorous pawns prefer relationships involving multiple partners to simple monogamous relationships. You can decide in the mod's "options" menu how likely pawns are to be polyamorous. Like the orientation traits, Polyamorous is an "extra" trait assigned after normal trait assignment is complete, so allowing pawns to be polyamorous won't in any way limit their access to other traits. The default chance for polyamory is 0%, as the system isn't yet fully tested, and even if it all works as intended, it may still complicate colony management in unexpected ways.
 
 (7) Adjusts Romance-Related Mood Penalties. Penalties and/or stack limits for rebuffs and other romantic failures have been reduced. You should no longer see pawns hitting on someone a few times, getting rejected, and then going on a murder spree as a result.
 
@@ -86,10 +86,9 @@ Some of the code related to polyamory is borrowed from Linq/Word-Mule's "Psychol
 
 If you're a modpack maker and want to include "Rational Romance" in your pack, or if you're a modder and want to use it as the basis of a derivative mod, please feel free to do so. I ask only that you let me know about it. 
 
-[h1][i]The Ludeon forums discussion thread for my mods can be found [url=https://ludeon.com/forums/index.php?topic=46165]here[/url].
+[i]The Ludeon forums discussion thread for my mods can be found [url=https://ludeon.com/forums/index.php?topic=46165]here[/url].[/i]
 
 If you have any (helpful) suggestions for improvement, please let me know!
-
 [img]https://i.imgur.com/Rs6T6cr.png[/img]
 [list]
 [*] See if the the error persists if you just have this mod and its requirements active.
@@ -101,4 +100,3 @@ If you have any (helpful) suggestions for improvement, please let me know!
 [/list]
 </description>
 </ModMetaData>
-
