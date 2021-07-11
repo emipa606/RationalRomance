@@ -88,7 +88,7 @@ namespace RationalRomance_Code
             TryItOn.initAction = delegate
             {
                 ticksLeftThisToil = 50;
-                MoteMaker.ThrowMetaIcon(actor.Position, actor.Map, ThingDefOf.Mote_Heart);
+                FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
             };
             yield return TryItOn;
 
@@ -101,12 +101,12 @@ namespace RationalRomance_Code
                     successfulPass = DoesTargetPawnAcceptAdvance();
                     if (successfulPass)
                     {
-                        MoteMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, ThingDefOf.Mote_Heart);
+                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
                         list.Add(RRRMiscDefOf.HookupSucceeded);
                     }
                     else
                     {
-                        MoteMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, ThingDefOf.Mote_IncapIcon);
+                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
                         actor.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
                             TargetPawn);
                         TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.FailedHookupAttemptOnMe,

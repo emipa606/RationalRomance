@@ -189,7 +189,7 @@ namespace RationalRomance_Code
             AskOut.initAction = delegate
             {
                 ticksLeftThisToil = 50;
-                MoteMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, ThingDefOf.Mote_Heart);
+                FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, FleckDefOf.Heart);
             };
             yield return AskOut;
             var AwaitResponse = new Toil
@@ -198,8 +198,8 @@ namespace RationalRomance_Code
                 initAction = delegate
                 {
                     successfulPass = IsTargetPawnFreeForDate();
-                    MoteMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map,
-                        successfulPass ? ThingDefOf.Mote_Heart : ThingDefOf.Mote_IncapIcon);
+                    FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map,
+                        successfulPass ? FleckDefOf.Heart : FleckDefOf.IncapIcon);
                 }
             };
             AwaitResponse.AddFailCondition(() => !successfulPass);

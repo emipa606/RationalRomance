@@ -1,101 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{CFD04186-9B2F-4664-B0D7-9D4B89D0C465}</ProjectGuid>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Rainbeau_s_Rational_Romance</RootNamespace>
-    <AssemblyName>Rainbeau%27s Rational Romance</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <TargetFrameworkProfile />
-    <NoWin32Manifest>False</NoWin32Manifest>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <NoStdLib>False</NoStdLib>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <WarningLevel>4</WarningLevel>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\Darryl\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <BaseAddress>4194304</BaseAddress>
-    <RegisterForComInterop>False</RegisterForComInterop>
-    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\..\1.2\Assemblies\</OutputPath>
-    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\1.3\Assemblies</OutputPath>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
-    <Optimize>False</Optimize>
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>False</DebugSymbols>
-    <DebugType>None</DebugType>
-    <Optimize>True</Optimize>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <Prefer32Bit>false</Prefer32Bit>
-    <OutputPath>..\..\1.2\Assemblies\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.2.2900</Version>
+       <Version>*</Version> 
+      <!--<Version>1.3.3056-beta</Version>-->
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
-      <Version>2.0.4</Version>
+      <Version>*</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CharacterCardUtility_DrawCharacterCard.cs" />
-    <Compile Include="ChildRelationUtility_ChanceOfBecomingChildOf.cs" />
-    <Compile Include="ExtraTraits.cs" />
-    <Compile Include="InteractionWorker_Breakup_RandomSelectionWeight.cs" />
-    <Compile Include="InteractionWorker_MarriageProposal_AcceptanceChance.cs" />
-    <Compile Include="InteractionWorker_MarriageProposal_RandomSelectionWeight.cs" />
-    <Compile Include="InteractionWorker_NullWorker.cs" />
-    <Compile Include="InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations.cs" />
-    <Compile Include="InteractionWorker_RomanceAttempt_RandomSelectionWeight.cs" />
-    <Compile Include="InteractionWorker_RomanceAttempt_SuccessChance.cs" />
-    <Compile Include="JobDriver_DoLovinCasual.cs" />
-    <Compile Include="JobDriver_JobDateFollow.cs" />
-    <Compile Include="JobDriver_JobDateLead.cs" />
-    <Compile Include="JobDriver_LeadHookup.cs" />
-    <Compile Include="JobDriver_ProposeDate.cs" />
-    <Compile Include="JoyGiver_CasualHookup.cs" />
-    <Compile Include="JoyGiver_Date.cs" />
-    <Compile Include="LovePartnerRelationUtility_ChangeSpouseRelationsToExSpouse.cs" />
-    <Compile Include="LovePartnerRelationUtility_LovePartnerRelationGenerationChance.cs" />
-    <Compile Include="RRRJobDefOf.cs" />
-    <Compile Include="PawnGenerator_GenerateTraits.cs" />
-    <Compile Include="Pawn_RelationsTracker_SecondaryLovinChanceFactor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RationalRomance.cs" />
-    <Compile Include="RRRMiscDefOf.cs" />
-    <Compile Include="RRRThoughtDefOf.cs" />
-    <Compile Include="RRRTraitDefOf.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SexualityUtilities.cs" />
-    <Compile Include="ThoughtWorker_Polyamorous.cs" />
-    <Compile Include="ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInternal.cs" />
-    <Compile Include="Thought_WantToSleepWithSpouseOrLoverRRR.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- 1.3.3056-beta -->
 </Project>

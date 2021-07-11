@@ -27,8 +27,8 @@ namespace RationalRomance_Code
                 return false;
             }
 
-            var spouse = recipient.GetSpouse();
-            var pawn = initiator.GetSpouse();
+            var spouse = recipient.GetFirstSpouse();
+            var pawn = initiator.GetFirstSpouse();
             if (spouse != null && !spouse.Dead || pawn != null && !pawn.Dead)
             {
                 __result = 0f;

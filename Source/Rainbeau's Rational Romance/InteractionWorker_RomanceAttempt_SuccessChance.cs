@@ -50,9 +50,9 @@ namespace RationalRomance_Code
                         single1 = 0f;
                     }
                 }
-                else if (recipient.GetSpouse() != null && !recipient.GetSpouse().Dead)
+                else if (recipient.GetFirstSpouse() != null && !recipient.GetFirstSpouse().Dead)
                 {
-                    firstDirectRelationPawn = recipient.GetSpouse();
+                    firstDirectRelationPawn = recipient.GetFirstSpouse();
                     single1 = 0.3f;
                     if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful))
                     {

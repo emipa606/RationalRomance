@@ -50,8 +50,8 @@ namespace RationalRomance_Code
             var melanin = GetMelanin(child, childGenerationRequest);
             var nullable = GetMelanin(father, fatherGenerationRequest);
             var melanin1 = GetMelanin(mother, motherGenerationRequest);
-            var flag = father != null && child.GetFather() != father;
-            var skinColorFactor = GetSkinColorFactor(melanin, nullable, melanin1, flag,
+            var skinColorFactor = GetSkinColorFactor(melanin, nullable, melanin1,
+                father != null && child.GetFather() != father,
                 mother != null && child.GetMother() != mother);
             if (skinColorFactor <= 0f)
             {

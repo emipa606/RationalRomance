@@ -115,7 +115,7 @@ namespace RationalRomance_Code
                 {
                     if (ticksLeftThisToil % 100 == 0)
                     {
-                        MoteMaker.ThrowMetaIcon(actor.Position, actor.Map, ThingDefOf.Mote_Heart);
+                        FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
                     }
 
                     if (ticksLeftThisToil % 100 == 0)
