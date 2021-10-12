@@ -32,8 +32,8 @@ namespace RationalRomance_Code
                 single1 = 0.4f;
             }
             var single2 = 1f;
-            HediffWithTarget psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove, false);
-            if(psylove != null && psylove.target == recipient)
+
+            if(SexualityUtilities.IsPsychicLoveActive(initiator, recipient))
             {
                 single2 = 0.1f;
             }

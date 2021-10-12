@@ -247,5 +247,11 @@ namespace RationalRomance_Code
 
             return result;
         }
+
+        public static bool IsPsychicLoveActive(Pawn initiator, Pawn recipient)
+        {
+            HediffWithTarget psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove, false);
+            return (psylove != null && psylove.target == recipient);
+        }
     }
 }
