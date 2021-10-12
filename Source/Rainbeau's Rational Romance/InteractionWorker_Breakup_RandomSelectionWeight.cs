@@ -31,8 +31,14 @@ namespace RationalRomance_Code
             {
                 single1 = 0.4f;
             }
+            var single2 = 1f;
+            HediffWithTarget psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove, false);
+            if(psylove != null && psylove.target == recipient)
+            {
+                single2 = 0.1f;
+            }
 
-            __result = 0.02f * single * single1;
+            __result = 0.02f * single * single1 * single2;
             if (initiator.gender == recipient.gender && initiator.story.traits.HasTrait(RRRTraitDefOf.Straight))
             {
                 __result *= 2f;
