@@ -27,9 +27,7 @@ namespace RationalRomance_Code
                 return false;
             }
 
-            var spouse = recipient.GetFirstSpouse();
-            var pawn = initiator.GetFirstSpouse();
-            if (spouse != null && !spouse.Dead || pawn != null && !pawn.Dead)
+            if (!SexualityUtilities.HasFreeSpouseCapacity(initiator) || !SexualityUtilities.HasFreeSpouseCapacity(recipient))
             {
                 __result = 0f;
                 return false;
@@ -86,7 +84,8 @@ namespace RationalRomance_Code
                 single *= 0.3f;
             }
 
-            __result = single * genderAggressiveness;
+            var psylove = SexualityUtilities.IsPsychicLoveActive(initiator, recipient) ? 10f : 1f;
+            __result = single * genderAggressiveness * psylove;
             return false;
         }
     }

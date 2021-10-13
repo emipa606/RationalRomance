@@ -253,5 +253,10 @@ namespace RationalRomance_Code
             HediffWithTarget psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove, false);
             return (psylove != null && psylove.target == recipient);
         }
+
+        public static bool HasFreeSpouseCapacity(Pawn pawn)
+        {
+            return IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
+        }
     }
 }
