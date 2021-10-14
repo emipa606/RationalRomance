@@ -82,13 +82,11 @@ namespace RationalRomance_Code
 
             if (p2.ownership.OwnedBed != null)
             {
-                if (p2.ownership.OwnedBed.SleepingSlotsCount <= 1)
+                if (p2.ownership.OwnedBed.SleepingSlotsCount > 1)
                 {
-                    return null;
+                    result = p2.ownership.OwnedBed;
+                    return result;
                 }
-
-                result = p2.ownership.OwnedBed;
-                return result;
             }
 
             foreach (var current in RestUtility.AllBedDefBestToWorst)
