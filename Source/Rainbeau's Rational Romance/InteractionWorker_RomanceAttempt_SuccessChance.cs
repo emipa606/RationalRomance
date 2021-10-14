@@ -24,13 +24,12 @@ namespace RationalRomance_Code
             var single = 0.6f;
             single *= recipient.relations.SecondaryRomanceChanceFactor(initiator);
             single *= Mathf.InverseLerp(5f, 100f, recipient.relations.OpinionOf(initiator));
-            var single1 = 1f;
-            if (recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-                !SexualityUtilities.HasNonPolyPartner(recipient))
+            if (recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) && !SexualityUtilities.HasNonPolyPartner(recipient))
             {
             }
-            else
+            else if (!SexualityUtilities.HasFreeSpouseCapacity(recipient))
             {
+                var single1 = 1f;
                 Pawn firstDirectRelationPawn = null;
                 if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover, x => !x.Dead) != null)
                 {
@@ -50,9 +49,10 @@ namespace RationalRomance_Code
                         single1 = 0f;
                     }
                 }
-                else if (recipient.GetFirstSpouse() != null && !recipient.GetFirstSpouse().Dead)
+                else if (recipient.GetSpouseCount(false) > 0)
                 {
-                    firstDirectRelationPawn = recipient.GetFirstSpouse();
+                    // This is a change from vanilla that checks for MostLikedSpouseRelation, but least liked seems better.
+                    firstDirectRelationPawn = recipient.GetLeastLikedSpouseRelation().otherPawn;
                     single1 = 0.3f;
                     if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful))
                     {
@@ -72,13 +72,13 @@ namespace RationalRomance_Code
                         }
                     }
 
-                    single1 *= Mathf.Clamp01(1f -
-                                             recipient.relations.SecondaryRomanceChanceFactor(firstDirectRelationPawn));
+                    single1 *= Mathf.Clamp01(1f - recipient.relations.SecondaryRomanceChanceFactor(firstDirectRelationPawn));
                 }
-            }
 
-            single *= single1;
+                single *= single1;
+            }
             __result = Mathf.Clamp01(single);
+
             if (initiator.gender == recipient.gender && recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
             {
                 __result *= 0.6f;
