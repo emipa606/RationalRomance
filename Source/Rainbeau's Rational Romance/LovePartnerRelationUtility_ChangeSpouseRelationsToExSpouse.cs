@@ -13,12 +13,10 @@ namespace RationalRomance_Code
         {
             if (pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
             {
-                var spouses = from p in pawn.relations.RelatedPawns
-                    where pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, p)
-                    select p;
+                var spouses = pawn.GetSpouses(true);
                 foreach (var spousePawn in spouses)
                 {
-                    if (!spousePawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
+                    if (spousePawn.Dead || !(spousePawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) || SexualityUtilities.HasFreeSpouseCapacity(pawn)))
                     {
                         pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, spousePawn);
                         pawn.relations.AddDirectRelation(PawnRelationDefOf.ExSpouse, spousePawn);
