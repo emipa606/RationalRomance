@@ -17,7 +17,8 @@ namespace RationalRomance_Code
             int num = 100;
             while ( num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
             {
-                var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn, (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover);
+                var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
+                    (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
                 if (leastLikedLover != null)
                 {
                     pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, leastLikedLover);
@@ -30,7 +31,8 @@ namespace RationalRomance_Code
                 }
                 else
                 {
-                    var leastLikedFiance = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn, (DirectPawnRelation r) => r.def == PawnRelationDefOf.Fiance);
+                    var leastLikedFiance = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
+                        (DirectPawnRelation r) => r.def == PawnRelationDefOf.Fiance && !r.otherPawn.Dead);
                     if (leastLikedFiance == null)
                     {
                         break;
