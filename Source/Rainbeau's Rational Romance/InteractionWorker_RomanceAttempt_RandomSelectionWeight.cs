@@ -45,28 +45,6 @@ namespace RationalRomance_Code
                 return false;
             }
 
-            var initiator_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-            if (initiator_partner != null && initiator.relations.OpinionOf(initiator_partner) >= 33)
-            {
-                if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-                    !initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-
-            var recipient_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
-            if (recipient_partner != null && recipient.relations.OpinionOf(recipient_partner) >= 33)
-            {
-                if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-                    !recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-
             var romanceChance = initiator.relations.SecondaryRomanceChanceFactor(recipient);
             if (romanceChance < 0.25f)
             {
@@ -87,9 +65,31 @@ namespace RationalRomance_Code
                 return false;
             }
 
+            var initiator_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
+            if (initiator_partner != null && initiator.relations.OpinionOf(initiator_partner) >= 33 && !SexualityUtilities.HasFreeSpouseCapacity(initiator))
+            {
+                if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+                    !initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
+                {
+                    __result = 0f;
+                    return false;
+                }
+            }
+
+            var recipient_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
+            if (recipient_partner != null && recipient.relations.OpinionOf(recipient_partner) >= 33 && !SexualityUtilities.HasFreeSpouseCapacity(recipient))
+            {
+                if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+                    !recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
+                {
+                    __result = 0f;
+                    return false;
+                }
+            }
+
             var cheatChance = 1f;
             var pawn = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-            if (pawn != null)
+            if (pawn != null && !SexualityUtilities.HasFreeSpouseCapacity(initiator))
             {
                 float opinionOfPartner = initiator.relations.OpinionOf(pawn);
                 if (initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
