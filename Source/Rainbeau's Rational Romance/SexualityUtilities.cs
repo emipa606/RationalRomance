@@ -10,6 +10,111 @@ namespace RationalRomance_Code
 {
     public static class SexualityUtilities
     {
+        public static bool IsFree(Pawn pawnToCheck)
+        {
+            if (PawnUtility.WillSoonHaveBasicNeed(pawnToCheck))
+            {
+                return false;
+            }
+
+            if (PawnUtility.EnemiesAreNearby(pawnToCheck))
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob == null)
+            {
+                return true;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.LayDown)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.BeatFire)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.Arrest)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.Capture)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.EscortPrisonerToBed)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.ExtinguishSelf)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.FleeAndCower)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.MarryAdjacentPawn)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.PrisonerExecution)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.ReleasePrisoner)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.Rescue)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.SocialFight)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.SpectateCeremony)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.TakeToBedToOperate)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.TakeWoundedPrisonerToBed)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.UseCommsConsole)
+            {
+                return false;
+            }
+
+            if (pawnToCheck.CurJob.def == JobDefOf.Vomit)
+            {
+                return false;
+            }
+
+            return pawnToCheck.CurJob.def != JobDefOf.Wait_Downed;
+        }
+
         public static Pawn FindAttractivePawn(Pawn p1)
         {
             Pawn result;
@@ -24,7 +129,7 @@ namespace RationalRomance_Code
                     where (p.story.traits.HasTrait(TraitDefOf.Asexual) || !p.RaceProps.Humanlike ||
                            p.story.traits.HasTrait(TraitDefOf.Gay) && p.gender != p1.gender ||
                            p.story.traits.HasTrait(RRRTraitDefOf.Straight) && p.gender == p1.gender) &&
-                          (double) Rand.Value < 0.8
+                          Rand.Value < 0.8
                     select p);
                 enumerable = from p in enumerable
                     where p.Map == p1.Map && p.Faction == p1.Faction
@@ -98,7 +203,7 @@ namespace RationalRomance_Code
                     continue;
                 }
 
-                var building_Bed = (Building_Bed) GenClosest.ClosestThingReachable(p1.Position, p1.Map,
+                var building_Bed = (Building_Bed)GenClosest.ClosestThingReachable(p1.Position, p1.Map,
                     ThingRequest.ForDef(current), PathEndMode.OnCell, TraverseParms.For(p1), 9999f, x => true);
                 if (building_Bed == null)
                 {

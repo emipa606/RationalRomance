@@ -29,20 +29,7 @@ namespace RationalRomance_Code
 
         private bool DoesTargetPawnAcceptAdvance()
         {
-            return !PawnUtility.WillSoonHaveBasicNeed(TargetPawn) && !PawnUtility.EnemiesAreNearby(TargetPawn) &&
-                   TargetPawn.CurJob.def != JobDefOf.LayDown && TargetPawn.CurJob.def != JobDefOf.BeatFire &&
-                   TargetPawn.CurJob.def != JobDefOf.Arrest && TargetPawn.CurJob.def != JobDefOf.Capture &&
-                   TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && TargetPawn.CurJob.def != JobDefOf.FleeAndCower &&
-                   TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn &&
-                   TargetPawn.CurJob.def != JobDefOf.PrisonerExecution &&
-                   TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && TargetPawn.CurJob.def != JobDefOf.Rescue &&
-                   TargetPawn.CurJob.def != JobDefOf.SocialFight &&
-                   TargetPawn.CurJob.def != JobDefOf.SpectateCeremony &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && TargetPawn.CurJob.def != JobDefOf.Vomit &&
-                   TargetPawn.CurJob.def != JobDefOf.Wait_Downed && SexualityUtilities.WillPawnTryHookup(TargetPawn) &&
+            return SexualityUtilities.IsFree(TargetPawn) && SexualityUtilities.WillPawnTryHookup(TargetPawn) &&
                    SexualityUtilities.IsHookupAppealing(TargetPawn, actor);
         }
 
@@ -51,28 +38,10 @@ namespace RationalRomance_Code
             return !TargetPawn.Dead && !TargetPawn.Downed;
         }
 
-        private bool IsTargetPawnFreeForHookup()
-        {
-            return !PawnUtility.WillSoonHaveBasicNeed(TargetPawn) && !PawnUtility.EnemiesAreNearby(TargetPawn) &&
-                   TargetPawn.CurJob.def != JobDefOf.LayDown && TargetPawn.CurJob.def != JobDefOf.BeatFire &&
-                   TargetPawn.CurJob.def != JobDefOf.Arrest && TargetPawn.CurJob.def != JobDefOf.Capture &&
-                   TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && TargetPawn.CurJob.def != JobDefOf.FleeAndCower &&
-                   TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn &&
-                   TargetPawn.CurJob.def != JobDefOf.PrisonerExecution &&
-                   TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && TargetPawn.CurJob.def != JobDefOf.Rescue &&
-                   TargetPawn.CurJob.def != JobDefOf.SocialFight &&
-                   TargetPawn.CurJob.def != JobDefOf.SpectateCeremony &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && TargetPawn.CurJob.def != JobDefOf.Vomit &&
-                   TargetPawn.CurJob.def != JobDefOf.Wait_Downed;
-        }
-
         [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            if (!IsTargetPawnFreeForHookup())
+            if (!SexualityUtilities.IsFree(TargetPawn))
             {
                 yield break;
             }
@@ -107,9 +76,10 @@ namespace RationalRomance_Code
                     else
                     {
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
-                        actor.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
+                        actor.needs?.mood?.thoughts?.memories?.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
                             TargetPawn);
-                        TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RRRThoughtDefOf.FailedHookupAttemptOnMe,
+                        TargetPawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
+                            RRRThoughtDefOf.FailedHookupAttemptOnMe,
                             actor);
                         list.Add(RRRMiscDefOf.HookupFailed);
                     }
