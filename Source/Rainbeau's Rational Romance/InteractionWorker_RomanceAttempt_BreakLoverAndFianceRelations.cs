@@ -41,7 +41,7 @@ namespace RationalRomance_Code
                     if (leastLikedFiance.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
                         pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
                     {
-                        polyPartners.Add((leastLikedLover, PawnRelationDefOf.Fiance));
+                        polyPartners.Add((leastLikedFiance, PawnRelationDefOf.Fiance));
                     }
 
                     pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, leastLikedFiance);
