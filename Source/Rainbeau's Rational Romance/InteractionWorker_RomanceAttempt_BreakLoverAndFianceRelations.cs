@@ -53,6 +53,7 @@ namespace RationalRomance_Code
             foreach((Pawn, PawnRelationDef) p in polyPartners){
                 pawn.relations.RemoveDirectRelation(PawnRelationDefOf.ExLover, p.Item1);
                 pawn.relations.AddDirectRelation(p.Item2, p.Item1);
+                oldLoversAndFiances.Remove(p.Item1);
             }
 
             return false;
