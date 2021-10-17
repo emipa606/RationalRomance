@@ -27,30 +27,12 @@ namespace RationalRomance_Code
             return true;
         }
 
-        private bool IsTargetPawnFreeForDate()
-        {
-            return !PawnUtility.WillSoonHaveBasicNeed(TargetPawn) && !PawnUtility.EnemiesAreNearby(TargetPawn) &&
-                   TargetPawn.CurJob.def != JobDefOf.LayDown && TargetPawn.CurJob.def != JobDefOf.BeatFire &&
-                   TargetPawn.CurJob.def != JobDefOf.Arrest && TargetPawn.CurJob.def != JobDefOf.Capture &&
-                   TargetPawn.CurJob.def != JobDefOf.EscortPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.ExtinguishSelf && TargetPawn.CurJob.def != JobDefOf.FleeAndCower &&
-                   TargetPawn.CurJob.def != JobDefOf.MarryAdjacentPawn &&
-                   TargetPawn.CurJob.def != JobDefOf.PrisonerExecution &&
-                   TargetPawn.CurJob.def != JobDefOf.ReleasePrisoner && TargetPawn.CurJob.def != JobDefOf.Rescue &&
-                   TargetPawn.CurJob.def != JobDefOf.SocialFight &&
-                   TargetPawn.CurJob.def != JobDefOf.SpectateCeremony &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeToBedToOperate &&
-                   TargetPawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed &&
-                   TargetPawn.CurJob.def != JobDefOf.UseCommsConsole && TargetPawn.CurJob.def != JobDefOf.Vomit &&
-                   TargetPawn.CurJob.def != JobDefOf.Wait_Downed;
-        }
-
         private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
         {
             var StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             var EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             var RadialIndexStride = 3;
-            var intVec3s = new List<IntVec3> {root};
+            var intVec3s = new List<IntVec3> { root };
             var intVec3 = root;
             for (var i = 0; i < 8; i++)
             {
@@ -177,7 +159,7 @@ namespace RationalRomance_Code
         [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            if (!IsTargetPawnFreeForDate())
+            if (!SexualityUtilities.IsFree(TargetPawn))
             {
                 yield break;
             }
@@ -197,7 +179,7 @@ namespace RationalRomance_Code
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
                 {
-                    successfulPass = IsTargetPawnFreeForDate();
+                    successfulPass = SexualityUtilities.IsFree(TargetPawn);
                     FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map,
                         successfulPass ? FleckDefOf.Heart : FleckDefOf.IncapIcon);
                 }

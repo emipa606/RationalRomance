@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.0.11.0 - Generalized the free-check as it was duplicated and also added some nullchecks that hopefully will fix some reported error.
+
+
 1.0.10.0 - Mod updated for 1.3 and passed autotests
 
 
