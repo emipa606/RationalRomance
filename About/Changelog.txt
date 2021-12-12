@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.0.12.0 - Polyamorous pawns with polyamorous fiances should no longer break the game when getting hit on by other pawns
+
+
 1.0.11.0 - Generalized the free-check as it was duplicated and also added some nullchecks that hopefully will fix some reported error.
 
 
