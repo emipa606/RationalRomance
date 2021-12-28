@@ -24,7 +24,8 @@ namespace RationalRomance_Code
                     pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, leastLikedLover);
                     pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, leastLikedLover);
                     oldLoversAndFiances.Add(leastLikedLover);
-                    if (!leastLikedLover.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) || !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
+                    if (leastLikedLover.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+                       pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
                     {
                         polyPartners.Add((leastLikedLover, PawnRelationDefOf.Lover));
                     }
