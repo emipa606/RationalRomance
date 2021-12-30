@@ -15,7 +15,7 @@ namespace RationalRomance_Code
             oldLoversAndFiances = new List<Pawn>();
             var polyPartners = new List<(Pawn, PawnRelationDef)>();
             int num = 100;
-            while ( num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
+            while (num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
             {
                 var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
                     (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
@@ -51,7 +51,8 @@ namespace RationalRomance_Code
                 }
                 num--;
             }
-            foreach((Pawn, PawnRelationDef) p in polyPartners){
+            foreach ((Pawn, PawnRelationDef) p in polyPartners)
+            {
                 pawn.relations.RemoveDirectRelation(PawnRelationDefOf.ExLover, p.Item1);
                 pawn.relations.AddDirectRelation(p.Item2, p.Item1);
                 oldLoversAndFiances.Remove(p.Item1);
