@@ -4,116 +4,115 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace RationalRomance_Code
+namespace RationalRomance_Code;
+
+public class JobDriver_LeadHookup : JobDriver
 {
-    public class JobDriver_LeadHookup : JobDriver
+    public bool successfulPass = true;
+
+    public bool wasSuccessfulPass => successfulPass;
+
+    private Pawn actor => GetActor();
+
+    private Pawn TargetPawn => TargetThingA as Pawn;
+
+    private Building_Bed TargetBed => TargetThingB as Building_Bed;
+
+    private TargetIndex TargetPawnIndex => TargetIndex.A;
+
+    private TargetIndex TargetBedIndex => TargetIndex.B;
+
+    public override bool TryMakePreToilReservations(bool errorOnFailed)
     {
-        public bool successfulPass = true;
+        return true;
+    }
 
-        public bool wasSuccessfulPass => successfulPass;
+    private bool DoesTargetPawnAcceptAdvance()
+    {
+        return SexualityUtilities.IsFree(TargetPawn) && SexualityUtilities.WillPawnTryHookup(TargetPawn) &&
+               SexualityUtilities.IsHookupAppealing(TargetPawn, actor);
+    }
 
-        private Pawn actor => GetActor();
+    private bool IsTargetPawnOkay()
+    {
+        return !TargetPawn.Dead && !TargetPawn.Downed;
+    }
 
-        private Pawn TargetPawn => TargetThingA as Pawn;
-
-        private Building_Bed TargetBed => TargetThingB as Building_Bed;
-
-        private TargetIndex TargetPawnIndex => TargetIndex.A;
-
-        private TargetIndex TargetBedIndex => TargetIndex.B;
-
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
+    [DebuggerHidden]
+    protected override IEnumerable<Toil> MakeNewToils()
+    {
+        if (!SexualityUtilities.IsFree(TargetPawn))
         {
-            return true;
+            yield break;
         }
 
-        private bool DoesTargetPawnAcceptAdvance()
-        {
-            return SexualityUtilities.IsFree(TargetPawn) && SexualityUtilities.WillPawnTryHookup(TargetPawn) &&
-                   SexualityUtilities.IsHookupAppealing(TargetPawn, actor);
-        }
+        // walk to target pawn
+        yield return Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
 
-        private bool IsTargetPawnOkay()
+        var TryItOn = new Toil();
+        // make sure target is feeling ok
+        TryItOn.AddFailCondition(() => !IsTargetPawnOkay());
+        TryItOn.defaultCompleteMode = ToilCompleteMode.Delay;
+        // show heart between pawns
+        TryItOn.initAction = delegate
         {
-            return !TargetPawn.Dead && !TargetPawn.Downed;
-        }
+            ticksLeftThisToil = 50;
+            FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
+        };
+        yield return TryItOn;
 
-        [DebuggerHidden]
-        protected override IEnumerable<Toil> MakeNewToils()
+        var AwaitResponse = new Toil
         {
-            if (!SexualityUtilities.IsFree(TargetPawn))
+            defaultCompleteMode = ToilCompleteMode.Instant,
+            initAction = delegate
             {
-                yield break;
+                var list = new List<RulePackDef>();
+                successfulPass = DoesTargetPawnAcceptAdvance();
+                if (successfulPass)
+                {
+                    FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
+                    list.Add(RRRMiscDefOf.HookupSucceeded);
+                }
+                else
+                {
+                    FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
+                    actor.needs?.mood?.thoughts?.memories?.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
+                        TargetPawn);
+                    TargetPawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
+                        RRRThoughtDefOf.FailedHookupAttemptOnMe,
+                        actor);
+                    list.Add(RRRMiscDefOf.HookupFailed);
+                }
+
+                // add "tried hookup with" to the log
+                Find.PlayLog.Add(new PlayLogEntry_Interaction(RRRMiscDefOf.TriedHookupWith, pawn, TargetPawn,
+                    list));
             }
+        };
+        AwaitResponse.AddFailCondition(() => !wasSuccessfulPass);
+        yield return AwaitResponse;
 
-            // walk to target pawn
-            yield return Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
-
-            var TryItOn = new Toil();
-            // make sure target is feeling ok
-            TryItOn.AddFailCondition(() => !IsTargetPawnOkay());
-            TryItOn.defaultCompleteMode = ToilCompleteMode.Delay;
-            // show heart between pawns
-            TryItOn.initAction = delegate
-            {
-                ticksLeftThisToil = 50;
-                FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
-            };
-            yield return TryItOn;
-
-            var AwaitResponse = new Toil
+        if (wasSuccessfulPass)
+        {
+            yield return new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
                 {
-                    var list = new List<RulePackDef>();
-                    successfulPass = DoesTargetPawnAcceptAdvance();
-                    if (successfulPass)
+                    if (!wasSuccessfulPass)
                     {
-                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
-                        list.Add(RRRMiscDefOf.HookupSucceeded);
-                    }
-                    else
-                    {
-                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
-                        actor.needs?.mood?.thoughts?.memories?.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
-                            TargetPawn);
-                        TargetPawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
-                            RRRThoughtDefOf.FailedHookupAttemptOnMe,
-                            actor);
-                        list.Add(RRRMiscDefOf.HookupFailed);
+                        return;
                     }
 
-                    // add "tried hookup with" to the log
-                    Find.PlayLog.Add(new PlayLogEntry_Interaction(RRRMiscDefOf.TriedHookupWith, pawn, TargetPawn,
-                        list));
+                    actor.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, TargetPawn,
+                        TargetBed, TargetBed.GetSleepingSlotPos(0)));
+                    TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, actor,
+                        TargetBed, TargetBed.GetSleepingSlotPos(1)));
+                    // important for 1.1 that the hookup leader ends their job last. best guess is that it's related to the new garbage collection
+                    TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 }
             };
-            AwaitResponse.AddFailCondition(() => !wasSuccessfulPass);
-            yield return AwaitResponse;
-
-            if (wasSuccessfulPass)
-            {
-                yield return new Toil
-                {
-                    defaultCompleteMode = ToilCompleteMode.Instant,
-                    initAction = delegate
-                    {
-                        if (!wasSuccessfulPass)
-                        {
-                            return;
-                        }
-
-                        actor.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, TargetPawn,
-                            TargetBed, TargetBed.GetSleepingSlotPos(0)));
-                        TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, actor,
-                            TargetBed, TargetBed.GetSleepingSlotPos(1)));
-                        // important for 1.1 that the hookup leader ends their job last. best guess is that it's related to the new garbage collection
-                        TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                        actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                    }
-                };
-            }
         }
     }
 }

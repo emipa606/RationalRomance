@@ -2,53 +2,52 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace RationalRomance_Code
-{
-    public class JoyGiver_CasualHookup : JoyGiver
-    {
-        public static float percentRate = RationalRomance.Settings.hookupRate / 2;
+namespace RationalRomance_Code;
 
-        public override Job TryGiveJob(Pawn pawn)
+public class JoyGiver_CasualHookup : JoyGiver
+{
+    public static float percentRate = RationalRomance.Settings.hookupRate / 2;
+
+    public override Job TryGiveJob(Pawn pawn)
+    {
+        Job result;
+        if (!InteractionUtility.CanInitiateInteraction(pawn))
         {
-            Job result;
-            if (!InteractionUtility.CanInitiateInteraction(pawn))
-            {
-                result = null;
-            }
-            else if (!SexualityUtilities.WillPawnTryHookup(pawn))
-            {
-                result = null;
-            }
-            else if (PawnUtility.WillSoonHaveBasicNeed(pawn))
+            result = null;
+        }
+        else if (!SexualityUtilities.WillPawnTryHookup(pawn))
+        {
+            result = null;
+        }
+        else if (PawnUtility.WillSoonHaveBasicNeed(pawn))
+        {
+            result = null;
+        }
+        else
+        {
+            var pawn2 = SexualityUtilities.FindAttractivePawn(pawn);
+            if (pawn2 == null)
             {
                 result = null;
             }
             else
             {
-                var pawn2 = SexualityUtilities.FindAttractivePawn(pawn);
-                if (pawn2 == null)
+                var bed = SexualityUtilities.FindHookupBed(pawn, pawn2);
+                if (bed == null)
+                {
+                    result = null;
+                }
+                else if (100f * Rand.Value > percentRate)
                 {
                     result = null;
                 }
                 else
                 {
-                    var bed = SexualityUtilities.FindHookupBed(pawn, pawn2);
-                    if (bed == null)
-                    {
-                        result = null;
-                    }
-                    else if (100f * Rand.Value > percentRate)
-                    {
-                        result = null;
-                    }
-                    else
-                    {
-                        result = new Job(def.jobDef, pawn2, bed);
-                    }
+                    result = new Job(def.jobDef, pawn2, bed);
                 }
             }
-
-            return result;
         }
+
+        return result;
     }
 }

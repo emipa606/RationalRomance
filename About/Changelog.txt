@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.3.1 - Polyamorous pawns should now do casual lovin with random partners, not just the first in the relation-list. Thanks Value客服
+
+
 1.0.12.0 - Polyamorous pawns with polyamorous fiances should no longer break the game when getting hit on by other pawns
 
 
