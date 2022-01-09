@@ -9,38 +9,53 @@ namespace RationalRomance_Code;
 public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations
 {
     // CHANGE: Allowed for polyamory.
+    // 1.3 change to allow multipartner precepts.
     public static bool Prefix(Pawn pawn, ref List<Pawn> oldLoversAndFiances)
     {
         oldLoversAndFiances = new List<Pawn>();
-        while (true)
+        var polyPartners = new List<(Pawn, PawnRelationDef)>();
+        int num = 100;
+        while (num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
         {
-            var firstDirectRelationPawn = pawn.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover);
-            if (firstDirectRelationPawn != null &&
-                (!firstDirectRelationPawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) ||
-                 !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous)))
+            var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
+                (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
+            if (leastLikedLover != null)
             {
-                pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, firstDirectRelationPawn);
-                pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, firstDirectRelationPawn);
-                oldLoversAndFiances.Add(firstDirectRelationPawn);
+                pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, leastLikedLover);
+                pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, leastLikedLover);
+                oldLoversAndFiances.Add(leastLikedLover);
+                if (leastLikedLover.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+                    pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
+                {
+                    polyPartners.Add((leastLikedLover, PawnRelationDefOf.Lover));
+                }
             }
             else
             {
-                var firstDirectRelationPawn1 = pawn.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance);
-                if (firstDirectRelationPawn1 == null)
+                var leastLikedFiance = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
+                    (DirectPawnRelation r) => r.def == PawnRelationDefOf.Fiance && !r.otherPawn.Dead);
+                if (leastLikedFiance == null)
                 {
                     break;
                 }
 
-                if (firstDirectRelationPawn1.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+                if (leastLikedFiance.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
                     pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
                 {
-                    break;
+                    polyPartners.Add((leastLikedFiance, PawnRelationDefOf.Fiance));
                 }
 
-                pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, firstDirectRelationPawn1);
-                pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, firstDirectRelationPawn1);
-                oldLoversAndFiances.Add(firstDirectRelationPawn1);
+                pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, leastLikedFiance);
+                pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, leastLikedFiance);
+                oldLoversAndFiances.Add(leastLikedFiance);
             }
+            num--;
+        }
+        foreach ((Pawn, PawnRelationDef) p in polyPartners)
+        {
+            pawn.relations.RemoveDirectRelation(PawnRelationDefOf.ExLover, p.Item1);
+            pawn.relations.AddDirectRelation(p.Item2, p.Item1);
+            oldLoversAndFiances.Remove(p.Item1);
         }
 
         return false;

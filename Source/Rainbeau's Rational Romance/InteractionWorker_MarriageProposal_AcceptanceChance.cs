@@ -1,6 +1,5 @@
 using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace RationalRomance_Code;
@@ -37,9 +36,6 @@ public static class InteractionWorker_MarriageProposal_AcceptanceChance
             return false;
         }
 
-        var single = 0.9f;
-        single *= Mathf.Clamp01(GenMath.LerpDouble(-20f, 60f, 0f, 1f, recipient.relations.OpinionOf(initiator)));
-        __result = Mathf.Clamp01(single);
-        return false;
+        return true;
     }
 }

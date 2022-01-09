@@ -31,8 +31,14 @@ public static class InteractionWorker_Breakup_RandomSelectionWeight
         {
             single1 = 0.4f;
         }
+        var single2 = 1f;
 
-        __result = 0.02f * single * single1;
+        if(SexualityUtilities.IsPsychicLoveActive(initiator, recipient))
+        {
+            single2 = 0.1f;
+        }
+
+        __result = 0.02f * single * single1 * single2;
         if (initiator.gender == recipient.gender && initiator.story.traits.HasTrait(RRRTraitDefOf.Straight))
         {
             __result *= 2f;
