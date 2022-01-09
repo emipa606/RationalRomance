@@ -31,9 +31,10 @@ public static class InteractionWorker_Breakup_RandomSelectionWeight
         {
             single1 = 0.4f;
         }
+
         var single2 = 1f;
 
-        if(SexualityUtilities.IsPsychicLoveActive(initiator, recipient))
+        if (SexualityUtilities.IsPsychicLoveActive(initiator, recipient))
         {
             single2 = 0.1f;
         }

@@ -9,6 +9,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 - Updated the patches to use the vanilla traits when possible instead of overwriting them
 - Added support for https://steamcommunity.com/sharedfiles/filedetails/?id=2451324814][SYR] Trait Value
 - Added french translation, thanks qux!
+- Better support for polyamorous pawns, thanks Value客服!
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 

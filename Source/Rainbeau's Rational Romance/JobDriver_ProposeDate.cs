@@ -138,7 +138,7 @@ public class JobDriver_ProposeDate : JobDriver
         if (list.Count == 0)
         {
             result = false;
-            Log.Message("No date walk destination found.");
+            //Log.Message("No date walk destination found.");
         }
         else
         {
@@ -147,9 +147,9 @@ public class JobDriver_ProposeDate : JobDriver
                 select c).ToList();
             best = list2.FirstOrDefault();
             list2.Reverse();
-            Log.Message("Date walk destinations found from beauty " +
-                        BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
-                        BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
+            //Log.Message("Date walk destinations found from beauty " +
+            //            BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
+            //            BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
             result = true;
         }
 
@@ -199,30 +199,28 @@ public class JobDriver_ProposeDate : JobDriver
                         return;
                     }
 
-                    if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out var list))
+                    if (!TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out var list))
                     {
-                        Log.Message("Date walk path found.");
-                        jobDateLead.targetQueueB = new List<LocalTargetInfo>();
-                        for (var i = 1; i < list.Count; i++)
-                        {
-                            jobDateLead.targetQueueB.Add(list[i]);
-                        }
+                        return;
+                    }
 
-                        jobDateLead.locomotionUrgency = LocomotionUrgency.Amble;
-                        jobDateLead.targetA = TargetPawn;
-                        actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
-                        var job2 = new Job(RRRJobDefOf.JobDateFollow)
-                        {
-                            locomotionUrgency = LocomotionUrgency.Amble, targetA = actor
-                        };
-                        TargetPawn.jobs.jobQueue.EnqueueFirst(job2);
-                        TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                        actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                    }
-                    else
+                    //Log.Message("Date walk path found.");
+                    jobDateLead.targetQueueB = new List<LocalTargetInfo>();
+                    for (var i = 1; i < list.Count; i++)
                     {
-                        Log.Message("No date walk path found.");
+                        jobDateLead.targetQueueB.Add(list[i]);
                     }
+
+                    jobDateLead.locomotionUrgency = LocomotionUrgency.Amble;
+                    jobDateLead.targetA = TargetPawn;
+                    actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
+                    var job2 = new Job(RRRJobDefOf.JobDateFollow)
+                    {
+                        locomotionUrgency = LocomotionUrgency.Amble, targetA = actor
+                    };
+                    TargetPawn.jobs.jobQueue.EnqueueFirst(job2);
+                    TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 }
             };
         }

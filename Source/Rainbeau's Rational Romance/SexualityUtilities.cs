@@ -125,12 +125,12 @@ public static class SexualityUtilities
         else
         {
             IEnumerable<Pawn> enumerable = p1.Map.mapPawns.FreeColonistsSpawned;
-            enumerable = enumerable.Except(from p in enumerable 
-                            where (p.story.traits.HasTrait(TraitDefOf.Asexual) || !p.RaceProps.Humanlike ||
-                            p.story.traits.HasTrait(TraitDefOf.Gay) && p.gender != p1.gender ||
-                            p.story.traits.HasTrait(RRRTraitDefOf.Straight) && p.gender == p1.gender) &&
-                            Rand.Value < 0.8
-                            select p);
+            enumerable = enumerable.Except(from p in enumerable
+                where (p.story.traits.HasTrait(TraitDefOf.Asexual) || !p.RaceProps.Humanlike ||
+                       p.story.traits.HasTrait(TraitDefOf.Gay) && p.gender != p1.gender ||
+                       p.story.traits.HasTrait(RRRTraitDefOf.Straight) && p.gender == p1.gender) &&
+                      Rand.Value < 0.8
+                select p);
             enumerable = from p in enumerable
                 where p.Map == p1.Map && p.Faction == p1.Faction
                 select p;
@@ -183,14 +183,12 @@ public static class SexualityUtilities
             return result;
         }
 
-        if (p2.ownership.OwnedBed != null)
+        if (p2.ownership.OwnedBed is { SleepingSlotsCount: > 1 })
         {
-            if (p2.ownership.OwnedBed.SleepingSlotsCount > 1)
-            {
-                result = p2.ownership.OwnedBed;
-                return result;
-            }
+            result = p2.ownership.OwnedBed;
+            return result;
         }
+
         if (p2.ownership.OwnedBed != null)
         {
             if (p2.ownership.OwnedBed.SleepingSlotsCount <= 1)
@@ -361,8 +359,8 @@ public static class SexualityUtilities
 
     public static bool IsPsychicLoveActive(Pawn initiator, Pawn recipient)
     {
-        HediffWithTarget psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove, false);
-        return (psylove != null && psylove.target == recipient);
+        var psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove);
+        return psylove != null && psylove.target == recipient;
     }
 
     public static bool HasFreeSpouseCapacity(Pawn pawn)

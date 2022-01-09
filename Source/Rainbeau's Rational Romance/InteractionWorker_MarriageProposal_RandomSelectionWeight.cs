@@ -27,7 +27,8 @@ public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
             return false;
         }
 
-        if (!SexualityUtilities.HasFreeSpouseCapacity(initiator) || !SexualityUtilities.HasFreeSpouseCapacity(recipient))
+        if (!SexualityUtilities.HasFreeSpouseCapacity(initiator) ||
+            !SexualityUtilities.HasFreeSpouseCapacity(recipient))
         {
             __result = 0f;
             return false;

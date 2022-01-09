@@ -14,11 +14,11 @@ public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelation
     {
         oldLoversAndFiances = new List<Pawn>();
         var polyPartners = new List<(Pawn, PawnRelationDef)>();
-        int num = 100;
+        var num = 100;
         while (num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
         {
             var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
-                (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
+                r => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
             if (leastLikedLover != null)
             {
                 pawn.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, leastLikedLover);
@@ -33,7 +33,7 @@ public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelation
             else
             {
                 var leastLikedFiance = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
-                    (DirectPawnRelation r) => r.def == PawnRelationDefOf.Fiance && !r.otherPawn.Dead);
+                    r => r.def == PawnRelationDefOf.Fiance && !r.otherPawn.Dead);
                 if (leastLikedFiance == null)
                 {
                     break;
@@ -49,9 +49,11 @@ public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelation
                 pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, leastLikedFiance);
                 oldLoversAndFiances.Add(leastLikedFiance);
             }
+
             num--;
         }
-        foreach ((Pawn, PawnRelationDef) p in polyPartners)
+
+        foreach (var p in polyPartners)
         {
             pawn.relations.RemoveDirectRelation(PawnRelationDefOf.ExLover, p.Item1);
             pawn.relations.AddDirectRelation(p.Item2, p.Item1);
