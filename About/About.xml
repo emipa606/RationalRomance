@@ -31,6 +31,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 - Added support for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2451324814][SYR] Trait Value[/url]
 - Added french translation, thanks qux!
 - Better support for polyamorous pawns, thanks Value客服!
+- Better support for Royalty and Ideology, thanks onewhostays!
 
 [img]https://i.imgur.com/pufA0kM.png[/img]
 
@@ -38,7 +39,11 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 	[tr]
 		[td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
 		[td][url=https://github.com/emipa606/RationalRomance][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
-	[/tr]
+    [/tr]
+    [tr]
+        [td][img]https://i.imgur.com/WjDSfUn.png[/img][/td]
+        [td][img]https://i.imgur.com/6KqTKks.png[/img][/td]
+    [/tr]
 [/table]
 	
 [img]https://i.imgur.com/Z4GOv8H.png[/img]
@@ -75,7 +80,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 This mod is fully compatible with "EdB Prepare Carefully."
 
-This mod is NOT compatible with "Psychology." You may or may not actually notice any problems if you try to use them together, but the mods both alter some of the same vanilla code, and if they're both installed, neither will be operating entirely as intended. For similar reasons, "Rational Romance" isn't likely to be compatible with any other mods altering RimWorld's romance systems, either.
+This mod is NOT compatible with "Psychology." "Rational Romance" isn't likely to be compatible with any other mods altering RimWorld's romance systems, either.
 
 [h1][b][u]Credits:[/u][/b][/h1]
 
