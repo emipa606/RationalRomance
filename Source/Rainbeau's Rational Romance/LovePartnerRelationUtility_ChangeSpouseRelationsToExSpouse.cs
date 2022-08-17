@@ -19,7 +19,7 @@ public static class LovePartnerRelationUtility_ChangeSpouseRelationsToExSpouse
         foreach (var spousePawn in spouses)
         {
             if (!spousePawn.Dead && (spousePawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) ||
-                                     SexualityUtilities.HasFreeSpouseCapacity(pawn)))
+                                     SexualityUtilities.HasFreeLoverCapacity(pawn)))
             {
                 continue;
             }

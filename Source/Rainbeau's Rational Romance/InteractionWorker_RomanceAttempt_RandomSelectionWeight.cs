@@ -67,7 +67,7 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
 
         var initiator_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
         if (initiator_partner != null && initiator.relations.OpinionOf(initiator_partner) >= 33 &&
-            !SexualityUtilities.HasFreeSpouseCapacity(initiator))
+            !SexualityUtilities.HasFreeLoverCapacity(initiator))
         {
             if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
                 !initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
@@ -79,7 +79,7 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
 
         var recipient_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
         if (recipient_partner != null && recipient.relations.OpinionOf(recipient_partner) >= 33 &&
-            !SexualityUtilities.HasFreeSpouseCapacity(recipient))
+            !SexualityUtilities.HasFreeLoverCapacity(recipient))
         {
             if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
                 !recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
@@ -91,7 +91,7 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
 
         var cheatChance = 1f;
         var pawn = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-        if (pawn != null && !SexualityUtilities.HasFreeSpouseCapacity(initiator))
+        if (pawn != null && !SexualityUtilities.HasFreeLoverCapacity(initiator))
         {
             float opinionOfPartner = initiator.relations.OpinionOf(pawn);
             if (initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
