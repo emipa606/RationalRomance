@@ -363,8 +363,13 @@ public static class SexualityUtilities
         return psylove != null && psylove.target == recipient;
     }
 
-    public static bool HasFreeSpouseCapacity(Pawn pawn)
+    public static bool HasFreeLoverCapacity(Pawn pawn)
     {
         return IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
+    }
+
+    public static bool HasFreeSpouseFianceCapacity(Pawn pawn)
+    {
+        return IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForSpouseAndFianceCountPlusOne(), pawn);
     }
 }

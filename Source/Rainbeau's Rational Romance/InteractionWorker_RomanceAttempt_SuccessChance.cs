@@ -28,7 +28,7 @@ public static class InteractionWorker_RomanceAttempt_SuccessChance
             !SexualityUtilities.HasNonPolyPartner(recipient))
         {
         }
-        else if (!SexualityUtilities.HasFreeSpouseCapacity(recipient))
+        else if (!SexualityUtilities.HasFreeLoverCapacity(recipient))
         {
             var single1 = 1f;
             Pawn firstDirectRelationPawn = null;

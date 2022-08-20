@@ -15,7 +15,7 @@ public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelation
         oldLoversAndFiances = new List<Pawn>();
         var polyPartners = new List<(Pawn, PawnRelationDef)>();
         var num = 100;
-        while (num > 0 && !SexualityUtilities.HasFreeSpouseCapacity(pawn))
+        while (num > 0 && !SexualityUtilities.HasFreeLoverCapacity(pawn))
         {
             var leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn,
                 r => r.def == PawnRelationDefOf.Lover && !r.otherPawn.Dead);
