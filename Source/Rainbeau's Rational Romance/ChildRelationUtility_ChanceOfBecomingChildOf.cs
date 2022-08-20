@@ -111,12 +111,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
 
     private static float? GetMelanin(Pawn pawn, PawnGenerationRequest? request)
     {
-        if (request.HasValue)
-        {
-            return request.Value.FixedMelanin;
-        }
-
-        return pawn?.story.melanin;
+        return request.HasValue ? request.Value.FixedMelanin : pawn?.story.melanin;
     }
 
     private static float GetSkinColorFactor(float? childMelanin, float? fatherMelanin, float? motherMelanin,
@@ -158,12 +153,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
         {
             if (!otherParentMelanin.HasValue)
             {
-                if (!childMelanin.HasValue)
-                {
-                    return 1f;
-                }
-
-                return PawnSkinColors.GetMelaninCommonalityFactor(childMelanin.Value);
+                return !childMelanin.HasValue ? 1f : PawnSkinColors.GetMelaninCommonalityFactor(childMelanin.Value);
             }
 
             if (!childMelanin.HasValue)
@@ -177,12 +167,9 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
 
         if (!otherParentMelanin.HasValue)
         {
-            if (!childMelanin.HasValue)
-            {
-                return PawnSkinColors.GetMelaninCommonalityFactor(newParentMelanin.Value);
-            }
-
-            return ChildRelationUtility.GetMelaninSimilarityFactor(newParentMelanin.Value, childMelanin.Value);
+            return !childMelanin.HasValue
+                ? PawnSkinColors.GetMelaninCommonalityFactor(newParentMelanin.Value)
+                : ChildRelationUtility.GetMelaninSimilarityFactor(newParentMelanin.Value, childMelanin.Value);
         }
 
         if (childMelanin.HasValue)

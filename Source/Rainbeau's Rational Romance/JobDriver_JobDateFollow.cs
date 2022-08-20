@@ -33,13 +33,17 @@ public class JobDriver_JobDateFollow : JobDriver
         // Wait a tick to avoid a 1.1 issue where the date leader now must end their current
         // job after the date follower, causing the date follower to think the leader was no
         // longer leading the date and end this job.
-        var WaitForPartnerJob = new Toil();
-        WaitForPartnerJob.defaultCompleteMode = ToilCompleteMode.Delay;
-        WaitForPartnerJob.initAction = delegate { ticksLeftThisToil = 1; };
+        var WaitForPartnerJob = new Toil
+        {
+            defaultCompleteMode = ToilCompleteMode.Delay,
+            initAction = delegate { ticksLeftThisToil = 1; }
+        };
         yield return WaitForPartnerJob;
 
-        var FollowPartner = new Toil();
-        FollowPartner.defaultCompleteMode = ToilCompleteMode.Delay;
+        var FollowPartner = new Toil
+        {
+            defaultCompleteMode = ToilCompleteMode.Delay
+        };
         FollowPartner.AddFailCondition(() => !Partner.Spawned);
         FollowPartner.AddFailCondition(() => Partner.Dead);
         FollowPartner.AddFailCondition(() => Partner.CurJob.def != RRRJobDefOf.JobDateLead);

@@ -30,12 +30,12 @@ public static class InteractionWorker_MarriageProposal_AcceptanceChance
             return false;
         }
 
-        if (recipient.story.traits.HasTrait(TraitDefOf.Asexual))
+        if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual))
         {
-            __result = 0f;
-            return false;
+            return true;
         }
 
-        return true;
+        __result = 0f;
+        return false;
     }
 }

@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.3.3 - Fixed marriage proposal rates (thanks onewhostays!), removed need for loadfolders-file.
+
+
 1.3.2 - Increased support for Royalty and Ideology, thanks to onewhostays
 
 

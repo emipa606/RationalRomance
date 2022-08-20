@@ -10,6 +10,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 - Added support for https://steamcommunity.com/sharedfiles/filedetails/?id=2451324814][SYR] Trait Value
 - Added french translation, thanks qux!
 - Better support for polyamorous pawns, thanks Value客服!
+- Better support for Royalty and Ideology, thanks onewhostays!
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 
@@ -51,7 +52,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 This mod is fully compatible with "EdB Prepare Carefully."
 
-This mod is NOT compatible with "Psychology." You may or may not actually notice any problems if you try to use them together, but the mods both alter some of the same vanilla code, and if they're both installed, neither will be operating entirely as intended. For similar reasons, "Rational Romance" isn't likely to be compatible with any other mods altering RimWorld's romance systems, either.
+This mod is NOT compatible with "Psychology." "Rational Romance" isn't likely to be compatible with any other mods altering RimWorld's romance systems, either.
 
 # **[u]Credits:[/u]**
 
@@ -80,6 +81,7 @@ If you have any (helpful) suggestions for improvement, please let me know!
 -  For best support, please use the Discord-channel for error-reporting.
 -  Do not report errors by making a discussion-thread, I get no notification of that.
 -  If you have the solution for a problem, please post it to the GitHub repository.
+
 
 
 
