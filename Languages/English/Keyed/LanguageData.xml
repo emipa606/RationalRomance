@@ -12,4 +12,5 @@
   <RRR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</RRR.AlienLoveChanceTip>
   <RRR.DateRate>Base Rate at Which Pawns Will Propose Dates:</RRR.DateRate>
   <RRR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</RRR.HookupRate>
+  <RRR.CurrentModVersion>Installed mod-version: {0}</RRR.CurrentModVersion>
 </LanguageData>

@@ -59,7 +59,7 @@ public class JobDriver_DoLovinCasual : JobDriver
     }
 
     [DebuggerHidden]
-    protected override IEnumerable<Toil> MakeNewToils()
+    public override IEnumerable<Toil> MakeNewToils()
     {
         yield return Toils_Reserve.Reserve(BedInd, 2, 0);
         yield return Toils_Goto.Goto(SlotInd, PathEndMode.OnCell);

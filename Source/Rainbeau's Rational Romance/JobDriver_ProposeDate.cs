@@ -157,7 +157,7 @@ public class JobDriver_ProposeDate : JobDriver
     }
 
     [DebuggerHidden]
-    protected override IEnumerable<Toil> MakeNewToils()
+    public override IEnumerable<Toil> MakeNewToils()
     {
         if (!SexualityUtilities.IsFree(TargetPawn))
         {

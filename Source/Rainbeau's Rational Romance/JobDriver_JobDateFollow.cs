@@ -28,7 +28,7 @@ public class JobDriver_JobDateFollow : JobDriver
     //	return this.actor.Position.InHorDistOf(this.Partner.Position, 2f);
     //}
     [DebuggerHidden]
-    protected override IEnumerable<Toil> MakeNewToils()
+    public override IEnumerable<Toil> MakeNewToils()
     {
         // Wait a tick to avoid a 1.1 issue where the date leader now must end their current
         // job after the date follower, causing the date follower to think the leader was no

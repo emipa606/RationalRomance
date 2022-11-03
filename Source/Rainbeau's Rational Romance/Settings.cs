@@ -66,6 +66,14 @@ public class Settings : ModSettings
         list.Label("RRR.AlienLoveChance".Translate() + "  " + (int)alienLoveChance + "%", -1f,
             "RRR.AlienLoveChanceTip".Translate());
         alienLoveChance = list.Slider(alienLoveChance, 0f, 100.99f);
+        if (RationalRomance.currentVersion != null)
+        {
+            list.Gap();
+            GUI.contentColor = Color.gray;
+            list.Label("RRR.CurrentModVersion".Translate(RationalRomance.currentVersion));
+            GUI.contentColor = Color.white;
+        }
+
         list.End();
     }
 

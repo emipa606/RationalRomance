@@ -94,40 +94,38 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
         }
 
         var targetBeautyMod = 1f;
-        if (targetBeauty == -2)
+        switch (targetBeauty)
         {
-            targetBeautyMod = initiatorBeauty >= 0 ? 0.3f : 0.8f;
-        }
-
-        if (targetBeauty == -1)
-        {
-            targetBeautyMod = initiatorBeauty >= 0 ? 0.75f : 0.9f;
-        }
-
-        if (targetBeauty == 1)
-        {
-            targetBeautyMod = 1.7f;
-        }
-        else if (targetBeauty == 2)
-        {
-            targetBeautyMod = 2.3f;
+            case -2:
+                targetBeautyMod = initiatorBeauty >= 0 ? 0.3f : 0.8f;
+                break;
+            case -1:
+                targetBeautyMod = initiatorBeauty >= 0 ? 0.75f : 0.9f;
+                break;
+            case 1:
+                targetBeautyMod = 1.7f;
+                break;
+            case 2:
+                targetBeautyMod = 2.3f;
+                break;
         }
 
         var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(pawn);
         var ageDiffPref = 1f;
-        if (backgroundCulture == "Urbworld" || backgroundCulture == "Medieval")
+        if (backgroundCulture is "Urbworld" or "Medieval")
         {
-            if (pawn.gender == Gender.Male && otherPawn.gender == Gender.Female)
+            switch (pawn.gender)
             {
-                ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
-            }
-            else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male)
-            {
-                ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
+                case Gender.Male when otherPawn.gender == Gender.Female:
+                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
+                    break;
+                case Gender.Female when otherPawn.gender == Gender.Male:
+                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
+                    break;
             }
         }
 
-        if (backgroundCulture == "Tribal" || backgroundCulture == "Imperial")
+        if (backgroundCulture is "Tribal" or "Imperial")
         {
             if (pawn.gender == Gender.Male && otherPawn.gender == Gender.Female)
             {

@@ -141,25 +141,23 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
 
         float genderAggressiveness;
         var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(initiator);
-        if (backgroundCulture == "Urbworld")
+        switch (backgroundCulture)
         {
-            genderAggressiveness = initiator.gender != Gender.Male ? 0.5f : 1f;
-        }
-        else if (backgroundCulture == "Imperial")
-        {
-            genderAggressiveness = initiator.gender != Gender.Female ? 0.5f : 1f;
-        }
-        else if (backgroundCulture == "Tribal")
-        {
-            genderAggressiveness = initiator.gender != Gender.Female ? 0.125f : 1f;
-        }
-        else if (backgroundCulture == "Medieval")
-        {
-            genderAggressiveness = initiator.gender != Gender.Male ? 0.125f : 1f;
-        }
-        else
-        {
-            genderAggressiveness = 1f;
+            case "Urbworld":
+                genderAggressiveness = initiator.gender != Gender.Male ? 0.5f : 1f;
+                break;
+            case "Imperial":
+                genderAggressiveness = initiator.gender != Gender.Female ? 0.5f : 1f;
+                break;
+            case "Tribal":
+                genderAggressiveness = initiator.gender != Gender.Female ? 0.125f : 1f;
+                break;
+            case "Medieval":
+                genderAggressiveness = initiator.gender != Gender.Male ? 0.125f : 1f;
+                break;
+            default:
+                genderAggressiveness = 1f;
+                break;
         }
 
         var romanceChancePercent = Mathf.InverseLerp(0.25f, 1f, romanceChance);

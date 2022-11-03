@@ -10,7 +10,7 @@ using Verse;
 namespace RationalRomance_Code;
 
 [HarmonyPatch(typeof(CharacterCardUtility), "DrawCharacterCard", typeof(Rect), typeof(Pawn), typeof(Action),
-    typeof(Rect))]
+    typeof(Rect), typeof(bool))]
 internal static class CharacterCardUtility_DrawCharacterCard
 {
     // CHANGE: Allowed more traits to be displayed, if "More Trait Slots" isn't already doing so, anyway.
