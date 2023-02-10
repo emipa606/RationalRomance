@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.4.2 - Fixed githublink in about-file, thanks Slaymeister
+
+
 1.4.1 - Mod updated for 1.4 and passed autotests.
 Used DeepL to update translations for ChineseSimplified, French, German, Russian
 
