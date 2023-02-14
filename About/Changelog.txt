@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.4.3 - Fixed the disfigured patch, thanks ululu
+
+
 1.4.2 - Fixed githublink in about-file, thanks Slaymeister
 
 

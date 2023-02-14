@@ -11,7 +11,7 @@
   <Operation Class="PatchOperationReplace">
     <xpath>Defs/ThoughtDef[defName = "Disfigured"]/stages/li[1]/baseOpinionOffset</xpath>
     <value>
-      <baseOpinionOffset>3</baseOpinionOffset>
+      <baseOpinionOffset>-3</baseOpinionOffset>
     </value>
   </Operation>
   <!-- Ugly -->
