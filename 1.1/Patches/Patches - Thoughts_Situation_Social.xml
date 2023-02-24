@@ -1,38 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Patch>
-  <!-- Affair -->
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/ThoughtDef[defName = "Affair"]/stages/li[1]/baseOpinionOffset</xpath>
-    <value>
-      <baseOpinionOffset>-30</baseOpinionOffset>
-    </value>
-  </Operation>
-  <!-- Disfigured -->
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/ThoughtDef[defName = "Disfigured"]/stages/li[1]/baseOpinionOffset</xpath>
-    <value>
-      <baseOpinionOffset>-3</baseOpinionOffset>
-    </value>
-  </Operation>
-  <!-- Ugly -->
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[1]/baseOpinionOffset</xpath>
-    <value>
-      <baseOpinionOffset>-15</baseOpinionOffset>
-    </value>
-  </Operation>
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[2]/baseOpinionOffset</xpath>
-    <value>
-      <baseOpinionOffset>-30</baseOpinionOffset>
-    </value>
-  </Operation>
-  <!-- AnnoyingVoice -->
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/ThoughtDef[defName = "AnnoyingVoice"]/stages/li[1]/baseOpinionOffset</xpath>
-    <value>
-      <baseOpinionOffset>-20</baseOpinionOffset>
-    </value>
+  <!-- Romance Related adjustments copied from Grim Reality. Skipping if Grim Reality already loaded -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>SF Grim Reality</li>
+    </mods>
+    <!-- Affair -->
+    <nomatch Class="PatchOperationReplace">
+      <xpath>Defs/ThoughtDef[defName = "Affair"]/stages/li[1]/baseOpinionOffset</xpath>
+      <value>
+        <baseOpinionOffset>-30</baseOpinionOffset>
+      </value>
+    </nomatch>
+    <!-- Disfigured -->
+    <nomatch Class="PatchOperationReplace">
+      <xpath>Defs/ThoughtDef[defName = "Disfigured"]/stages/li[1]/baseOpinionOffset</xpath>
+      <value>
+        <baseOpinionOffset>3</baseOpinionOffset>
+      </value>
+    </nomatch>
+    <!-- Ugly -->
+    <nomatch Class="PatchOperationReplace">
+      <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[1]/baseOpinionOffset</xpath>
+      <value>
+        <baseOpinionOffset>-15</baseOpinionOffset>
+      </value>
+    </nomatch>
+    <nomatch Class="PatchOperationReplace">
+      <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[2]/baseOpinionOffset</xpath>
+      <value>
+        <baseOpinionOffset>-30</baseOpinionOffset>
+      </value>
+    </nomatch>
+    <!-- AnnoyingVoice -->
+    <nomatch Class="PatchOperationReplace">
+      <xpath>Defs/ThoughtDef[defName = "AnnoyingVoice"]/stages/li[1]/baseOpinionOffset</xpath>
+      <value>
+        <baseOpinionOffset>-20</baseOpinionOffset>
+      </value>
+    </nomatch>
   </Operation>
   <!-- Polyamorus patches -->
   <Operation Class="PatchOperationSequence">
