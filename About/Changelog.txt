@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.4.4 - Added check for Grim Reality-mod, thank you Slaymeister!
+
+
 1.4.3 - Fixed the disfigured patch, thanks ululu
 
 
