@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.4.5 - Fixed the recent patch for SF Grim Reality
+
+
 1.4.4 - Added check for Grim Reality-mod, thank you Slaymeister!
 
 
