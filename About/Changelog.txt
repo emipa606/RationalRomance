@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.4.6 - Pawns should now check if they are allowed in the area before asking a pawn out on a date
+
+
 1.4.5 - Fixed the recent patch for SF Grim Reality
 
 

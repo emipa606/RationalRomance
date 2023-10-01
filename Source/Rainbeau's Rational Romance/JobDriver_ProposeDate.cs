@@ -117,7 +117,7 @@ public class JobDriver_ProposeDate : JobDriver
 
     private bool IsTargetPawnOkay()
     {
-        return !TargetPawn.Dead && !TargetPawn.Downed;
+        return !TargetPawn.Dead && !TargetPawn.Downed && TargetPawn.Position.InAllowedArea(GetActor());
     }
 
     private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)

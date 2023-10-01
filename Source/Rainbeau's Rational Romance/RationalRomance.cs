@@ -16,7 +16,7 @@ internal class RationalRomance : Mod
         harmony.PatchAll();
         Settings = GetSettings<Settings>();
         currentVersion =
-            VersionFromManifest.GetVersionFromModMetaData(ModLister.GetActiveModWithIdentifier("Mlie.RationalRomance"));
+            VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
     }
 
     public override string SettingsCategory()

@@ -12,6 +12,8 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 - Better support for polyamorous pawns, thanks Value客服!
 - Better support for Royalty and Ideology, thanks onewhostays!
 
+Please use the comments for bug-reports about the mod, not your opinion of it.
+
 ![Image](https://i.imgur.com/pufA0kM.png)
 
 	
@@ -27,9 +29,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 (1) Adds Orientations. All pawns will now have a trait indicating their sexual orientation, either asexual, bisexual, gay or straight. (Don't worry; the mod doesn't "waste" a trait slot on this, as orientation traits are assigned only *after* regular trait assignment is complete.)
 
-*By default, pawns have a 50% chance to be bisexual, a 20% chance to be gay, a 20% chance to be straight, and a 10% chance to be asexual. I set the percentages this way because biological, sociological and historical evidence strongly suggest that, in the absence of cultural imperatives to the contrary, bisexuality is actually the "default" status for most humans. However, the percentages are all configurable in the mod's "options" menu, so you can set things up however you prefer for your own games.
-
-(And yes, I'm aware that I'm using certain terms rather loosely. "Bisexual" isn't the only or even necessarily the best term to describe someone whose romantic interests are not governed by gender or gender presentation, but it's a convenient and widely familiar term that fits the mod's needs. Similarly, while I know that not all asexual individuals are aromantic, the game draws no distinction between romantic and sexual relationships, and so the use of the term "asexual," though not strictly accurate, is convenient. On a related note, sadly, there's really nothing I can do to correct the fact that the game forces pawns to conform to the idea of a gender binary.)*
+*By default, pawns have a 50% chance to be bisexual, a 20% chance to be gay, a 20% chance to be straight, and a 10% chance to be asexual. I set the percentages this way because biological, sociological and historical evidence strongly suggest that, in the absence of cultural imperatives to the contrary, bisexuality is actually the "default" status for most humans. However, the percentages are all configurable in the mod's "options" menu, so you can set things up however you prefer for your own games.*
 
 (2) Adds New Traits. The mod adds two new traits, "Faithful" and "Philanderer," which influence how likely a pawn is to cheat.
 
@@ -49,8 +49,6 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 
 "Rational Romance" can safely be added to a game in progress. (Pawns without orientation traits will be assigned them as they enter into social interactions for which orientation is relevant.) The mod cannot, however, be removed from a game in progress.
-
-This mod is fully compatible with "EdB Prepare Carefully."
 
 This mod is NOT compatible with "Psychology." "Rational Romance" isn't likely to be compatible with any other mods altering RimWorld's romance systems, either.
 
@@ -83,4 +81,6 @@ If you have any (helpful) suggestions for improvement, please let me know!
 -  If you have the solution for a problem, please post it to the GitHub repository.
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2013144996]Last updated 2023-02-25
+
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2013144996]![Image](https://img.shields.io/github/v/release/emipa606/RationalRomance?label=latest%20version&style=plastic&color=9f1111&labelColor=black)
+
