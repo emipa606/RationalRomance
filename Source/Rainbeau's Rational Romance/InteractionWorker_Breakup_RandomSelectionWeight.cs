@@ -5,7 +5,7 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_Breakup), "RandomSelectionWeight", null)]
+[HarmonyPatch(typeof(InteractionWorker_Breakup), nameof(InteractionWorker_Breakup.RandomSelectionWeight), null)]
 public static class InteractionWorker_Breakup_RandomSelectionWeight
 {
     // CHANGE: Pawns are more likely to break up if currently with non-ideal partner.

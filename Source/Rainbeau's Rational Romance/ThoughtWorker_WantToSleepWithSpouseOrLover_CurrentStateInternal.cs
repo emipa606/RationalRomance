@@ -5,7 +5,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(ThoughtWorker_WantToSleepWithSpouseOrLover), "CurrentStateInternal")]
+[HarmonyPatch(typeof(ThoughtWorker_WantToSleepWithSpouseOrLover),
+    nameof(ThoughtWorker_WantToSleepWithSpouseOrLover.CurrentStateInternal))]
 public static class ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInternal
 {
     // CHANGE: Allowed for polyamory.

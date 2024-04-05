@@ -6,12 +6,12 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationGenerationChance", null)]
+[HarmonyPatch(typeof(LovePartnerRelationUtility),
+    nameof(LovePartnerRelationUtility.LovePartnerRelationGenerationChance), null)]
 public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChance
 {
     // CHANGE: Updated with new orientation options.
-    public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, bool ex,
-        ref float __result)
+    public static bool Prefix(Pawn generated, Pawn other, bool ex, ref float __result)
     {
         if (generated.ageTracker.AgeBiologicalYearsFloat < 14f)
         {

@@ -5,14 +5,15 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "BreakLoverAndFianceRelations", null)]
+[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt),
+    nameof(InteractionWorker_RomanceAttempt.BreakLoverAndFianceRelations), null)]
 public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations
 {
     // CHANGE: Allowed for polyamory.
     // 1.3 change to allow multipartner precepts.
     public static bool Prefix(Pawn pawn, ref List<Pawn> oldLoversAndFiances)
     {
-        oldLoversAndFiances = new List<Pawn>();
+        oldLoversAndFiances = [];
         var polyPartners = new List<(Pawn, PawnRelationDef)>();
         var num = 100;
         while (num > 0 && !SexualityUtilities.HasFreeLoverCapacity(pawn))

@@ -4,7 +4,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "AcceptanceChance", null)]
+[HarmonyPatch(typeof(InteractionWorker_MarriageProposal), nameof(InteractionWorker_MarriageProposal.AcceptanceChance),
+    null)]
 public static class InteractionWorker_MarriageProposal_AcceptanceChance
 {
     // CHANGE: Pawns will always reject marriage proposals if proposer is of non-ideal gender.

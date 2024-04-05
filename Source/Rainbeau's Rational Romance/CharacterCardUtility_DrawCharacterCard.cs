@@ -17,7 +17,6 @@ internal static class CharacterCardUtility_DrawCharacterCard
     [HarmonyPriority(Priority.VeryHigh)]
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var SetTextSize = AccessTools.Method(typeof(CharacterCardUtility_DrawCharacterCard), "SetTextSize");
         var l = new List<CodeInstruction>(instructions);
         if (ModsConfig.ActiveModsInLoadOrder.Any(mod => mod.Name.Contains("More Trait Slots")))
         {

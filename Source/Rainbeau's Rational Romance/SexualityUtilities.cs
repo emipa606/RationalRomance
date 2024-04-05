@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -309,52 +308,50 @@ public static class SexualityUtilities
 
     public static string GetAdultCulturalAdjective(Pawn p)
     {
-        var result = "Colonial";
-        if (p.story.adulthood == null)
+        if (p?.story?.Adulthood == null || p.story.Childhood == null)
         {
-            return result;
+            return "Colonial";
         }
 
-        if (p.story.adulthood.spawnCategories.Contains("Tribal"))
+        if (p.story.Adulthood.spawnCategories?.Contains("Tribal") == true ||
+            p.story.Adulthood.description.ToLower().Contains("tribe"))
         {
-            result = "Tribal";
-        }
-        else if (p.story.adulthood.title.Contains("medieval") ||
-                 p.story.adulthood.baseDesc.IndexOf("Medieval", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                 p.story.adulthood.baseDesc.IndexOf("Village", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            result = "Medieval";
-        }
-        else if (p.story.adulthood.title.Contains("glitterworld") ||
-                 p.story.adulthood.baseDesc.IndexOf("Glitterworld", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            if (p.story.adulthood.title != "adventurer")
-            {
-                result = "Glitterworld";
-            }
-        }
-        else if (p.story.adulthood.title.Contains("urbworld") || p.story.adulthood.title.Contains("vatgrown") ||
-                 p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                 p.story.adulthood.baseDesc.IndexOf("Urbworld", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            result = "Urbworld";
-        }
-        else if (p.story.adulthood.title.Contains("midworld") ||
-                 p.story.adulthood.baseDesc.IndexOf("Midworld", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            result = "Midworld";
-        }
-        else if (p.story.adulthood.baseDesc.IndexOf("Tribe", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            result = "Tribal";
-        }
-        else if (p.story.adulthood.title.Contains("imperial") ||
-                 p.story.adulthood.baseDesc.IndexOf("Imperial", StringComparison.OrdinalIgnoreCase) >= 0)
-        {
-            result = "Imperial";
+            return "Tribal";
         }
 
-        return result;
+        if (p.story.Adulthood.title.ToLower().Contains("medieval") ||
+            p.story.Adulthood.description.ToLower().Contains("medieval") ||
+            p.story.Adulthood.description.ToLower().Contains("village"))
+        {
+            return "Medieval";
+        }
+
+        if ((p.story.Adulthood.title.ToLower().Contains("glitterworld") ||
+             p.story.Adulthood.description.ToLower().Contains("glitterworld")) &&
+            p.story.Adulthood.title != "adventurer")
+        {
+            return "Glitterworld";
+        }
+
+        if (p.story.Adulthood.title.Contains("urbworld") || p.story.Adulthood.title.Contains("vatgrown") ||
+            p.story.Adulthood.description.ToLower().Contains("urbworld"))
+        {
+            return "Urbworld";
+        }
+
+        if (p.story.Adulthood.title.Contains("midworld") ||
+            p.story.Adulthood.description.ToLower().Contains("midworld"))
+        {
+            return "Midworld";
+        }
+
+        if (p.story.Adulthood.title.Contains("imperial") ||
+            p.story.Adulthood.description.ToLower().Contains("imperial"))
+        {
+            return "Imperial";
+        }
+
+        return "Colonial";
     }
 
     public static bool IsPsychicLoveActive(Pawn initiator, Pawn recipient)

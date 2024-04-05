@@ -26,7 +26,7 @@ public class Settings : ModSettings
         list.Label("RRR.Overview".Translate());
         Text.Font = GameFont.Small;
         list.Gap();
-        list.Label("RRR.StraightChance".Translate() + "  " + (int)straightChance + "%");
+        list.Label($"{"RRR.StraightChance".Translate() + "  "}{(int)straightChance}%");
         straightChance = list.Slider(straightChance, 0f, 100.99f);
         if (straightChance > 100.99f - bisexualChance - gayChance)
         {
@@ -34,7 +34,7 @@ public class Settings : ModSettings
         }
 
         list.Gap();
-        list.Label("RRR.BisexualChance".Translate() + "  " + (int)bisexualChance + "%");
+        list.Label($"{"RRR.BisexualChance".Translate() + "  "}{(int)bisexualChance}%");
         bisexualChance = list.Slider(bisexualChance, 0f, 100.99f);
         if (bisexualChance > 100.99f - straightChance - gayChance)
         {
@@ -42,7 +42,7 @@ public class Settings : ModSettings
         }
 
         list.Gap();
-        list.Label("RRR.GayChance".Translate() + "  " + (int)gayChance + "%");
+        list.Label($"{"RRR.GayChance".Translate() + "  "}{(int)gayChance}%");
         gayChance = list.Slider(gayChance, 0f, 100.99f);
         if (gayChance > 100.99f - straightChance - bisexualChance)
         {
@@ -51,19 +51,19 @@ public class Settings : ModSettings
 
         list.Gap();
         asexualChance = 100 - (int)straightChance - (int)bisexualChance - (int)gayChance;
-        list.Label("RRR.AsexualChance".Translate() + "  " + asexualChance + "%");
+        list.Label($"{"RRR.AsexualChance".Translate() + "  "}{asexualChance}%");
         list.Gap(48);
-        list.Label("RRR.PolyamoryChance".Translate() + "  " + (int)polyChance + "%", -1f,
+        list.Label($"{"RRR.PolyamoryChance".Translate() + "  "}{(int)polyChance}%", -1f,
             "RRR.PolyamoryChanceTip".Translate());
         polyChance = list.Slider(polyChance, 0f, 100.99f);
         list.Gap();
-        list.Label("RRR.DateRate".Translate() + "  " + (int)dateRate + "%");
+        list.Label($"{"RRR.DateRate".Translate() + "  "}{(int)dateRate}%");
         dateRate = list.Slider(dateRate, 0f, 1000.99f);
         list.Gap();
-        list.Label("RRR.HookupRate".Translate() + "  " + (int)hookupRate + "%");
+        list.Label($"{"RRR.HookupRate".Translate() + "  "}{(int)hookupRate}%");
         hookupRate = list.Slider(hookupRate, 0f, 1000.99f);
         list.Gap();
-        list.Label("RRR.AlienLoveChance".Translate() + "  " + (int)alienLoveChance + "%", -1f,
+        list.Label($"{"RRR.AlienLoveChance".Translate() + "  "}{(int)alienLoveChance}%", -1f,
             "RRR.AlienLoveChanceTip".Translate());
         alienLoveChance = list.Slider(alienLoveChance, 0f, 100.99f);
         if (RationalRomance.currentVersion != null)

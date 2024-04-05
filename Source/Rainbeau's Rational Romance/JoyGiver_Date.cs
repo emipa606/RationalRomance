@@ -6,7 +6,7 @@ namespace RationalRomance_Code;
 
 public class JoyGiver_Date : JoyGiver
 {
-    public static float percentRate = RationalRomance.Settings.dateRate / 2;
+    public static readonly float percentRate = RationalRomance.Settings.dateRate / 2;
 
     public override Job TryGiveJob(Pawn pawn)
     {

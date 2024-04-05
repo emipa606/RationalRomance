@@ -5,7 +5,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "RandomSelectionWeight", null)]
+[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RandomSelectionWeight),
+    null)]
 public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
 {
     // CHANGE: Updated with new orientation options and traits.

@@ -5,7 +5,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "RandomSelectionWeight", null)]
+[HarmonyPatch(typeof(InteractionWorker_MarriageProposal),
+    nameof(InteractionWorker_MarriageProposal.RandomSelectionWeight), null)]
 public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
 {
     // CHANGE: Female pawns are now just as likely to propose as male pawns, with cultural variations.

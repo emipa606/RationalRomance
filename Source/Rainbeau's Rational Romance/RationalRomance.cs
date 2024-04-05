@@ -12,8 +12,7 @@ internal class RationalRomance : Mod
 
     public RationalRomance(ModContentPack content) : base(content)
     {
-        var harmony = new Harmony("net.rainbeau.rimworld.mod.rationalromance");
-        harmony.PatchAll();
+        new Harmony("net.rainbeau.rimworld.mod.rationalromance").PatchAll();
         Settings = GetSettings<Settings>();
         currentVersion =
             VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);

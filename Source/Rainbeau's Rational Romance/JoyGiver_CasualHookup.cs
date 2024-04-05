@@ -6,7 +6,7 @@ namespace RationalRomance_Code;
 
 public class JoyGiver_CasualHookup : JoyGiver
 {
-    public static float percentRate = RationalRomance.Settings.hookupRate / 2;
+    public static readonly float percentRate = RationalRomance.Settings.hookupRate / 2;
 
     public override Job TryGiveJob(Pawn pawn)
     {

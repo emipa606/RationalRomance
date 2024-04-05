@@ -4,7 +4,7 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(PawnGenerator), "GenerateTraits", null)]
+[HarmonyPatch(typeof(PawnGenerator), nameof(PawnGenerator.GenerateTraits), null)]
 public static class PawnGenerator_GenerateTraits
 {
     // CHANGE: Add orientation trait after other traits are selected.

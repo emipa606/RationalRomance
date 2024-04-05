@@ -5,7 +5,7 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "SuccessChance", null)]
+[HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.SuccessChance), null)]
 public static class InteractionWorker_RomanceAttempt_SuccessChance
 {
     // CHANGE: Updated with new orientation options and traits.

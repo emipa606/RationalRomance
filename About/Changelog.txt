@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.5.0 - Updated for 1.5
+
+
 1.4.6 - Pawns should now check if they are allowed in the area before asking a pawn out on a date
 
 

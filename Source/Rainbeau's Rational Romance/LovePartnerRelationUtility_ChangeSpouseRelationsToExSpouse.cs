@@ -4,7 +4,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(LovePartnerRelationUtility), "ChangeSpouseRelationsToExSpouse", null)]
+[HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.ChangeSpouseRelationsToExSpouse),
+    null)]
 public static class LovePartnerRelationUtility_ChangeSpouseRelationsToExSpouse
 {
     // CHANGE: Allowed for polyamory.

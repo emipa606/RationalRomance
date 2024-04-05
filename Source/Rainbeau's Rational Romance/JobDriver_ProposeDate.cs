@@ -205,7 +205,7 @@ public class JobDriver_ProposeDate : JobDriver
                     }
 
                     //Log.Message("Date walk path found.");
-                    jobDateLead.targetQueueB = new List<LocalTargetInfo>();
+                    jobDateLead.targetQueueB = [];
                     for (var i = 1; i < list.Count; i++)
                     {
                         jobDateLead.targetQueueB.Add(list[i]);
