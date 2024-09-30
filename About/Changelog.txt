@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.5.1 - Updated reference to the continued version of [SYR] Trait Value
+
+
 1.5.0 - Updated for 1.5
 
 
