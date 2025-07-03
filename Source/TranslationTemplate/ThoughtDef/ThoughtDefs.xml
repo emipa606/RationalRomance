@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: failed to hook up with me -->
+  <FailedHookupAttemptOnMe.stages.failed_to_hook_up_with_me.label>failed to hook up with me</FailedHookupAttemptOnMe.stages.failed_to_hook_up_with_me.label>
+  <!-- EN: I can't get a moment's peace! -->
+  <FeelingHarassed.stages.I_cant_get_a_moments_peace.label>I can't get a moment's peace!</FeelingHarassed.stages.I_cant_get_a_moments_peace.label>
+  <!-- EN: Can I just go a day without having to turn someone down? -->
+  <FeelingHarassed.stages.I_cant_get_a_moments_peace.description>Can I just go a day without having to turn someone down?</FeelingHarassed.stages.I_cant_get_a_moments_peace.description>
+  <!-- EN: in a monogamous relationship -->
+  <Polyamorous.stages.in_a_monogamous_relationship.label>in a monogamous relationship</Polyamorous.stages.in_a_monogamous_relationship.label>
+  <!-- EN: I wish my love wasn't limited to just one person. -->
+  <Polyamorous.stages.in_a_monogamous_relationship.description>I wish my love wasn't limited to just one person.</Polyamorous.stages.in_a_monogamous_relationship.description>
+  <!-- EN: rebuffed me -->
+  <RebuffedMyHookupAttempt.stages.rebuffed_me.label>rebuffed me</RebuffedMyHookupAttempt.stages.rebuffed_me.label>
+  <!-- EN: rebuffed by {0} -->
+  <RebuffedMyHookupAttemptMood.stages.rebuffed_by.label>rebuffed by {0}</RebuffedMyHookupAttemptMood.stages.rebuffed_by.label>
+  <!-- EN: What, am I not pretty enough for a tumble?? -->
+  <RebuffedMyHookupAttemptMood.stages.rebuffed_by.description>What, am I not pretty enough for a tumble??</RebuffedMyHookupAttemptMood.stages.rebuffed_by.description>
+</LanguageData>

@@ -13,25 +13,9 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
     // CHANGE: Updated with new orientation options.
     public static bool Prefix(Pawn generated, Pawn other, bool ex, ref float __result)
     {
-        if (generated.ageTracker.AgeBiologicalYearsFloat < 14f)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (other.ageTracker.AgeBiologicalYearsFloat < 14f)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (generated.gender == other.gender && other.story.traits.HasTrait(RRRTraitDefOf.Straight))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (generated.gender != other.gender && other.story.traits.HasTrait(TraitDefOf.Gay))
+        if (generated.ageTracker.AgeBiologicalYearsFloat < 14f || other.ageTracker.AgeBiologicalYearsFloat < 14f ||
+            generated.gender == other.gender && other.story.traits.HasTrait(RRRTraitDefOf.Straight) ||
+            generated.gender != other.gender && other.story.traits.HasTrait(TraitDefOf.Gay))
         {
             __result = 0f;
             return false;
@@ -59,9 +43,9 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
         }
 
         var single1 = generated.gender != other.gender ? 1f : 0.01f;
-        var generationChanceAgeFactor = GetGenerationChanceAgeFactor(generated);
-        var generationChanceAgeFactor1 = GetGenerationChanceAgeFactor(other);
-        var generationChanceAgeGapFactor = GetGenerationChanceAgeGapFactor(generated, other, ex);
+        var generationChanceAgeFactor = getGenerationChanceAgeFactor(generated);
+        var generationChanceAgeFactor1 = getGenerationChanceAgeFactor(other);
+        var generationChanceAgeGapFactor = getGenerationChanceAgeGapFactor(generated, other, ex);
         var single2 = 1f;
         if (generated.GetRelations(other).Any(x => x.familyByBloodRelation))
         {
@@ -73,24 +57,24 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
         return false;
     }
 
-    private static float GetGenerationChanceAgeFactor(Pawn p)
+    private static float getGenerationChanceAgeFactor(Pawn p)
     {
         var single = GenMath.LerpDouble(14f, 27f, 0f, 1f, p.ageTracker.AgeBiologicalYearsFloat);
         return Mathf.Clamp(single, 0f, 1f);
     }
 
-    private static float GetGenerationChanceAgeGapFactor(Pawn p1, Pawn p2, bool ex)
+    private static float getGenerationChanceAgeGapFactor(Pawn p1, Pawn p2, bool ex)
     {
         var single = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
         if (ex)
         {
-            var generateAsLovers = MinPossibleAgeGapAtMinAgeToGenerateAsLovers(p1, p2);
+            var generateAsLovers = minPossibleAgeGapAtMinAgeToGenerateAsLovers(p1, p2);
             if (generateAsLovers >= 0f)
             {
                 single = Mathf.Min(single, generateAsLovers);
             }
 
-            var generateAsLovers1 = MinPossibleAgeGapAtMinAgeToGenerateAsLovers(p2, p1);
+            var generateAsLovers1 = minPossibleAgeGapAtMinAgeToGenerateAsLovers(p2, p1);
             if (generateAsLovers1 >= 0f)
             {
                 single = Mathf.Min(single, generateAsLovers1);
@@ -106,7 +90,7 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
         return Mathf.Clamp(single1, 0.001f, 1f);
     }
 
-    private static float MinPossibleAgeGapAtMinAgeToGenerateAsLovers(Pawn p1, Pawn p2)
+    private static float minPossibleAgeGapAtMinAgeToGenerateAsLovers(Pawn p1, Pawn p2)
     {
         var ageChronologicalYearsFloat = p1.ageTracker.AgeChronologicalYearsFloat - 14f;
         if (ageChronologicalYearsFloat < 0f)

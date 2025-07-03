@@ -10,7 +10,7 @@ namespace RationalRomance_Code;
 public static class ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInternal
 {
     // CHANGE: Allowed for polyamory.
-    public static void CurrentStateInternal(ref ThoughtState __result, Pawn p)
+    public static void Postfix(ref ThoughtState __result, Pawn p)
     {
         if (__result.StageIndex == ThoughtState.Inactive.StageIndex)
         {

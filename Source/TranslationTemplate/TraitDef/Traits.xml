@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: faithful -->
+  <Faithful.degreeDatas.faithful.label>faithful</Faithful.degreeDatas.faithful.label>
+  <!-- EN: {PAWN_nameDef} will never cheat on a partner, no matter how bad the relationship gets. -->
+  <Faithful.degreeDatas.faithful.description>{PAWN_nameDef} will never cheat on a partner, no matter how bad the relationship gets.</Faithful.degreeDatas.faithful.description>
+  <!-- EN: philanderer -->
+  <Philanderer.degreeDatas.philanderer.label>philanderer</Philanderer.degreeDatas.philanderer.label>
+  <!-- EN: {PAWN_nameDef} just cannot be trusted to stay faithful to a partner. -->
+  <Philanderer.degreeDatas.philanderer.description>{PAWN_nameDef} just cannot be trusted to stay faithful to a partner.</Philanderer.degreeDatas.philanderer.description>
+  <!-- EN: polyamorous -->
+  <Polyamorous.degreeDatas.polyamorous.label>polyamorous</Polyamorous.degreeDatas.polyamorous.label>
+  <!-- EN: {PAWN_nameDef} prefers romantic relationships involving multiple partners to monogamous relationships. {PAWN_pronoun} doesn't mind if {PAWN_possessive} partners romance other people, but will be less happy in a restraining, monogamous relationship. -->
+  <Polyamorous.degreeDatas.polyamorous.description>{PAWN_nameDef} prefers romantic relationships involving multiple partners to monogamous relationships. {PAWN_pronoun} doesn't mind if {PAWN_possessive} partners romance other people, but will be less happy in a restraining, monogamous relationship.</Polyamorous.degreeDatas.polyamorous.description>
+  <!-- EN: straight -->
+  <Straight.degreeDatas.straight.label>straight</Straight.degreeDatas.straight.label>
+  <!-- EN: {PAWN_nameDef} is romantically attracted to people of the opposite gender. -->
+  <Straight.degreeDatas.straight.description>{PAWN_nameDef} is romantically attracted to people of the opposite gender.</Straight.degreeDatas.straight.description>
+</LanguageData>

@@ -133,33 +133,21 @@ public static class SexualityUtilities
             enumerable = from p in enumerable
                 where p.Map == p1.Map && p.Faction == p1.Faction
                 select p;
-            if (!enumerable.Any())
+            var pawns = enumerable as Pawn[] ?? enumerable.ToArray();
+            if (!pawns.Any())
             {
                 result = null;
             }
             else
             {
-                enumerable.TryRandomElementByWeight(
+                pawns.TryRandomElementByWeight(
                     x => p1.relations.SecondaryRomanceChanceFactor(x) *
                          p1.relations.SecondaryRomanceChanceFactor(x), out var pawn);
-                if (pawn == null)
-                {
-                    result = null;
-                }
-                else if (pawn == p1)
-                {
-                    result = null;
-                }
-                else if (LovePartnerRelationUtility.HasAnyLovePartner(pawn) && Rand.Value < 0.85f)
-                {
-                    result = null;
-                }
-                else if (LovePartnerRelationUtility.ExistingLovePartners(p1)
-                         .Any(relation => relation.otherPawn == pawn))
-                {
-                    result = null;
-                }
-                else if (p1.relations.SecondaryRomanceChanceFactor(pawn) < 0.05)
+                if (pawn == null || pawn == p1 ||
+                    LovePartnerRelationUtility.HasAnyLovePartner(pawn) && Rand.Value < 0.85f ||
+                    LovePartnerRelationUtility.ExistingLovePartners(p1)
+                        .Any(relation => relation.otherPawn == pawn) ||
+                    p1.relations.SecondaryRomanceChanceFactor(pawn) < 0.05)
                 {
                     result = null;
                 }
@@ -356,8 +344,8 @@ public static class SexualityUtilities
 
     public static bool IsPsychicLoveActive(Pawn initiator, Pawn recipient)
     {
-        var psylove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove);
-        return psylove != null && psylove.target == recipient;
+        var psyLove = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove);
+        return psyLove != null && psyLove.target == recipient;
     }
 
     public static bool HasFreeLoverCapacity(Pawn pawn)

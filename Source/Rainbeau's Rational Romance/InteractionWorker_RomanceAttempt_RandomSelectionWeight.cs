@@ -34,13 +34,8 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
             ExtraTraits.AssignOrientation(recipient);
         }
 
-        if (recipient.InMentalState || LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (initiator.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDefOf.RebuffedMyRomanceAttempt) > 0)
+        if (recipient.InMentalState || LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient) ||
+            initiator.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDefOf.RebuffedMyRomanceAttempt) > 0)
         {
             __result = 0f;
             return false;
@@ -54,20 +49,14 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
         }
 
         var opinionOfTarget = initiator.relations.OpinionOf(recipient);
-        if (opinionOfTarget < 5)
+        if (opinionOfTarget < 5 || recipient.relations.OpinionOf(initiator) < 5)
         {
             __result = 0f;
             return false;
         }
 
-        if (recipient.relations.OpinionOf(initiator) < 5)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        var initiator_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-        if (initiator_partner != null && initiator.relations.OpinionOf(initiator_partner) >= 33 &&
+        var initiatorPartner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
+        if (initiatorPartner != null && initiator.relations.OpinionOf(initiatorPartner) >= 33 &&
             !SexualityUtilities.HasFreeLoverCapacity(initiator))
         {
             if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
@@ -78,8 +67,8 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
             }
         }
 
-        var recipient_partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
-        if (recipient_partner != null && recipient.relations.OpinionOf(recipient_partner) >= 33 &&
+        var recipientPartner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
+        if (recipientPartner != null && recipient.relations.OpinionOf(recipientPartner) >= 33 &&
             !SexualityUtilities.HasFreeLoverCapacity(recipient))
         {
             if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&

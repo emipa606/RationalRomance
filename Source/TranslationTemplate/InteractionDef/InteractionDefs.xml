@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: hookup attempt -->
+  <TriedHookupWith.label>hookup attempt</TriedHookupWith.label>
+  <!-- EN:
+    <li>r_logentry->[INITIATOR_nameDef] tried to chat up [RECIPIENT_nameDef].</li>
+  -->
+  <TriedHookupWith.logRulesInitiator.rulesStrings>
+    <li>r_logentry->[INITIATOR_nameDef] tried to chat up [RECIPIENT_nameDef].</li>
+  </TriedHookupWith.logRulesInitiator.rulesStrings>
+  <!-- EN:
+    <li>r_logentry->[RECIPIENT_nameDef] was chatted up by [INITIATOR_nameDef].</li>
+  -->
+  <TriedHookupWith.logRulesRecipient.rulesStrings>
+    <li>r_logentry->[RECIPIENT_nameDef] was chatted up by [INITIATOR_nameDef].</li>
+  </TriedHookupWith.logRulesRecipient.rulesStrings>
+</LanguageData>

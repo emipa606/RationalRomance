@@ -2,6 +2,16 @@
   "Continued": true,
   "CanAdd": "0",
   "CanRemove": "1",
-  "PreviewVersion": "1.5",
-  "SocialImageSet": true
+  "PreviewVersion": "1.6",
+  "SocialImageSet": true,
+  "LastXmlCleaning": "2025-07-03T19:07:44.3589009+02:00",
+  "Patches": true,
+  "Defs": true,
+  "Assemblies": true,
+  "LinesOfCode": 87259.0,
+  "LinesOfXML": 23386.0,
+  "SearchTags": [
+    " orientation",
+    " traits"
+  ]
 }

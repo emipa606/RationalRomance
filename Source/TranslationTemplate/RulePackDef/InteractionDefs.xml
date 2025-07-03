@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN:
+    <li>sent-> [RECIPIENT_nameDef] did not agree to the hookup.</li>
+  -->
+  <HookupFailed.rulePack.rulesStrings>
+    <li>sent-> [RECIPIENT_nameDef] did not agree to the hookup.</li>
+  </HookupFailed.rulePack.rulesStrings>
+  <!-- EN:
+    <li>sent-> [RECIPIENT_nameDef] agreed to the hookup.</li>
+  -->
+  <HookupSucceeded.rulePack.rulesStrings>
+    <li>sent-> [RECIPIENT_nameDef] agreed to the hookup.</li>
+  </HookupSucceeded.rulePack.rulesStrings>
+</LanguageData>

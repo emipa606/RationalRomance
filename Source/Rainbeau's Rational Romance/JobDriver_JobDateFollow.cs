@@ -8,9 +8,9 @@ namespace RationalRomance_Code;
 
 public class JobDriver_JobDateFollow : JobDriver
 {
-    private readonly TargetIndex PartnerInd = TargetIndex.A;
+    private const TargetIndex PartnerInd = TargetIndex.A;
 
-    private Pawn actor => GetActor();
+    private Pawn Actor => GetActor();
 
     private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
 
@@ -33,29 +33,29 @@ public class JobDriver_JobDateFollow : JobDriver
         // Wait a tick to avoid a 1.1 issue where the date leader now must end their current
         // job after the date follower, causing the date follower to think the leader was no
         // longer leading the date and end this job.
-        var WaitForPartnerJob = new Toil
+        var waitForPartnerJob = new Toil
         {
             defaultCompleteMode = ToilCompleteMode.Delay,
             initAction = delegate { ticksLeftThisToil = 1; }
         };
-        yield return WaitForPartnerJob;
+        yield return waitForPartnerJob;
 
-        var FollowPartner = new Toil
+        var followPartner = new Toil
         {
             defaultCompleteMode = ToilCompleteMode.Delay
         };
-        FollowPartner.AddFailCondition(() => !Partner.Spawned);
-        FollowPartner.AddFailCondition(() => Partner.Dead);
-        FollowPartner.AddFailCondition(() => Partner.CurJob.def != RRRJobDefOf.JobDateLead);
-        FollowPartner.initAction = delegate
+        followPartner.AddFailCondition(() => !Partner.Spawned);
+        followPartner.AddFailCondition(() => Partner.Dead);
+        followPartner.AddFailCondition(() => Partner.CurJob.def != RRRJobDefOf.JobDateLead);
+        followPartner.initAction = delegate
         {
             ticksLeftThisToil = 200;
-            actor.pather.StartPath(Partner, PathEndMode.Touch);
+            Actor.pather.StartPath(Partner, PathEndMode.Touch);
         };
-        FollowPartner.tickAction = delegate { actor.needs.joy.GainJoy(0.0001f, RRRMiscDefOf.Social); };
+        followPartner.tickAction = delegate { Actor.needs.joy.GainJoy(0.0001f, RRRMiscDefOf.Social); };
         for (var i = 0; i < 100; i++)
         {
-            yield return FollowPartner;
+            yield return followPartner;
         }
     }
 }

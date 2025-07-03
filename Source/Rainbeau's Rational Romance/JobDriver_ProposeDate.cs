@@ -10,15 +10,15 @@ namespace RationalRomance_Code;
 
 public class JobDriver_ProposeDate : JobDriver
 {
-    public bool successfulPass = true;
+    private bool successfulPass = true;
 
-    private Pawn actor => GetActor();
+    private Pawn Actor => GetActor();
 
     private Pawn TargetPawn => TargetThingA as Pawn;
 
     private Building_Bed TargetBed => TargetThingB as Building_Bed;
 
-    private TargetIndex TargetPawnIndex => TargetIndex.A;
+    private static TargetIndex TargetPawnIndex => TargetIndex.A;
 
     private TargetIndex TargetBedIndex => TargetIndex.B;
 
@@ -27,18 +27,18 @@ public class JobDriver_ProposeDate : JobDriver
         return true;
     }
 
-    private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
+    private static bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
     {
-        var StartRadialIndex = GenRadial.NumCellsInRadius(14f);
-        var EndRadialIndex = GenRadial.NumCellsInRadius(2f);
-        var RadialIndexStride = 3;
-        var intVec3s = new List<IntVec3> { root };
+        var startRadialIndex = GenRadial.NumCellsInRadius(14f);
+        var endRadialIndex = GenRadial.NumCellsInRadius(2f);
+        const int radialIndexStride = 3;
+        var intVec3S = new List<IntVec3> { root };
         var intVec3 = root;
         for (var i = 0; i < 8; i++)
         {
             var invalid = IntVec3.Invalid;
             var single1 = -1f;
-            for (var j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
+            for (var j = startRadialIndex; j > endRadialIndex; j -= radialIndexStride)
             {
                 var radialPattern = intVec3 + GenRadial.RadialPattern[j];
                 if (!radialPattern.InBounds(p1.Map) || !radialPattern.Standable(p1.Map) ||
@@ -52,7 +52,7 @@ public class JobDriver_ProposeDate : JobDriver
                 }
 
                 var lengthManhattan = 10000f;
-                foreach (var vec3 in intVec3s)
+                foreach (var vec3 in intVec3S)
                 {
                     lengthManhattan += (vec3 - radialPattern).LengthManhattan;
                 }
@@ -63,21 +63,17 @@ public class JobDriver_ProposeDate : JobDriver
                     lengthManhattan *= Mathf.InverseLerp(70f, 40f, lengthManhattan1);
                 }
 
-                if (intVec3s.Count >= 2)
+                if (intVec3S.Count >= 2)
                 {
-                    var item = intVec3s[intVec3s.Count - 1] - intVec3s[intVec3s.Count - 2];
+                    var item = intVec3S[^1] - intVec3S[^2];
                     var angleFlat = item.AngleFlat;
                     var angleFlat1 = (radialPattern - intVec3).AngleFlat;
-                    float single;
                     if (angleFlat1 <= angleFlat)
                     {
                         angleFlat -= 360f;
-                        single = angleFlat1 - angleFlat;
                     }
-                    else
-                    {
-                        single = angleFlat1 - angleFlat;
-                    }
+
+                    var single = angleFlat1 - angleFlat;
 
                     if (single > 110f)
                     {
@@ -85,7 +81,7 @@ public class JobDriver_ProposeDate : JobDriver
                     }
                 }
 
-                if (intVec3s.Count >= 4 &&
+                if (intVec3S.Count >= 4 &&
                     (intVec3 - root).LengthManhattan < (radialPattern - root).LengthManhattan)
                 {
                     lengthManhattan *= 1E-05f;
@@ -106,21 +102,21 @@ public class JobDriver_ProposeDate : JobDriver
                 return false;
             }
 
-            intVec3s.Add(invalid);
+            intVec3S.Add(invalid);
             intVec3 = invalid;
         }
 
-        intVec3s.Add(root);
-        result = intVec3s;
+        intVec3S.Add(root);
+        result = intVec3S;
         return true;
     }
 
-    private bool IsTargetPawnOkay()
+    private bool isTargetPawnOkay()
     {
         return !TargetPawn.Dead && !TargetPawn.Downed && TargetPawn.Position.InAllowedArea(GetActor());
     }
 
-    private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
+    private static bool tryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
     {
         best = default;
         var list = new List<IntVec3>();
@@ -166,7 +162,7 @@ public class JobDriver_ProposeDate : JobDriver
 
         yield return Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
         var AskOut = new Toil();
-        AskOut.AddFailCondition(() => !IsTargetPawnOkay());
+        AskOut.AddFailCondition(() => !isTargetPawnOkay());
         AskOut.defaultCompleteMode = ToilCompleteMode.Delay;
         AskOut.initAction = delegate
         {
@@ -194,7 +190,7 @@ public class JobDriver_ProposeDate : JobDriver
                 initAction = delegate
                 {
                     var jobDateLead = new Job(RRRJobDefOf.JobDateLead);
-                    if (!TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out var root))
+                    if (!tryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out var root))
                     {
                         return;
                     }
@@ -213,14 +209,14 @@ public class JobDriver_ProposeDate : JobDriver
 
                     jobDateLead.locomotionUrgency = LocomotionUrgency.Amble;
                     jobDateLead.targetA = TargetPawn;
-                    actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
+                    Actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
                     var job2 = new Job(RRRJobDefOf.JobDateFollow)
                     {
-                        locomotionUrgency = LocomotionUrgency.Amble, targetA = actor
+                        locomotionUrgency = LocomotionUrgency.Amble, targetA = Actor
                     };
                     TargetPawn.jobs.jobQueue.EnqueueFirst(job2);
                     TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                    actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 }
             };
         }

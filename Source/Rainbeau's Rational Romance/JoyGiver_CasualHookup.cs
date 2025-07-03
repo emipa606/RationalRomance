@@ -6,20 +6,13 @@ namespace RationalRomance_Code;
 
 public class JoyGiver_CasualHookup : JoyGiver
 {
-    public static readonly float percentRate = RationalRomance.Settings.hookupRate / 2;
+    private static readonly float percentRate = RationalRomance.Settings.HookupRate / 2;
 
     public override Job TryGiveJob(Pawn pawn)
     {
         Job result;
-        if (!InteractionUtility.CanInitiateInteraction(pawn))
-        {
-            result = null;
-        }
-        else if (!SexualityUtilities.WillPawnTryHookup(pawn))
-        {
-            result = null;
-        }
-        else if (PawnUtility.WillSoonHaveBasicNeed(pawn))
+        if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || !SexualityUtilities.WillPawnTryHookup(pawn) ||
+            PawnUtility.WillSoonHaveBasicNeed(pawn))
         {
             result = null;
         }
@@ -33,11 +26,7 @@ public class JoyGiver_CasualHookup : JoyGiver
             else
             {
                 var bed = SexualityUtilities.FindHookupBed(pawn, pawn2);
-                if (bed == null)
-                {
-                    result = null;
-                }
-                else if (100f * Rand.Value > percentRate)
+                if (bed == null || 100f * Rand.Value > percentRate)
                 {
                     result = null;
                 }

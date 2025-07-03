@@ -8,22 +8,8 @@ public class ThoughtWorker_Polyamorous : ThoughtWorker
 {
     public override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (!p.Spawned)
-        {
-            return ThoughtState.Inactive;
-        }
-
-        if (!p.RaceProps.Humanlike)
-        {
-            return ThoughtState.Inactive;
-        }
-
-        if (!p.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
-        {
-            return ThoughtState.Inactive;
-        }
-
-        if (!LovePartnerRelationUtility.HasAnyLovePartner(p))
+        if (!p.Spawned || !p.RaceProps.Humanlike || !p.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) ||
+            !LovePartnerRelationUtility.HasAnyLovePartner(p))
         {
             return ThoughtState.Inactive;
         }

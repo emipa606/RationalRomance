@@ -8,13 +8,13 @@ namespace RationalRomance_Code;
 internal class RationalRomance : Mod
 {
     public static Settings Settings;
-    public static string currentVersion;
+    public static string CurrentVersion;
 
     public RationalRomance(ModContentPack content) : base(content)
     {
         new Harmony("net.rainbeau.rimworld.mod.rationalromance").PatchAll();
         Settings = GetSettings<Settings>();
-        currentVersion =
+        CurrentVersion =
             VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
     }
 

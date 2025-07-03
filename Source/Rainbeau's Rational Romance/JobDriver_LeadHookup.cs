@@ -8,17 +8,15 @@ namespace RationalRomance_Code;
 
 public class JobDriver_LeadHookup : JobDriver
 {
-    public bool successfulPass = true;
+    private bool WasSuccessfulPass { get; set; } = true;
 
-    public bool wasSuccessfulPass => successfulPass;
-
-    private Pawn actor => GetActor();
+    private Pawn Actor => GetActor();
 
     private Pawn TargetPawn => TargetThingA as Pawn;
 
     private Building_Bed TargetBed => TargetThingB as Building_Bed;
 
-    private TargetIndex TargetPawnIndex => TargetIndex.A;
+    private static TargetIndex TargetPawnIndex => TargetIndex.A;
 
     private TargetIndex TargetBedIndex => TargetIndex.B;
 
@@ -27,13 +25,13 @@ public class JobDriver_LeadHookup : JobDriver
         return true;
     }
 
-    private bool DoesTargetPawnAcceptAdvance()
+    private bool doesTargetPawnAcceptAdvance()
     {
         return SexualityUtilities.IsFree(TargetPawn) && SexualityUtilities.WillPawnTryHookup(TargetPawn) &&
-               SexualityUtilities.IsHookupAppealing(TargetPawn, actor);
+               SexualityUtilities.IsHookupAppealing(TargetPawn, Actor);
     }
 
-    private bool IsTargetPawnOkay()
+    private bool isTargetPawnOkay()
     {
         return !TargetPawn.Dead && !TargetPawn.Downed;
     }
@@ -51,24 +49,24 @@ public class JobDriver_LeadHookup : JobDriver
 
         var TryItOn = new Toil();
         // make sure target is feeling ok
-        TryItOn.AddFailCondition(() => !IsTargetPawnOkay());
+        TryItOn.AddFailCondition(() => !isTargetPawnOkay());
         TryItOn.defaultCompleteMode = ToilCompleteMode.Delay;
         // show heart between pawns
         TryItOn.initAction = delegate
         {
             ticksLeftThisToil = 50;
-            FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
+            FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
         };
         yield return TryItOn;
 
-        var AwaitResponse = new Toil
+        var awaitResponse = new Toil
         {
             defaultCompleteMode = ToilCompleteMode.Instant,
             initAction = delegate
             {
                 var list = new List<RulePackDef>();
-                successfulPass = DoesTargetPawnAcceptAdvance();
-                if (successfulPass)
+                WasSuccessfulPass = doesTargetPawnAcceptAdvance();
+                if (WasSuccessfulPass)
                 {
                     FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
                     list.Add(RRRMiscDefOf.HookupSucceeded);
@@ -76,11 +74,11 @@ public class JobDriver_LeadHookup : JobDriver
                 else
                 {
                     FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
-                    actor.needs?.mood?.thoughts?.memories?.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
+                    Actor.needs?.mood?.thoughts?.memories?.TryGainMemory(RRRThoughtDefOf.RebuffedMyHookupAttempt,
                         TargetPawn);
                     TargetPawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
                         RRRThoughtDefOf.FailedHookupAttemptOnMe,
-                        actor);
+                        Actor);
                     list.Add(RRRMiscDefOf.HookupFailed);
                 }
 
@@ -89,28 +87,28 @@ public class JobDriver_LeadHookup : JobDriver
                     list));
             }
         };
-        AwaitResponse.AddFailCondition(() => !wasSuccessfulPass);
-        yield return AwaitResponse;
+        awaitResponse.AddFailCondition(() => !WasSuccessfulPass);
+        yield return awaitResponse;
 
-        if (wasSuccessfulPass)
+        if (WasSuccessfulPass)
         {
             yield return new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
                 {
-                    if (!wasSuccessfulPass)
+                    if (!WasSuccessfulPass)
                     {
                         return;
                     }
 
-                    actor.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, TargetPawn,
+                    Actor.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, TargetPawn,
                         TargetBed, TargetBed.GetSleepingSlotPos(0)));
-                    TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, actor,
+                    TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RRRJobDefOf.DoLovinCasual, Actor,
                         TargetBed, TargetBed.GetSleepingSlotPos(1)));
                     // important for 1.1 that the hookup leader ends their job last. best guess is that it's related to the new garbage collection
                     TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                    actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 }
             };
         }

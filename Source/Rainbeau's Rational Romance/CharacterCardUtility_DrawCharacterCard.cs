@@ -9,7 +9,8 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(CharacterCardUtility), "DrawCharacterCard", typeof(Rect), typeof(Pawn), typeof(Action),
+[HarmonyPatch(typeof(CharacterCardUtility), nameof(CharacterCardUtility.DrawCharacterCard), typeof(Rect), typeof(Pawn),
+    typeof(Action),
     typeof(Rect), typeof(bool))]
 internal static class CharacterCardUtility_DrawCharacterCard
 {

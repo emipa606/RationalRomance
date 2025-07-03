@@ -12,19 +12,14 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
     // CHANGE: Updated with new orientation options.
     // CHANGE: Gender age preferences are now the same, except for mild cultural variation.
     // CHANGE: Pawns with Ugly trait are less uninterested romantically in other ugly pawns.
-    internal static FieldInfo _pawn;
+    private static FieldInfo pawnFieldInfo;
     private static readonly TraitDef beauty = TraitDef.Named("Beauty");
 
     public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance)
     {
-        var pawn = __instance.GetPawn();
-        if (pawn == otherPawn)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if ((!pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && pawn.def != otherPawn.def)
+        var pawn = __instance.getPawn();
+        if (pawn == otherPawn ||
+            (!pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && pawn.def != otherPawn.def)
         {
             __result = 0f;
             return false;
@@ -33,7 +28,7 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
         float crossSpecies = 1;
         if (pawn.def != otherPawn.def)
         {
-            crossSpecies = RationalRomance.Settings.alienLoveChance / 100;
+            crossSpecies = RationalRomance.Settings.AlienLoveChance / 100;
         }
 
         if (Rand.ValueSeeded(pawn.thingIDNumber ^ 3273711) >= 0.015f)
@@ -113,28 +108,31 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
 
         var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(pawn);
         var ageDiffPref = 1f;
-        if (backgroundCulture is "Urbworld" or "Medieval")
+        switch (backgroundCulture)
         {
-            switch (pawn.gender)
-            {
-                case Gender.Male when otherPawn.gender == Gender.Female:
-                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
-                    break;
-                case Gender.Female when otherPawn.gender == Gender.Male:
-                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
-                    break;
-            }
-        }
+            case "Urbworld" or "Medieval":
+                switch (pawn.gender)
+                {
+                    case Gender.Male when otherPawn.gender == Gender.Female:
+                        ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
+                        break;
+                    case Gender.Female when otherPawn.gender == Gender.Male:
+                        ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
+                        break;
+                }
 
-        if (backgroundCulture is "Tribal" or "Imperial")
-        {
-            if (pawn.gender == Gender.Male && otherPawn.gender == Gender.Female)
-            {
+                break;
+            case "Tribal" or "Imperial" when pawn.gender == Gender.Male && otherPawn.gender == Gender.Female:
                 ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
-            }
-            else if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male)
+                break;
+            case "Tribal" or "Imperial":
             {
-                ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
+                if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male)
+                {
+                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
+                }
+
+                break;
             }
         }
 
@@ -145,19 +143,19 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
         return false;
     }
 
-    private static Pawn GetPawn(this Pawn_RelationsTracker _this)
+    private static Pawn getPawn(this Pawn_RelationsTracker _this)
     {
-        if (!(_pawn == null))
+        if (!(pawnFieldInfo == null))
         {
-            return (Pawn)_pawn.GetValue(_this);
+            return (Pawn)pawnFieldInfo.GetValue(_this);
         }
 
-        _pawn = typeof(Pawn_RelationsTracker).GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (_pawn == null)
+        pawnFieldInfo = typeof(Pawn_RelationsTracker).GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (pawnFieldInfo == null)
         {
             Log.ErrorOnce("Unable to reflect Pawn_RelationsTracker.pawn!", 305432421);
         }
 
-        return (Pawn)_pawn?.GetValue(_this);
+        return (Pawn)pawnFieldInfo?.GetValue(_this);
     }
 }

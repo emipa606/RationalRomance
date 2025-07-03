@@ -19,13 +19,8 @@ public static class InteractionWorker_MarriageProposal_AcceptanceChance
             ExtraTraits.AssignOrientation(recipient);
         }
 
-        if (initiator.gender == recipient.gender && recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (initiator.gender != recipient.gender && recipient.story.traits.HasTrait(TraitDefOf.Gay))
+        if (initiator.gender == recipient.gender && recipient.story.traits.HasTrait(RRRTraitDefOf.Straight) ||
+            initiator.gender != recipient.gender && recipient.story.traits.HasTrait(TraitDefOf.Gay))
         {
             __result = 0f;
             return false;

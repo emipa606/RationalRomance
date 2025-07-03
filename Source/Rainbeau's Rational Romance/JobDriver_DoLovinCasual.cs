@@ -9,15 +9,15 @@ namespace RationalRomance_Code;
 public class JobDriver_DoLovinCasual : JobDriver
 {
     private const int TicksBetweenHeartMotes = 100;
-    private const int duration = 20;
-    private readonly TargetIndex BedInd = TargetIndex.B;
-    private readonly TargetIndex PartnerInd = TargetIndex.A;
-    private readonly TargetIndex SlotInd = TargetIndex.C;
+    private const int Duration = 20;
+    private const TargetIndex BedInd = TargetIndex.B;
+    private const TargetIndex PartnerInd = TargetIndex.A;
+    private const TargetIndex SlotInd = TargetIndex.C;
     private int ticksLeft = 20;
 
     private Building_Bed Bed => (Building_Bed)(Thing)job.GetTarget(BedInd);
 
-    private Pawn actor => GetActor();
+    private Pawn Actor => GetActor();
 
     private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
 
@@ -32,20 +32,7 @@ public class JobDriver_DoLovinCasual : JobDriver
         Scribe_Values.Look(ref ticksLeft, "ticksLeft");
     }
 
-    private IntVec3 GetSleepingSpot(Building_Bed bed)
-    {
-        for (var i = 0; i < bed.SleepingSlotsCount; i++)
-        {
-            if (bed.GetCurOccupant(i) == null)
-            {
-                return bed.GetSleepingSlotPos(i);
-            }
-        }
-
-        return bed.GetSleepingSlotPos(0);
-    }
-
-    private bool IsInOrByBed(Building_Bed b, Pawn p)
+    private static bool isInOrByBed(Building_Bed b, Pawn p)
     {
         for (var i = 0; i < b.SleepingSlotsCount; i++)
         {
@@ -68,7 +55,7 @@ public class JobDriver_DoLovinCasual : JobDriver
             initAction = delegate { ticksLeftThisToil = 300; },
             tickAction = delegate
             {
-                if (IsInOrByBed(Bed, Partner))
+                if (isInOrByBed(Bed, Partner))
                 {
                     ticksLeftThisToil = 0;
                 }
@@ -83,19 +70,19 @@ public class JobDriver_DoLovinCasual : JobDriver
             //				curDriver.layingDown = 2;
             curDriver.asleep = false;
         };
-        layDown.tickAction = delegate { actor.GainComfortFromCellIfPossible(); };
+        layDown.tickIntervalAction = delegate(int delta) { Actor.GainComfortFromCellIfPossible(delta); };
         yield return layDown;
         var loveToil = new Toil
         {
             initAction = delegate
             {
                 ticksLeftThisToil = 1200;
-                if (!LovePartnerRelationUtility.HasAnyLovePartner(actor))
+                if (!LovePartnerRelationUtility.HasAnyLovePartner(Actor))
                 {
                     return;
                 }
 
-                var existingLovePartners = LovePartnerRelationUtility.ExistingLovePartners(actor, false);
+                var existingLovePartners = LovePartnerRelationUtility.ExistingLovePartners(Actor, false);
                 if (existingLovePartners.Any(relation => relation.otherPawn == Partner))
                 {
                     return;
@@ -103,10 +90,10 @@ public class JobDriver_DoLovinCasual : JobDriver
 
                 foreach (var existingLovePartner in existingLovePartners)
                 {
-                    if (existingLovePartner.otherPawn.Map == actor.Map || Rand.Value < 0.25)
+                    if (existingLovePartner.otherPawn.Map == Actor.Map || Rand.Value < 0.25)
                     {
                         existingLovePartner.otherPawn.needs.mood.thoughts.memories.TryGainMemory(
-                            ThoughtDefOf.CheatedOnMe, actor);
+                            ThoughtDefOf.CheatedOnMe, Actor);
                     }
                 }
             },
@@ -114,24 +101,24 @@ public class JobDriver_DoLovinCasual : JobDriver
             {
                 if (ticksLeftThisToil % TicksBetweenHeartMotes == 0)
                 {
-                    FleckMaker.ThrowMetaIcon(actor.Position, actor.Map, FleckDefOf.Heart);
+                    FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
                 }
 
                 if (ticksLeftThisToil % TicksBetweenHeartMotes == 0)
                 {
-                    actor.needs.joy.GainJoy(0.005f, RRRMiscDefOf.Lewd);
+                    Actor.needs.joy.GainJoy(0.005f, RRRMiscDefOf.Lewd);
                 }
             },
             defaultCompleteMode = ToilCompleteMode.Delay
         };
         loveToil.AddFailCondition(() =>
-            Partner.Dead || ticksLeftThisToil > TicksBetweenHeartMotes && !IsInOrByBed(Bed, Partner));
+            Partner.Dead || ticksLeftThisToil > TicksBetweenHeartMotes && !isInOrByBed(Bed, Partner));
         yield return loveToil;
         yield return new Toil
         {
             initAction = delegate
             {
-                actor.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.GotSomeLovin, Partner);
+                Actor.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.GotSomeLovin, Partner);
             },
             defaultCompleteMode = ToilCompleteMode.Instant
         };

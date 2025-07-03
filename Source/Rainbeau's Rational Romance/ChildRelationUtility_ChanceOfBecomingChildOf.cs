@@ -5,13 +5,11 @@ using Verse;
 
 namespace RationalRomance_Code;
 
-[HarmonyPatch(typeof(ChildRelationUtility), "ChanceOfBecomingChildOf", null)]
+[HarmonyPatch(typeof(ChildRelationUtility), nameof(ChildRelationUtility.ChanceOfBecomingChildOf), null)]
 public static class ChildRelationUtility_ChanceOfBecomingChildOf
 {
     // CHANGE: Removed bias against gays being assigned as parents.
-    public static bool Prefix(Pawn child, Pawn father, Pawn mother, PawnGenerationRequest? childGenerationRequest,
-        PawnGenerationRequest? fatherGenerationRequest, PawnGenerationRequest? motherGenerationRequest,
-        ref float __result)
+    public static bool Prefix(Pawn child, Pawn father, Pawn mother, ref float __result)
     {
         if (father != null && father.gender != Gender.Male)
         {
@@ -27,19 +25,9 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
             return false;
         }
 
-        if (father != null && child.GetFather() != null && child.GetFather() != father)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (mother != null && child.GetMother() != null && child.GetMother() != mother)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (mother != null && father != null &&
+        if (father != null && child.GetFather() != null && child.GetFather() != father ||
+            mother != null && child.GetMother() != null && child.GetMother() != mother || mother != null &&
+            father != null &&
             !LovePartnerRelationUtility.LovePartnerRelationExists(mother, father) &&
             !LovePartnerRelationUtility.ExLovePartnerRelationExists(mother, father))
         {
@@ -47,7 +35,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
             return false;
         }
 
-        var skinColorFactor = GetSkinColorFactor(child.story.melanin, father?.story.melanin, mother?.story.melanin);
+        var skinColorFactor = getSkinColorFactor(child.story.melanin, father?.story.melanin, mother?.story.melanin);
         if (skinColorFactor <= 0f)
         {
             __result = 0f;
@@ -60,7 +48,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
         var single1 = 1f;
         if (father != null && child.GetFather() == null)
         {
-            parentAgeFactor = GetParentAgeFactor(father, child, 14f, 30f, 50f);
+            parentAgeFactor = getParentAgeFactor(father, child, 14f, 30f, 50f);
             if (parentAgeFactor == 0f)
             {
                 __result = 0f;
@@ -70,14 +58,14 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
 
         if (mother != null && child.GetMother() == null)
         {
-            single = GetParentAgeFactor(mother, child, 16f, 27f, 45f);
+            single = getParentAgeFactor(mother, child, 16f, 27f, 45f);
             if (single == 0f)
             {
                 __result = 0f;
                 return false;
             }
 
-            var num = NumberOfChildrenFemaleWantsEver(mother);
+            var num = numberOfChildrenFemaleWantsEver(mother);
             if (mother.relations.ChildrenCount >= num)
             {
                 __result = 0f;
@@ -104,7 +92,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
         return false;
     }
 
-    private static float GetSkinColorFactor(float? childMelanin, float? fatherMelanin, float? motherMelanin)
+    private static float getSkinColorFactor(float? childMelanin, float? fatherMelanin, float? motherMelanin)
     {
         if (!childMelanin.HasValue || !fatherMelanin.HasValue || !motherMelanin.HasValue)
         {
@@ -122,7 +110,7 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
     }
 
 
-    private static float GetParentAgeFactor(Pawn parent, Pawn child, float minAgeToHaveChildren,
+    private static float getParentAgeFactor(Pawn parent, Pawn child, float minAgeToHaveChildren,
         float usualAgeToHaveChildren, float maxAgeToHaveChildren)
     {
         var single = PawnRelationUtility.MaxPossibleBioAgeAt(parent.ageTracker.AgeBiologicalYearsFloat,
@@ -141,9 +129,9 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
                 return 1f;
             }
 
-            var ageFactor = GetAgeFactor(single1, minAgeToHaveChildren, maxAgeToHaveChildren,
+            var ageFactor = getAgeFactor(single1, minAgeToHaveChildren, maxAgeToHaveChildren,
                 usualAgeToHaveChildren);
-            var ageFactor1 = GetAgeFactor(single, minAgeToHaveChildren, maxAgeToHaveChildren,
+            var ageFactor1 = getAgeFactor(single, minAgeToHaveChildren, maxAgeToHaveChildren,
                 usualAgeToHaveChildren);
             return Mathf.Max(ageFactor, ageFactor1);
         }
@@ -156,12 +144,12 @@ public static class ChildRelationUtility_ChanceOfBecomingChildOf
         return 0f;
     }
 
-    private static float GetAgeFactor(float ageAtBirth, float min, float max, float mid)
+    private static float getAgeFactor(float ageAtBirth, float min, float max, float mid)
     {
         return GenMath.GetFactorInInterval(min, mid, max, 1.6f, ageAtBirth);
     }
 
-    private static int NumberOfChildrenFemaleWantsEver(Pawn female)
+    private static int numberOfChildrenFemaleWantsEver(Pawn female)
     {
         Rand.PushState();
         Rand.Seed = female.thingIDNumber * 3;

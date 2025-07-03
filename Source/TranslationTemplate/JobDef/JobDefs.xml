@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: lovin'. -->
+  <DoLovinCasual.reportString>lovin'.</DoLovinCasual.reportString>
+  <!-- EN: on a date. -->
+  <JobDateFollow.reportString>on a date.</JobDateFollow.reportString>
+  <!-- EN: on a date. -->
+  <JobDateLead.reportString>on a date.</JobDateLead.reportString>
+  <!-- EN: attempting hookup. -->
+  <LeadHookup.reportString>attempting hookup.</LeadHookup.reportString>
+  <!-- EN: asking for a date. -->
+  <ProposeDate.reportString>asking for a date.</ProposeDate.reportString>
+</LanguageData>

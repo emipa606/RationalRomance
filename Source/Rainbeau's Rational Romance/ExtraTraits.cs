@@ -13,7 +13,7 @@ public static class ExtraTraits
             return;
         }
 
-        if (orientation < RationalRomance.Settings.asexualChance / 100)
+        if (orientation < RationalRomance.Settings.AsexualChance / 100)
         {
             if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) ||
                 LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn))
@@ -34,13 +34,13 @@ public static class ExtraTraits
                 pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual));
             }
         }
-        else if (orientation < (RationalRomance.Settings.asexualChance + RationalRomance.Settings.bisexualChance) /
+        else if (orientation < (RationalRomance.Settings.AsexualChance + RationalRomance.Settings.BisexualChance) /
                  100)
         {
             pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
         }
-        else if (orientation < (RationalRomance.Settings.asexualChance + RationalRomance.Settings.bisexualChance +
-                                RationalRomance.Settings.gayChance) / 100)
+        else if (orientation < (RationalRomance.Settings.AsexualChance + RationalRomance.Settings.BisexualChance +
+                                RationalRomance.Settings.GayChance) / 100)
         {
             if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) ||
                 LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn))
@@ -70,7 +70,7 @@ public static class ExtraTraits
             return;
         }
 
-        if (Rand.Value < RationalRomance.Settings.polyChance / 100)
+        if (Rand.Value < RationalRomance.Settings.PolyChance / 100)
         {
             pawn.story.traits.GainTrait(new Trait(RRRTraitDefOf.Polyamorous));
         }

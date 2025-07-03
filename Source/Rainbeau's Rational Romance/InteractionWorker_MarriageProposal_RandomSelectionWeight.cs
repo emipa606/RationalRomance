@@ -22,32 +22,12 @@ public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
         }
 
         var directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient);
-        if (directRelation == null)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (!SexualityUtilities.HasFreeSpouseFianceCapacity(initiator) ||
-            !SexualityUtilities.HasFreeSpouseFianceCapacity(recipient))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (initiator.gender == recipient.gender && initiator.story.traits.HasTrait(RRRTraitDefOf.Straight))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (initiator.gender != recipient.gender && initiator.story.traits.HasTrait(TraitDefOf.Gay))
-        {
-            __result = 0f;
-            return false;
-        }
-
-        if (initiator.story.traits.HasTrait(TraitDefOf.Asexual))
+        if (directRelation == null ||
+            !SexualityUtilities.HasFreeSpouseFianceCapacity(initiator) ||
+            !SexualityUtilities.HasFreeSpouseFianceCapacity(recipient) ||
+            initiator.gender == recipient.gender && initiator.story.traits.HasTrait(RRRTraitDefOf.Straight) ||
+            initiator.gender != recipient.gender && initiator.story.traits.HasTrait(TraitDefOf.Gay) ||
+            initiator.story.traits.HasTrait(TraitDefOf.Asexual))
         {
             __result = 0f;
             return false;
