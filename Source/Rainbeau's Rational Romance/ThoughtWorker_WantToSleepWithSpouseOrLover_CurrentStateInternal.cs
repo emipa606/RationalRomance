@@ -22,14 +22,29 @@ public static class ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInter
             (from r in p.relations.PotentiallyRelatedPawns
                 where LovePartnerRelationUtility.LovePartnerRelationExists(p, r)
                 select r).Count() > 1;
-        var partnerBedInRoom =
-            (from t in p.ownership.OwnedBed.GetRoom().ContainedBeds
-                where t.OwnersForReading.Contains(directPawnRelation.otherPawn)
-                select t).Any();
-        if (directPawnRelation != null && p.ownership.OwnedBed != null &&
-            p.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) && multiplePartners && partnerBedInRoom)
+
+        if (directPawnRelation == null || p.ownership.OwnedBed.GetRoom() == null)
+        {
+            return;
+        }
+
+        if (p.ownership.OwnedBed == null)
+        {
+            return;
+        }
+
+        var partnerBedInRoom = (from t in p.ownership.OwnedBed.GetRoom()?.ContainedBeds
+            where t.OwnersForReading.Contains(directPawnRelation.otherPawn)
+            select t).Any();
+
+        if (hasPolyamorousTrait(p) && multiplePartners && partnerBedInRoom)
         {
             __result = false;
         }
+    }
+
+    private static bool hasPolyamorousTrait(Pawn pawn)
+    {
+        return pawn.story?.traits?.HasTrait(RRRTraitDefOf.Polyamorous) ?? false;
     }
 }

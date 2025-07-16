@@ -4,14 +4,15 @@
   "CanRemove": "1",
   "PreviewVersion": "1.6",
   "SocialImageSet": true,
-  "LastXmlCleaning": "2025-07-03T19:07:44.3589009+02:00",
+  "LastXmlCleaning": "2025-07-16T15:02:32.166815+02:00",
   "Patches": true,
   "Defs": true,
   "Assemblies": true,
-  "LinesOfCode": 87259.0,
-  "LinesOfXML": 23386.0,
+  "LinesOfCode": 87510,
+  "LinesOfXML": 23386,
   "SearchTags": [
     " orientation",
     " traits"
-  ]
+  ],
+  "CodeBaseSize": 80
 }
