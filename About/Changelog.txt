@@ -1,5 +1,8 @@
 # Changelog for RationalRomance
 
+1.6.2 - Added a few more null-checks for the room-methods
+
+
 1.6.1 - Should fix WantToSleepWithSpouseOrLover error
 
 

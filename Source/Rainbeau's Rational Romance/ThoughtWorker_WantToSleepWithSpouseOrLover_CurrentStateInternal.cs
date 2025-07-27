@@ -23,17 +23,17 @@ public static class ThoughtWorker_WantToSleepWithSpouseOrLover_CurrentStateInter
                 where LovePartnerRelationUtility.LovePartnerRelationExists(p, r)
                 select r).Count() > 1;
 
-        if (directPawnRelation == null || p.ownership.OwnedBed.GetRoom() == null)
+        if (directPawnRelation == null || p.ownership?.OwnedBed?.GetRoom() == null)
         {
             return;
         }
 
-        if (p.ownership.OwnedBed == null)
+        if (p.ownership?.OwnedBed == null)
         {
             return;
         }
 
-        var partnerBedInRoom = (from t in p.ownership.OwnedBed.GetRoom()?.ContainedBeds
+        var partnerBedInRoom = (from t in p.ownership?.OwnedBed?.GetRoom()?.ContainedBeds
             where t.OwnersForReading.Contains(directPawnRelation.otherPawn)
             select t).Any();
 
