@@ -14,7 +14,7 @@
   <!-- EN: {PAWN_nameDef} prefers romantic relationships involving multiple partners to monogamous relationships. {PAWN_pronoun} doesn't mind if {PAWN_possessive} partners romance other people, but will be less happy in a restraining, monogamous relationship. -->
   <Polyamorous.degreeDatas.polyamorous.description>{PAWN_nameDef} bevorzugt romantische Beziehungen mit mehreren Partnern gegenüber monogamen Beziehungen. {PAWN_pronoun} hat nichts dagegen, wenn {PAWN_possessive} Partner eine Romanze mit anderen Menschen eingehen, ist aber weniger glücklich in einer einschränkenden, monogamen Beziehung.</Polyamorous.degreeDatas.polyamorous.description>
   <!-- EN: straight -->
-  <Straight.degreeDatas.straight.label>gerade</Straight.degreeDatas.straight.label>
+  <Straight.degreeDatas.straight.label>hetero</Straight.degreeDatas.straight.label>
   <!-- EN: {PAWN_nameDef} is romantically attracted to people of the opposite gender. -->
   <Straight.degreeDatas.straight.description>{PAWN_nameDef} fühlt sich romantisch zu Menschen des anderen Geschlechts hingezogen.</Straight.degreeDatas.straight.description>
 </LanguageData>
