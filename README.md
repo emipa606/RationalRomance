@@ -1,6 +1,6 @@
 # [[RF] Rational Romance (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=2013144996)
 
-![Image](https://i.imgur.com/buuPQel.png)
+![Image](https://img.litet.net/logos/Info.png)
 
 Update of Rainbeau Flambe mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
@@ -14,9 +14,9 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=1543164506
 
 Please use the comments for bug-reports about the mod, not your opinion of it.
 
-![Image](https://i.imgur.com/pufA0kM.png)
+![Image](https://img.litet.net/logos/Notice.png)
 	
-![Image](https://i.imgur.com/Z4GOv8H.png)
+![Image](https://img.litet.net/logos/OriginalDescription.png)
 
 **"Rational Romance" overhauls RimWorld's romance system, fixing some problems and adding some new options. Think of it as a "spiritual successor" to SeveralPuffins' popular but sadly abandoned a17 mod, "Romance Diversified."
 
@@ -67,13 +67,13 @@ If you're a modpack maker and want to include "Rational Romance" in your pack, o
 *The Ludeon forums discussion thread for my mods can be found [here](https://ludeon.com/forums/index.php?topic=46165).*
 
 If you have any (helpful) suggestions for improvement, please let me know!
-![Image](https://i.imgur.com/PwoNOj4.png)
+![Image](https://img.litet.net/logos/ReportingIssues.png)
 
 
 
 -  See if the the error persists if you just have this mod and its requirements active.
 -  If not, try adding your other mods until it happens again.
--  Post your error-log using the [Log Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404) or the standalone [Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404) and command Ctrl+F12
+-  Always post your log using the [Log Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404)
 -  For best support, please use the Discord-channel for error-reporting.
 -  Do not report errors by making a discussion-thread, I get no notification of that.
 -  If you have the solution for a problem, please post it to the GitHub repository.
@@ -81,4 +81,4 @@ If you have any (helpful) suggestions for improvement, please let me know!
 
  
 
-[![Image](https://img.shields.io/github/v/release/emipa606/RationalRomance?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2013144996) | tags:  orientation,  traits
+[![Image](https://img.shields.io/github/v/release/emipa606/RationalRomance?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/2013144996) | tags: traits, orientation
