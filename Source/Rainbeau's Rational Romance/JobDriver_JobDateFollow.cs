@@ -24,9 +24,6 @@ public class JobDriver_JobDateFollow : JobDriver
         return RandomSocialMode.SuperActive;
     }
 
-    //private bool IsPartnerNearby() {
-    //	return this.actor.Position.InHorDistOf(this.Partner.Position, 2f);
-    //}
     [DebuggerHidden]
     public override IEnumerable<Toil> MakeNewToils()
     {

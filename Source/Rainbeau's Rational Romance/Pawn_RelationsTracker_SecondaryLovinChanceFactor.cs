@@ -18,47 +18,12 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
     public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance)
     {
         var pawn = __instance.getPawn();
-        if (pawn == otherPawn ||
-            (!pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && pawn.def != otherPawn.def)
+        if (IsInvalidPair(pawn, otherPawn) || FailsOrientationGate(pawn, otherPawn))
         {
             __result = 0f;
             return false;
         }
 
-        float crossSpecies = 1;
-        if (pawn.def != otherPawn.def)
-        {
-            crossSpecies = RationalRomance.Settings.AlienLoveChance / 100;
-        }
-
-        if (Rand.ValueSeeded(pawn.thingIDNumber ^ 3273711) >= 0.015f)
-        {
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(TraitDefOf.Asexual))
-            {
-                __result = 0f;
-                return false;
-            }
-
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(TraitDefOf.Gay))
-            {
-                if (otherPawn.gender != pawn.gender)
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(RRRTraitDefOf.Straight))
-            {
-                if (otherPawn.gender == pawn.gender)
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-        }
-
-        var ageBiologicalYearsFloat = pawn.ageTracker.AgeBiologicalYearsFloat;
         var targetAge = otherPawn.ageTracker.AgeBiologicalYearsFloat;
         if (targetAge < 16f)
         {
@@ -66,75 +31,12 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
             return false;
         }
 
-        var youngestTargetAge = Mathf.Max(16f, ageBiologicalYearsFloat - 30f);
-        var youngestReasonableTargetAge = Mathf.Max(20f, ageBiologicalYearsFloat, ageBiologicalYearsFloat - 10f);
-        var targetAgeLikelihood = GenMath.FlatHill(0.15f, youngestTargetAge, youngestReasonableTargetAge,
-            ageBiologicalYearsFloat + 7f, ageBiologicalYearsFloat + 30f, 0.15f, targetAge);
-        var targetBaseCapabilities = 1f;
-        targetBaseCapabilities *=
-            Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Talking));
-        targetBaseCapabilities *=
-            Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
-        targetBaseCapabilities *=
-            Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
-        var initiatorBeauty = 0;
-        var targetBeauty = 0;
-        if (otherPawn.RaceProps.Humanlike)
-        {
-            initiatorBeauty = pawn.story.traits.DegreeOfTrait(beauty);
-        }
-
-        if (otherPawn.RaceProps.Humanlike)
-        {
-            targetBeauty = otherPawn.story.traits.DegreeOfTrait(beauty);
-        }
-
-        var targetBeautyMod = 1f;
-        switch (targetBeauty)
-        {
-            case -2:
-                targetBeautyMod = initiatorBeauty >= 0 ? 0.3f : 0.8f;
-                break;
-            case -1:
-                targetBeautyMod = initiatorBeauty >= 0 ? 0.75f : 0.9f;
-                break;
-            case 1:
-                targetBeautyMod = 1.7f;
-                break;
-            case 2:
-                targetBeautyMod = 2.3f;
-                break;
-        }
-
-        var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(pawn);
-        var ageDiffPref = 1f;
-        switch (backgroundCulture)
-        {
-            case "Urbworld" or "Medieval":
-                switch (pawn.gender)
-                {
-                    case Gender.Male when otherPawn.gender == Gender.Female:
-                        ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
-                        break;
-                    case Gender.Female when otherPawn.gender == Gender.Male:
-                        ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
-                        break;
-                }
-
-                break;
-            case "Tribal" or "Imperial" when pawn.gender == Gender.Male && otherPawn.gender == Gender.Female:
-                ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 1.2f : 0.8f;
-                break;
-            case "Tribal" or "Imperial":
-            {
-                if (pawn.gender == Gender.Female && otherPawn.gender == Gender.Male)
-                {
-                    ageDiffPref = ageBiologicalYearsFloat <= targetAge ? 0.8f : 1.2f;
-                }
-
-                break;
-            }
-        }
+        var ageBiologicalYearsFloat = pawn.ageTracker.AgeBiologicalYearsFloat;
+        var targetAgeLikelihood = CalculateTargetAgeLikelihood(ageBiologicalYearsFloat, targetAge);
+        var targetBaseCapabilities = CalculateTargetBaseCapabilities(otherPawn);
+        var targetBeautyMod = CalculateTargetBeautyModifier(pawn, otherPawn);
+        var ageDiffPref = GetAgeDifferencePreference(pawn, otherPawn, ageBiologicalYearsFloat, targetAge);
+        var crossSpecies = pawn.def != otherPawn.def ? RationalRomance.Settings.AlienLoveChance / 100f : 1f;
 
         var initiatorYoung = Mathf.InverseLerp(15f, 18f, ageBiologicalYearsFloat);
         var targetYoung = Mathf.InverseLerp(15f, 18f, targetAge);
@@ -143,9 +45,102 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
         return false;
     }
 
+    private static bool IsInvalidPair(Pawn pawn, Pawn otherPawn)
+    {
+        return pawn == otherPawn ||
+               (!pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && pawn.def != otherPawn.def;
+    }
+
+    private static bool FailsOrientationGate(Pawn pawn, Pawn otherPawn)
+    {
+        if (Rand.ValueSeeded(pawn.thingIDNumber ^ 3273711) < 0.015f || !pawn.RaceProps.Humanlike)
+        {
+            return false;
+        }
+
+        return pawn.story.traits.HasTrait(TraitDefOf.Asexual) ||
+               pawn.story.traits.HasTrait(TraitDefOf.Gay) && otherPawn.gender != pawn.gender ||
+               pawn.story.traits.HasTrait(RRRTraitDefOf.Straight) && otherPawn.gender == pawn.gender;
+    }
+
+    private static float CalculateTargetAgeLikelihood(float initiatorAge, float targetAge)
+    {
+        var youngestTargetAge = Mathf.Max(16f, initiatorAge - 30f);
+        var youngestReasonableTargetAge = Mathf.Max(20f, initiatorAge, initiatorAge - 10f);
+        return GenMath.FlatHill(0.15f, youngestTargetAge, youngestReasonableTargetAge, initiatorAge + 7f,
+            initiatorAge + 30f, 0.15f, targetAge);
+    }
+
+    private static float CalculateTargetBaseCapabilities(Pawn otherPawn)
+    {
+        var capabilityMultiplier = 1f;
+        capabilityMultiplier *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Talking));
+        capabilityMultiplier *=
+            Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
+        capabilityMultiplier *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
+        return capabilityMultiplier;
+    }
+
+    private static float CalculateTargetBeautyModifier(Pawn pawn, Pawn otherPawn)
+    {
+        var initiatorBeauty = 0;
+        var targetBeauty = 0;
+        if (otherPawn.RaceProps.Humanlike)
+        {
+            initiatorBeauty = pawn.story.traits.DegreeOfTrait(beauty);
+            targetBeauty = otherPawn.story.traits.DegreeOfTrait(beauty);
+        }
+
+        return targetBeauty switch
+        {
+            -2 => initiatorBeauty >= 0 ? 0.3f : 0.8f,
+            -1 => initiatorBeauty >= 0 ? 0.75f : 0.9f,
+            1 => 1.7f,
+            2 => 2.3f,
+            _ => 1f
+        };
+    }
+
+    private static float GetAgeDifferencePreference(Pawn pawn, Pawn otherPawn, float initiatorAge, float targetAge)
+    {
+        var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(pawn);
+        var initiatorYounger = initiatorAge <= targetAge;
+
+        return backgroundCulture switch
+        {
+            "Urbworld" or "Medieval" => GetGenderAgePreference(pawn.gender, otherPawn.gender, initiatorYounger, true),
+            "Tribal" or "Imperial" => GetGenderAgePreference(pawn.gender, otherPawn.gender, initiatorYounger, false),
+            _ => 1f
+        };
+    }
+
+    private static float GetGenderAgePreference(Gender initiatorGender, Gender targetGender, bool initiatorYounger,
+        bool malePrefersYounger)
+    {
+        if (initiatorGender == Gender.Male && targetGender == Gender.Female)
+        {
+            return malePrefersYounger
+                ? initiatorYounger ? 0.8f : 1.2f
+                : initiatorYounger
+                    ? 1.2f
+                    : 0.8f;
+        }
+
+        if (initiatorGender == Gender.Female && targetGender == Gender.Male)
+        {
+            return malePrefersYounger
+                ? initiatorYounger ? 1.2f : 0.8f
+                : initiatorYounger
+                    ? 0.8f
+                    : 1.2f;
+        }
+
+        return 1f;
+    }
+
     private static Pawn getPawn(this Pawn_RelationsTracker _this)
     {
-        if (!(pawnFieldInfo == null))
+        if (pawnFieldInfo != null)
         {
             return (Pawn)pawnFieldInfo.GetValue(_this);
         }

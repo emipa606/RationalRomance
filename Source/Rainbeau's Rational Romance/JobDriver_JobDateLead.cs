@@ -8,7 +8,6 @@ namespace RationalRomance_Code;
 
 public class JobDriver_JobDateLead : JobDriver
 {
-    private const int Duration = 20;
     private const TargetIndex PartnerInd = TargetIndex.A;
     private int ticksLeft = 20;
 
@@ -32,9 +31,6 @@ public class JobDriver_JobDateLead : JobDriver
         return RandomSocialMode.SuperActive;
     }
 
-    //private bool IsPartnerNearby() {
-    //	return this.actor.Position.InHorDistOf(this.Partner.Position, 2f);
-    //}
     private Toil gotoCell(LocalTargetInfo target)
     {
         var toil = new Toil();

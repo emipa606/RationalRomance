@@ -32,83 +32,104 @@ public class JobDriver_ProposeDate : JobDriver
         var startRadialIndex = GenRadial.NumCellsInRadius(14f);
         var endRadialIndex = GenRadial.NumCellsInRadius(2f);
         const int radialIndexStride = 3;
-        var intVec3S = new List<IntVec3> { root };
-        var intVec3 = root;
+
+        var path = new List<IntVec3> { root };
+        var current = root;
+
         for (var i = 0; i < 8; i++)
         {
-            var invalid = IntVec3.Invalid;
-            var single1 = -1f;
-            for (var j = startRadialIndex; j > endRadialIndex; j -= radialIndexStride)
-            {
-                var radialPattern = intVec3 + GenRadial.RadialPattern[j];
-                if (!radialPattern.InBounds(p1.Map) || !radialPattern.Standable(p1.Map) ||
-                    radialPattern.IsForbidden(p1) || radialPattern.IsForbidden(p2) ||
-                    radialPattern.GetTerrain(p1.Map).avoidWander ||
-                    !GenSight.LineOfSight(intVec3, radialPattern, p1.Map) || radialPattern.Roofed(p1.Map) ||
-                    PawnUtility.KnownDangerAt(radialPattern, p1.Map, p1) ||
-                    PawnUtility.KnownDangerAt(radialPattern, p1.Map, p2))
-                {
-                    continue;
-                }
-
-                var lengthManhattan = 10000f;
-                foreach (var vec3 in intVec3S)
-                {
-                    lengthManhattan += (vec3 - radialPattern).LengthManhattan;
-                }
-
-                float lengthManhattan1 = (radialPattern - root).LengthManhattan;
-                if (lengthManhattan1 > 40f)
-                {
-                    lengthManhattan *= Mathf.InverseLerp(70f, 40f, lengthManhattan1);
-                }
-
-                if (intVec3S.Count >= 2)
-                {
-                    var item = intVec3S[^1] - intVec3S[^2];
-                    var angleFlat = item.AngleFlat;
-                    var angleFlat1 = (radialPattern - intVec3).AngleFlat;
-                    if (angleFlat1 <= angleFlat)
-                    {
-                        angleFlat -= 360f;
-                    }
-
-                    var single = angleFlat1 - angleFlat;
-
-                    if (single > 110f)
-                    {
-                        lengthManhattan *= 0.01f;
-                    }
-                }
-
-                if (intVec3S.Count >= 4 &&
-                    (intVec3 - root).LengthManhattan < (radialPattern - root).LengthManhattan)
-                {
-                    lengthManhattan *= 1E-05f;
-                }
-
-                if (!(lengthManhattan > single1))
-                {
-                    continue;
-                }
-
-                invalid = radialPattern;
-                single1 = lengthManhattan;
-            }
-
-            if (single1 < 0f)
+            if (!TryFindBestNextDateCell(p1, p2, root, current, path, startRadialIndex, endRadialIndex,
+                    radialIndexStride, out var nextCell))
             {
                 result = null;
                 return false;
             }
 
-            intVec3S.Add(invalid);
-            intVec3 = invalid;
+            path.Add(nextCell);
+            current = nextCell;
         }
 
-        intVec3S.Add(root);
-        result = intVec3S;
+        path.Add(root);
+        result = path;
         return true;
+    }
+
+    private static bool TryFindBestNextDateCell(Pawn p1, Pawn p2, IntVec3 root, IntVec3 current,
+        List<IntVec3> path, int startRadialIndex, int endRadialIndex, int radialIndexStride, out IntVec3 bestCell)
+    {
+        bestCell = IntVec3.Invalid;
+        var bestScore = -1f;
+
+        for (var j = startRadialIndex; j > endRadialIndex; j -= radialIndexStride)
+        {
+            var candidate = current + GenRadial.RadialPattern[j];
+            if (!IsValidDateCell(candidate, current, p1, p2))
+            {
+                continue;
+            }
+
+            var score = GetDateCellScore(root, current, candidate, path);
+            if (!(score > bestScore))
+            {
+                continue;
+            }
+
+            bestCell = candidate;
+            bestScore = score;
+        }
+
+        return bestScore >= 0f;
+    }
+
+    private static bool IsValidDateCell(IntVec3 candidate, IntVec3 current, Pawn p1, Pawn p2)
+    {
+        return candidate.InBounds(p1.Map) &&
+               candidate.Standable(p1.Map) &&
+               !candidate.IsForbidden(p1) &&
+               !candidate.IsForbidden(p2) &&
+               !candidate.GetTerrain(p1.Map).avoidWander &&
+               GenSight.LineOfSight(current, candidate, p1.Map) &&
+               !candidate.Roofed(p1.Map) &&
+               !PawnUtility.KnownDangerAt(candidate, p1.Map, p1) &&
+               !PawnUtility.KnownDangerAt(candidate, p1.Map, p2);
+    }
+
+    private static float GetDateCellScore(IntVec3 root, IntVec3 current, IntVec3 candidate, List<IntVec3> path)
+    {
+        var score = 10000f;
+        foreach (var point in path)
+        {
+            score += (point - candidate).LengthManhattan;
+        }
+
+        var distanceFromRoot = (candidate - root).LengthManhattan;
+        if (distanceFromRoot > 40f)
+        {
+            score *= Mathf.InverseLerp(70f, 40f, distanceFromRoot);
+        }
+
+        if (path.Count >= 2)
+        {
+            var lastDirection = path[^1] - path[^2];
+            var lastAngle = lastDirection.AngleFlat;
+            var newAngle = (candidate - current).AngleFlat;
+            if (newAngle <= lastAngle)
+            {
+                lastAngle -= 360f;
+            }
+
+            if (newAngle - lastAngle > 110f)
+            {
+                score *= 0.01f;
+            }
+        }
+
+        if (path.Count >= 4 && (current - root).LengthManhattan < (candidate - root).LengthManhattan)
+        {
+            score *= 1E-05f;
+        }
+
+        return score;
     }
 
     private bool isTargetPawnOkay()
@@ -134,7 +155,6 @@ public class JobDriver_ProposeDate : JobDriver
         if (list.Count == 0)
         {
             result = false;
-            //Log.Message("No date walk destination found.");
         }
         else
         {
@@ -143,9 +163,6 @@ public class JobDriver_ProposeDate : JobDriver
                 select c).ToList();
             best = list2.FirstOrDefault();
             list2.Reverse();
-            //Log.Message("Date walk destinations found from beauty " +
-            //            BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
-            //            BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
             result = true;
         }
 
@@ -200,7 +217,6 @@ public class JobDriver_ProposeDate : JobDriver
                         return;
                     }
 
-                    //Log.Message("Date walk path found.");
                     jobDateLead.targetQueueB = [];
                     for (var i = 1; i < list.Count; i++)
                     {

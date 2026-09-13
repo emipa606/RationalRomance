@@ -18,7 +18,7 @@ public class JobDriver_LeadHookup : JobDriver
 
     private static TargetIndex TargetPawnIndex => TargetIndex.A;
 
-    private TargetIndex TargetBedIndex => TargetIndex.B;
+    private static TargetIndex TargetBedIndex => TargetIndex.B;
 
     public override bool TryMakePreToilReservations(bool errorOnFailed)
     {

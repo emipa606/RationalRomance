@@ -18,140 +18,127 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
     // CHANGE: Allowed for polyamory.
     public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
     {
-        if (!initiator.story.traits.HasTrait(TraitDefOf.Asexual) &&
-            !initiator.story.traits.HasTrait(TraitDefOf.Bisexual) &&
-            !initiator.story.traits.HasTrait(TraitDefOf.Gay) &&
-            !initiator.story.traits.HasTrait(RRRTraitDefOf.Straight))
-        {
-            ExtraTraits.AssignOrientation(initiator);
-        }
+        EnsureOrientationAssigned(initiator);
+        EnsureOrientationAssigned(recipient);
 
-        if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual) &&
-            !recipient.story.traits.HasTrait(TraitDefOf.Bisexual) &&
-            !recipient.story.traits.HasTrait(TraitDefOf.Gay) &&
-            !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
-        {
-            ExtraTraits.AssignOrientation(recipient);
-        }
-
-        if (recipient.InMentalState || LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient) ||
-            initiator.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDefOf.RebuffedMyRomanceAttempt) > 0)
+        if (ShouldBlockAttempt(initiator, recipient, out var romanceChance, out var opinionOfTarget))
         {
             __result = 0f;
             return false;
         }
 
-        var romanceChance = initiator.relations.SecondaryRomanceChanceFactor(recipient);
-        if (romanceChance < 0.25f)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        var opinionOfTarget = initiator.relations.OpinionOf(recipient);
-        if (opinionOfTarget < 5 || recipient.relations.OpinionOf(initiator) < 5)
-        {
-            __result = 0f;
-            return false;
-        }
-
-        var initiatorPartner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-        if (initiatorPartner != null && initiator.relations.OpinionOf(initiatorPartner) >= 33 &&
-            !SexualityUtilities.HasFreeLoverCapacity(initiator))
-        {
-            if (!initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-                !initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-            {
-                __result = 0f;
-                return false;
-            }
-        }
-
-        var recipientPartner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(recipient, false);
-        if (recipientPartner != null && recipient.relations.OpinionOf(recipientPartner) >= 33 &&
-            !SexualityUtilities.HasFreeLoverCapacity(recipient))
-        {
-            if (!recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-                !recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-            {
-                __result = 0f;
-                return false;
-            }
-        }
-
-        var cheatChance = 1f;
-        var pawn = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
-        if (pawn != null && !SexualityUtilities.HasFreeLoverCapacity(initiator))
-        {
-            float opinionOfPartner = initiator.relations.OpinionOf(pawn);
-            if (initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous))
-            {
-                if (SexualityUtilities.HasNonPolyPartner(initiator))
-                {
-                    if (initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-                    {
-                        cheatChance = initiator.Map == pawn.Map
-                            ? Mathf.InverseLerp(75f, 5f, opinionOfPartner)
-                            : Mathf.InverseLerp(100f, 50f, opinionOfPartner);
-                    }
-                    else
-                    {
-                        cheatChance = Mathf.InverseLerp(50f, -50f, opinionOfPartner);
-                    }
-
-                    if (initiator.story.traits.HasTrait(RRRTraitDefOf.Faithful))
-                    {
-                        cheatChance = 0f;
-                    }
-                }
-                else
-                {
-                    cheatChance = 1f;
-                }
-            }
-            else
-            {
-                if (initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-                {
-                    cheatChance = initiator.Map == pawn.Map
-                        ? Mathf.InverseLerp(75f, 5f, opinionOfPartner)
-                        : Mathf.InverseLerp(100f, 50f, opinionOfPartner);
-                }
-                else
-                {
-                    cheatChance = Mathf.InverseLerp(50f, -50f, opinionOfPartner);
-                }
-
-                if (initiator.story.traits.HasTrait(RRRTraitDefOf.Faithful))
-                {
-                    cheatChance = 0f;
-                }
-            }
-        }
-
-        float genderAggressiveness;
-        var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(initiator);
-        switch (backgroundCulture)
-        {
-            case "Urbworld":
-                genderAggressiveness = initiator.gender != Gender.Male ? 0.5f : 1f;
-                break;
-            case "Imperial":
-                genderAggressiveness = initiator.gender != Gender.Female ? 0.5f : 1f;
-                break;
-            case "Tribal":
-                genderAggressiveness = initiator.gender != Gender.Female ? 0.125f : 1f;
-                break;
-            case "Medieval":
-                genderAggressiveness = initiator.gender != Gender.Male ? 0.125f : 1f;
-                break;
-            default:
-                genderAggressiveness = 1f;
-                break;
-        }
+        var cheatChance = CalculateCheatChance(initiator);
+        var genderAggressiveness = GetGenderAggressiveness(initiator);
+        var orientationMatch = GetOrientationMatch(initiator, recipient, ref genderAggressiveness);
 
         var romanceChancePercent = Mathf.InverseLerp(0.25f, 1f, romanceChance);
         var opinionPercent = Mathf.InverseLerp(5f, 100f, opinionOfTarget);
+
+        __result = 1.15f * genderAggressiveness * romanceChancePercent * opinionPercent * cheatChance *
+                   orientationMatch;
+        return false;
+    }
+
+    private static void EnsureOrientationAssigned(Pawn pawn)
+    {
+        if (pawn.story.traits.HasTrait(TraitDefOf.Asexual) ||
+            pawn.story.traits.HasTrait(TraitDefOf.Bisexual) ||
+            pawn.story.traits.HasTrait(TraitDefOf.Gay) ||
+            pawn.story.traits.HasTrait(RRRTraitDefOf.Straight))
+        {
+            return;
+        }
+
+        ExtraTraits.AssignOrientation(pawn);
+    }
+
+    private static bool ShouldBlockAttempt(Pawn initiator, Pawn recipient, out float romanceChance,
+        out int opinionOfTarget)
+    {
+        romanceChance = 0f;
+        opinionOfTarget = 0;
+
+        if (recipient.InMentalState ||
+            LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient) ||
+            initiator.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDefOf.RebuffedMyRomanceAttempt) > 0)
+        {
+            return true;
+        }
+
+        romanceChance = initiator.relations.SecondaryRomanceChanceFactor(recipient);
+        if (romanceChance < 0.25f)
+        {
+            return true;
+        }
+
+        opinionOfTarget = initiator.relations.OpinionOf(recipient);
+        if (opinionOfTarget < 5 || recipient.relations.OpinionOf(initiator) < 5)
+        {
+            return true;
+        }
+
+        return HasCommittedPartnerBlock(initiator) || HasCommittedPartnerBlock(recipient);
+    }
+
+    private static bool HasCommittedPartnerBlock(Pawn pawn)
+    {
+        var currentPartner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(pawn, false);
+        return currentPartner != null &&
+               pawn.relations.OpinionOf(currentPartner) >= 33 &&
+               !SexualityUtilities.HasFreeLoverCapacity(pawn) &&
+               !pawn.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+               !pawn.story.traits.HasTrait(RRRTraitDefOf.Philanderer);
+    }
+
+    private static float CalculateCheatChance(Pawn initiator)
+    {
+        var partner = LovePartnerRelationUtility.ExistingMostLikedLovePartner(initiator, false);
+        if (partner == null || SexualityUtilities.HasFreeLoverCapacity(initiator))
+        {
+            return 1f;
+        }
+
+        if (initiator.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
+            !SexualityUtilities.HasNonPolyPartner(initiator))
+        {
+            return 1f;
+        }
+
+        var opinionOfPartner = initiator.relations.OpinionOf(partner);
+        var cheatChance = initiator.story.traits.HasTrait(RRRTraitDefOf.Philanderer)
+            ? GetPhilandererCheatChance(initiator, partner, opinionOfPartner)
+            : Mathf.InverseLerp(50f, -50f, opinionOfPartner);
+
+        if (initiator.story.traits.HasTrait(RRRTraitDefOf.Faithful))
+        {
+            cheatChance = 0f;
+        }
+
+        return cheatChance;
+    }
+
+    private static float GetPhilandererCheatChance(Pawn initiator, Pawn partner, float opinionOfPartner)
+    {
+        return initiator.Map == partner.Map
+            ? Mathf.InverseLerp(75f, 5f, opinionOfPartner)
+            : Mathf.InverseLerp(100f, 50f, opinionOfPartner);
+    }
+
+    private static float GetGenderAggressiveness(Pawn initiator)
+    {
+        var backgroundCulture = SexualityUtilities.GetAdultCulturalAdjective(initiator);
+        return backgroundCulture switch
+        {
+            "Urbworld" => initiator.gender != Gender.Male ? 0.5f : 1f,
+            "Imperial" => initiator.gender != Gender.Female ? 0.5f : 1f,
+            "Tribal" => initiator.gender != Gender.Female ? 0.125f : 1f,
+            "Medieval" => initiator.gender != Gender.Male ? 0.125f : 1f,
+            _ => 1f
+        };
+    }
+
+    private static float GetOrientationMatch(Pawn initiator, Pawn recipient, ref float genderAggressiveness)
+    {
         var orientationMatch = 1f;
         if (initiator.story.traits.HasTrait(TraitDefOf.Asexual) ||
             recipient.story.traits.HasTrait(TraitDefOf.Asexual))
@@ -159,26 +146,24 @@ public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
             orientationMatch = 0.15f;
         }
 
+        if (initiator.gender != recipient.gender &&
+            (initiator.story.traits.HasTrait(TraitDefOf.Gay) || recipient.story.traits.HasTrait(TraitDefOf.Gay)))
+        {
+            orientationMatch = 0.15f;
+        }
+
         if (initiator.gender != recipient.gender)
         {
-            if (initiator.story.traits.HasTrait(TraitDefOf.Gay) || recipient.story.traits.HasTrait(TraitDefOf.Gay))
-            {
-                orientationMatch = 0.15f;
-            }
+            return orientationMatch;
         }
 
-        if (initiator.gender == recipient.gender)
+        genderAggressiveness = 1f;
+        if (initiator.story.traits.HasTrait(RRRTraitDefOf.Straight) ||
+            recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
         {
-            genderAggressiveness = 1f;
-            if (initiator.story.traits.HasTrait(RRRTraitDefOf.Straight) ||
-                recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
-            {
-                orientationMatch = 0.15f;
-            }
+            orientationMatch = 0.15f;
         }
 
-        __result = 1.15f * genderAggressiveness * romanceChancePercent * opinionPercent * cheatChance *
-                   orientationMatch;
-        return false;
+        return orientationMatch;
     }
 }

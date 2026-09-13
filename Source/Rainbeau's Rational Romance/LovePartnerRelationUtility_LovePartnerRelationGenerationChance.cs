@@ -26,12 +26,10 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
         {
             var num = 0;
             var directRelations = other.relations.DirectRelations;
-            foreach (var directPawnRelation in directRelations)
+            foreach (var unused in directRelations.Where(relation =>
+                         LovePartnerRelationUtility.IsExLovePartnerRelation(relation.def)))
             {
-                if (LovePartnerRelationUtility.IsExLovePartnerRelation(directPawnRelation.def))
-                {
-                    num++;
-                }
+                num++;
             }
 
             single = Mathf.Pow(0.2f, num);
@@ -90,19 +88,19 @@ public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChan
         return Mathf.Clamp(single1, 0.001f, 1f);
     }
 
-    private static float minPossibleAgeGapAtMinAgeToGenerateAsLovers(Pawn p1, Pawn p2)
+    private static float minPossibleAgeGapAtMinAgeToGenerateAsLovers(Pawn firstPawn, Pawn secondPawn)
     {
-        var ageChronologicalYearsFloat = p1.ageTracker.AgeChronologicalYearsFloat - 14f;
+        var ageChronologicalYearsFloat = firstPawn.ageTracker.AgeChronologicalYearsFloat - 14f;
         if (ageChronologicalYearsFloat < 0f)
         {
             Log.Warning("at < 0");
             return 0f;
         }
 
-        var single = PawnRelationUtility.MaxPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat,
-            p2.ageTracker.AgeChronologicalYearsFloat, ageChronologicalYearsFloat);
+        var single = PawnRelationUtility.MaxPossibleBioAgeAt(secondPawn.ageTracker.AgeBiologicalYearsFloat,
+            secondPawn.ageTracker.AgeChronologicalYearsFloat, ageChronologicalYearsFloat);
         var single1 =
-            PawnRelationUtility.MinPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat,
+            PawnRelationUtility.MinPossibleBioAgeAt(secondPawn.ageTracker.AgeBiologicalYearsFloat,
                 ageChronologicalYearsFloat);
         switch (single)
         {

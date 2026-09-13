@@ -1,5 +1,9 @@
 # Changelog for RationalRomance
 
+1.6.5 - Support for Psychic Bonding gene
+Used DeepL to update translations for German, ChineseSimplified, French, Russian
+
+
 1.6.4 - Fixed wrong author name
 
 

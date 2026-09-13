@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -9,7 +10,6 @@ namespace RationalRomance_Code;
 public class JobDriver_DoLovinCasual : JobDriver
 {
     private const int TicksBetweenHeartMotes = 100;
-    private const int Duration = 20;
     private const TargetIndex BedInd = TargetIndex.B;
     private const TargetIndex PartnerInd = TargetIndex.A;
     private const TargetIndex SlotInd = TargetIndex.C;
@@ -67,7 +67,6 @@ public class JobDriver_DoLovinCasual : JobDriver
         {
             layDown.actor.pather.StopDead();
             var curDriver = layDown.actor.jobs.curDriver;
-            //				curDriver.layingDown = 2;
             curDriver.asleep = false;
         };
         layDown.tickIntervalAction = delegate(int delta) { Actor.GainComfortFromCellIfPossible(delta); };
@@ -88,11 +87,11 @@ public class JobDriver_DoLovinCasual : JobDriver
                     return;
                 }
 
-                foreach (var existingLovePartner in existingLovePartners)
+                foreach (var existingLovePartner in existingLovePartners.Select(lovePartners => lovePartners.otherPawn))
                 {
-                    if (existingLovePartner.otherPawn.Map == Actor.Map || Rand.Value < 0.25)
+                    if (existingLovePartner.Map == Actor.Map || Rand.Value < 0.25)
                     {
-                        existingLovePartner.otherPawn.needs.mood.thoughts.memories.TryGainMemory(
+                        existingLovePartner.needs.mood.thoughts.memories.TryGainMemory(
                             ThoughtDefOf.CheatedOnMe, Actor);
                     }
                 }

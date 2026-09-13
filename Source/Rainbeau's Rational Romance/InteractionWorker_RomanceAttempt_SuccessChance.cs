@@ -13,90 +13,125 @@ public static class InteractionWorker_RomanceAttempt_SuccessChance
     // CHANGE: Allowed for polyamory.
     public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
     {
-        if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual) &&
-            !recipient.story.traits.HasTrait(TraitDefOf.Bisexual) &&
-            !recipient.story.traits.HasTrait(TraitDefOf.Gay) &&
-            !recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
+        if (InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween(initiator, recipient))
         {
-            ExtraTraits.AssignOrientation(recipient);
+            if (initiator.IsQuestHelper() || recipient.IsQuestHelper())
+            {
+                __result = 0f;
+                return false;
+            }
+
+            __result = 1f;
+            return false;
         }
 
-        var single = 0.6f;
-        single *= recipient.relations.SecondaryRomanceChanceFactor(initiator);
-        single *= Mathf.InverseLerp(5f, 100f, recipient.relations.OpinionOf(initiator));
-        if (recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) &&
-            !SexualityUtilities.HasNonPolyPartner(recipient))
+        EnsureOrientationAssigned(recipient);
+
+        var successChance = CalculateBaseSuccessChance(initiator, recipient);
+        if (ShouldApplyCommitmentPenalty(recipient))
         {
-        }
-        else if (!SexualityUtilities.HasFreeLoverCapacity(recipient))
-        {
-            var single1 = 1f;
-            Pawn firstDirectRelationPawn = null;
-            if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover, x => !x.Dead) != null)
-            {
-                firstDirectRelationPawn = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover);
-                single1 = 0.6f;
-                if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful))
-                {
-                    single1 = 0f;
-                }
-            }
-            else if (recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, x => !x.Dead) != null)
-            {
-                firstDirectRelationPawn = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance);
-                single1 = 0.1f;
-                if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful))
-                {
-                    single1 = 0f;
-                }
-            }
-            else if (recipient.GetSpouseCount(false) > 0)
-            {
-                // This is a change from vanilla that checks for MostLikedSpouseRelation, but least liked seems better.
-                firstDirectRelationPawn = recipient.GetLeastLikedSpouseRelation().otherPawn;
-                single1 = 0.3f;
-                if (recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful))
-                {
-                    single1 = 0f;
-                }
-            }
-
-            if (firstDirectRelationPawn != null)
-            {
-                single1 *= Mathf.InverseLerp(100f, 0f, recipient.relations.OpinionOf(firstDirectRelationPawn));
-                if (recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
-                {
-                    single1 *= 1.6f;
-                    if (firstDirectRelationPawn.Map != recipient.Map)
-                    {
-                        single1 *= 2f;
-                    }
-                }
-
-                single1 *= Mathf.Clamp01(1f -
-                                         recipient.relations.SecondaryRomanceChanceFactor(firstDirectRelationPawn));
-            }
-
-            single *= single1;
+            successChance *= CalculateCommitmentModifier(recipient);
         }
 
-        __result = Mathf.Clamp01(single);
+        __result = ApplyOrientationModifiers(initiator, recipient, Mathf.Clamp01(successChance));
+        return false;
+    }
 
+    private static void EnsureOrientationAssigned(Pawn pawn)
+    {
+        if (pawn.story.traits.HasTrait(TraitDefOf.Asexual) ||
+            pawn.story.traits.HasTrait(TraitDefOf.Bisexual) ||
+            pawn.story.traits.HasTrait(TraitDefOf.Gay) ||
+            pawn.story.traits.HasTrait(RRRTraitDefOf.Straight))
+        {
+            return;
+        }
+
+        ExtraTraits.AssignOrientation(pawn);
+    }
+
+    private static float CalculateBaseSuccessChance(Pawn initiator, Pawn recipient)
+    {
+        var successChance = 0.6f;
+        successChance *= recipient.relations.SecondaryRomanceChanceFactor(initiator);
+        successChance *= Mathf.InverseLerp(5f, 100f, recipient.relations.OpinionOf(initiator));
+        return successChance;
+    }
+
+    private static bool ShouldApplyCommitmentPenalty(Pawn recipient)
+    {
+        if (SexualityUtilities.HasFreeLoverCapacity(recipient))
+        {
+            return false;
+        }
+
+        return !recipient.story.traits.HasTrait(RRRTraitDefOf.Polyamorous) ||
+               SexualityUtilities.HasNonPolyPartner(recipient);
+    }
+
+    private static float CalculateCommitmentModifier(Pawn recipient)
+    {
+        var commitmentMultiplier = GetCommitmentMultiplier(recipient, out var currentPartner);
+        if (currentPartner == null)
+        {
+            return commitmentMultiplier;
+        }
+
+        commitmentMultiplier *= Mathf.InverseLerp(100f, 0f, recipient.relations.OpinionOf(currentPartner));
+        if (recipient.story.traits.HasTrait(RRRTraitDefOf.Philanderer))
+        {
+            commitmentMultiplier *= 1.6f;
+            if (currentPartner.Map != recipient.Map)
+            {
+                commitmentMultiplier *= 2f;
+            }
+        }
+
+        commitmentMultiplier *= Mathf.Clamp01(1f - recipient.relations.SecondaryRomanceChanceFactor(currentPartner));
+        return commitmentMultiplier;
+    }
+
+    private static float GetCommitmentMultiplier(Pawn recipient, out Pawn currentPartner)
+    {
+        currentPartner = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Lover, x => !x.Dead);
+        if (currentPartner != null)
+        {
+            return recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful) ? 0f : 0.6f;
+        }
+
+        currentPartner = recipient.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Fiance, x => !x.Dead);
+        if (currentPartner != null)
+        {
+            return recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful) ? 0f : 0.1f;
+        }
+
+        if (recipient.GetSpouseCount(false) <= 0)
+        {
+            return 1f;
+        }
+
+        // This is a change from vanilla that checks for MostLikedSpouseRelation, but least liked seems better.
+        currentPartner = recipient.GetLeastLikedSpouseRelation().otherPawn;
+        return recipient.story.traits.HasTrait(RRRTraitDefOf.Faithful) ? 0f : 0.3f;
+    }
+
+    private static float ApplyOrientationModifiers(Pawn initiator, Pawn recipient, float successChance)
+    {
         if (initiator.gender == recipient.gender && recipient.story.traits.HasTrait(RRRTraitDefOf.Straight))
         {
-            __result *= 0.6f;
+            successChance *= 0.6f;
         }
 
         if (initiator.gender != recipient.gender && recipient.story.traits.HasTrait(TraitDefOf.Gay))
         {
-            __result *= 0.6f;
+            successChance *= 0.6f;
         }
 
         if (recipient.story.traits.HasTrait(TraitDefOf.Asexual))
         {
-            __result *= 0.3f;
+            successChance *= 0.3f;
         }
 
-        return false;
+        return successChance;
     }
 }

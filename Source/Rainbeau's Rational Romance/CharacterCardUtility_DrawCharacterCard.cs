@@ -14,88 +14,122 @@ namespace RationalRomance_Code;
     typeof(Rect), typeof(bool))]
 internal static class CharacterCardUtility_DrawCharacterCard
 {
+    private const int SearchWindowSize = 20;
+    private const float FloatComparisonEpsilon = 0.001f;
+
     // CHANGE: Allowed more traits to be displayed, if "More Trait Slots" isn't already doing so, anyway.
     [HarmonyPriority(Priority.VeryHigh)]
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var l = new List<CodeInstruction>(instructions);
+        var instructionsList = new List<CodeInstruction>(instructions);
         if (ModsConfig.ActiveModsInLoadOrder.Any(mod => mod.Name.Contains("More Trait Slots")))
         {
-            return l;
+            return instructionsList;
         }
 
-        for (var i = 0; i < l.Count; ++i)
+        var traitsLabelIndex = instructionsList.FindIndex(instruction =>
+            instruction.opcode == OpCodes.Ldstr &&
+            instruction.operand is "Traits");
+
+        if (traitsLabelIndex < 0)
         {
-            if (l[i].opcode != OpCodes.Ldstr || !l[i].operand.Equals("Traits"))
+            return instructionsList;
+        }
+
+        AdjustTraitsHeaderWidth(instructionsList, traitsLabelIndex);
+        AdjustTraitsVisibleRows(instructionsList, traitsLabelIndex);
+        AdjustTraitsSectionLayout(instructionsList, traitsLabelIndex);
+
+        return instructionsList;
+    }
+
+    private static void AdjustTraitsHeaderWidth(List<CodeInstruction> instructions, int traitsLabelIndex)
+    {
+        for (var i = traitsLabelIndex; i >= 0 && i >= traitsLabelIndex - SearchWindowSize; i--)
+        {
+            if (instructions[i].opcode != OpCodes.Ldc_R4 || !TryGetFloatOperand(instructions[i], out var value))
             {
                 continue;
             }
 
-            for (var j = i; j >= i - 20; --j)
+            if (!ApproximatelyEquals(value, 100f))
             {
-                if (l[j].opcode != OpCodes.Ldc_R4)
-                {
-                    continue;
-                }
-
-                if (!float.TryParse(l[j].operand.ToString(), out var temp))
-                {
-                    continue;
-                }
-
-                if (temp != 100f)
-                {
-                    continue;
-                }
-
-                l[j].operand = 80f;
-                break;
+                continue;
             }
 
-            for (var j = i; i >= i - 20; --j)
-            {
-                if (l[j].opcode != OpCodes.Ldc_I4_2)
-                {
-                    continue;
-                }
-
-                l[j].opcode = OpCodes.Ldc_I4_1;
-                break;
-            }
-
-            bool first0 = false,
-                first30 = false,
-                first24 = false;
-            for (; i < l.Count; ++i)
-            {
-                if (l[i].opcode == OpCodes.Ldc_R4 && l[i].operand != null)
-                {
-                    if (!float.TryParse(l[i].operand.ToString(), out var f))
-                    {
-                        continue;
-                    }
-
-                    if (!first30 && f == 30f)
-                    {
-                        l[i].operand = 24f;
-                    }
-                    else if (!first24 && f == 24f)
-                    {
-                        first24 = true;
-                        l[i].operand = 16f;
-                        break;
-                    }
-                }
-                else if (!first0 && l[i].opcode == OpCodes.Ldc_I4_1)
-                {
-                    first0 = true;
-                    l[i].opcode = OpCodes.Ldc_I4_0;
-                }
-            }
-
-            i = int.MaxValue - 1;
+            instructions[i].operand = 80f;
+            return;
         }
+    }
 
-        return l;
+    private static void AdjustTraitsVisibleRows(List<CodeInstruction> instructions, int traitsLabelIndex)
+    {
+        for (var i = traitsLabelIndex; i >= 0 && i >= traitsLabelIndex - SearchWindowSize; i--)
+        {
+            if (instructions[i].opcode != OpCodes.Ldc_I4_2)
+            {
+                continue;
+            }
+
+            instructions[i].opcode = OpCodes.Ldc_I4_1;
+            return;
+        }
+    }
+
+    private static void AdjustTraitsSectionLayout(List<CodeInstruction> instructions, int traitsLabelIndex)
+    {
+        var replacedFirstOneConstant = false;
+        var replacedThirtyConstant = false;
+
+        for (var i = traitsLabelIndex; i < instructions.Count; i++)
+        {
+            if (!replacedFirstOneConstant && instructions[i].opcode == OpCodes.Ldc_I4_1)
+            {
+                instructions[i].opcode = OpCodes.Ldc_I4_0;
+                replacedFirstOneConstant = true;
+                continue;
+            }
+
+            if (instructions[i].opcode != OpCodes.Ldc_R4 || !TryGetFloatOperand(instructions[i], out var value))
+            {
+                continue;
+            }
+
+            if (!replacedThirtyConstant && ApproximatelyEquals(value, 30f))
+            {
+                instructions[i].operand = 24f;
+                replacedThirtyConstant = true;
+                continue;
+            }
+
+            if (!ApproximatelyEquals(value, 24f))
+            {
+                continue;
+            }
+
+            instructions[i].operand = 16f;
+            return;
+        }
+    }
+
+    private static bool TryGetFloatOperand(CodeInstruction instruction, out float value)
+    {
+        switch (instruction.operand)
+        {
+            case float floatValue:
+                value = floatValue;
+                return true;
+            case double doubleValue:
+                value = (float)doubleValue;
+                return true;
+            default:
+                value = 0f;
+                return false;
+        }
+    }
+
+    private static bool ApproximatelyEquals(float left, float right)
+    {
+        return Math.Abs(left - right) < FloatComparisonEpsilon;
     }
 }
