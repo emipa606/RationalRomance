@@ -1,3 +1,4 @@
+using System.Reflection;
 using HarmonyLib;
 using Mlie;
 using UnityEngine;
@@ -12,7 +13,7 @@ internal class RationalRomance : Mod
 
     public RationalRomance(ModContentPack content) : base(content)
     {
-        new Harmony("net.rainbeau.rimworld.mod.rationalromance").PatchAll();
+        new Harmony("net.rainbeau.rimworld.mod.rationalromance").PatchAll(Assembly.GetExecutingAssembly());
         Settings = GetSettings<Settings>();
         CurrentVersion =
             VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);

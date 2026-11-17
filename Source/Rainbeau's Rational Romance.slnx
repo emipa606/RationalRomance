@@ -5,24 +5,28 @@
   <Configurations>
     <BuildType Name="Release" />
   </Configurations>
-  <Project Path="Rainbeau's Rational Romance/Rainbeau's Rational Romance.csproj" />
-  <Folder Name="/XML/1.6/Defs/">
-    <File Path="../1.6/Defs/InteractionDefs.xml" />
-    <File Path="../1.6/Defs/JobDefs.xml" />
-    <File Path="../1.6/Defs/JoyDefs.xml" />
-    <File Path="../1.6/Defs/ThoughtDefs.xml" />
-    <File Path="../1.6/Defs/Traits.xml" />
-  </Folder>
+  <Folder Name="/XML/Languages/" />
+  <Folder Name="/XML/Languages/English/" />
   <Folder Name="/XML/Languages/English/Keyed/">
     <File Path="../Languages/English/Keyed/LanguageData.xml" />
   </Folder>
   <Folder Name="/XML/About/">
     <File Path="../About/about.xml" />
   </Folder>
-  <Folder Name="/XML/1.6/Patches/">
-    <File Path="../1.6/Patches/Patches - Thoughts_Memory_Social.xml" />
-    <File Path="../1.6/Patches/Patches - Thoughts_Situation_Social.xml" />
-    <File Path="../1.6/Patches/Patches - TraitsSingular.xml" />
-    <File Path="../1.6/Patches/Traits_Patch.xml" />
+  <Folder Name="/XML/" />
+  <Folder Name="/XML/1.7/" />
+  <Folder Name="/XML/1.7/Defs/">
+    <File Path="../1.7/Defs/InteractionDefs.xml" />
+    <File Path="../1.7/Defs/JobDefs.xml" />
+    <File Path="../1.7/Defs/JoyDefs.xml" />
+    <File Path="../1.7/Defs/ThoughtDefs.xml" />
+    <File Path="../1.7/Defs/Traits.xml" />
   </Folder>
+  <Folder Name="/XML/1.7/Patches/">
+    <File Path="../1.7/Patches/Patches - Thoughts_Memory_Social.xml" />
+    <File Path="../1.7/Patches/Patches - Thoughts_Situation_Social.xml" />
+    <File Path="../1.7/Patches/Patches - TraitsSingular.xml" />
+    <File Path="../1.7/Patches/Traits_Patch.xml" />
+  </Folder>
+  <Project Path="Rainbeau's Rational Romance/Rainbeaus Rational Romance.csproj" />
 </Solution>

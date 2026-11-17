@@ -119,23 +119,29 @@ public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
     {
         if (initiatorGender == Gender.Male && targetGender == Gender.Female)
         {
-            return malePrefersYounger
-                ? initiatorYounger ? 0.8f : 1.2f
-                : initiatorYounger
-                    ? 1.2f
-                    : 0.8f;
+            if (malePrefersYounger)
+            {
+                return initiatorYounger ? 0.8f : 1.2f;
+            }
+
+            return initiatorYounger
+                ? 1.2f
+                : 0.8f;
         }
 
-        if (initiatorGender == Gender.Female && targetGender == Gender.Male)
+        if (initiatorGender != Gender.Female || targetGender != Gender.Male)
         {
-            return malePrefersYounger
-                ? initiatorYounger ? 1.2f : 0.8f
-                : initiatorYounger
-                    ? 0.8f
-                    : 1.2f;
+            return 1f;
         }
 
-        return 1f;
+        if (malePrefersYounger)
+        {
+            return initiatorYounger ? 1.2f : 0.8f;
+        }
+
+        return initiatorYounger
+            ? 0.8f
+            : 1.2f;
     }
 
     private static Pawn getPawn(this Pawn_RelationsTracker _this)
